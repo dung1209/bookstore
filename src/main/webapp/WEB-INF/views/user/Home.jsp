@@ -158,39 +158,36 @@
 						<div class="carousel-inner">
 							<div class="item active">
 								<div class="col-sm-6">
-									<h1><span>E</span>-SHOPPER</h1>
-									<h2>Free E-Commerce Template</h2>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-									<button type="button" class="btn btn-default get">Get it now</button>
+									<h1><span>E</span>-SHOPPER - BOOKSTORE</h1>
+									<h2>Cánh cửa tri thức của bạn</h2>
+									<p>Khám phá hàng ngàn đầu sách từ văn học, khoa học đến kỹ năng sống. Mỗi quyển sách là một thế giới chờ bạn khám phá. </p>
+									<button type="button" class="btn btn-default get">Mua ngay</button>
 								</div>
 								<div class="col-sm-6">
-									<img src="assets/user/images/home/girl1.jpg" class="girl img-responsive" alt="" />
-									<img src="assets/user/images/home/pricing.png"  class="pricing" alt="" />
+									<img src="assets/user/images/home/book1.jpg" class="girl img-responsive" alt="" />
 								</div>
 							</div>
 							<div class="item">
 								<div class="col-sm-6">
-									<h1><span>E</span>-SHOPPER</h1>
-									<h2>100% Responsive Design</h2>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-									<button type="button" class="btn btn-default get">Get it now</button>
+									<h1><span>E</span>-SHOPPER - BOOKSTORE</h1>
+									<h2>Thiết kế thân thiện và dễ sử dụng</h2>
+									<p>Chúng tôi mang đến trải nghiệm mua sắm sách trực tuyến đơn giản, thân thiện với mọi thiết bị, giúp bạn dễ dàng tìm kiếm và đặt mua sách yêu thích. </p>
+									<button type="button" class="btn btn-default get">Khám phá ngay</button>
 								</div>
 								<div class="col-sm-6">
-									<img src="assets/user/images/home/girl2.jpg" class="girl img-responsive" alt="" />
-									<img src="assets/user/images/home/pricing.png"  class="pricing" alt="" />
+									<img src="assets/user/images/home/book2.jpg" class="girl img-responsive" alt="" />
 								</div>
 							</div>
 							
 							<div class="item">
 								<div class="col-sm-6">
-									<h1><span>E</span>-SHOPPER</h1>
-									<h2>Free Ecommerce Template</h2>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-									<button type="button" class="btn btn-default get">Get it now</button>
+									<h1><span>E</span>-SHOPPER - BOOKSTORE</h1>
+									<h2>Miễn phí vận chuyển toàn quốc</h2>
+									<p>Mua sách tại B-Bookstore, bạn sẽ được hỗ trợ giao hàng miễn phí với các đơn hàng trên 200.000 VNĐ. Đặt mua sách dễ dàng, nhận hàng nhanh chóng. </p>
+									<button type="button" class="btn btn-default get">Đặt sách ngay</button>
 								</div>
 								<div class="col-sm-6">
-									<img src="assets/user/images/home/girl3.jpg" class="girl img-responsive" alt="" />
-									<img src="assets/user/images/home/pricing.png" class="pricing" alt="" />
+									<img src="assets/user/images/home/book3.jpg" class="girl img-responsive" alt="" />
 								</div>
 							</div>
 							
@@ -609,7 +606,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery1.jpg" alt="" />
+												<img src="assets/user/images/home/gallery1.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -622,7 +619,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery2.jpg" alt="" />
+												<img src="assets/user/images/home/gallery2.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -635,7 +632,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery3.jpg" alt="" />
+												<img src="assets/user/images/home/gallery3.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -648,7 +645,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery4.jpg" alt="" />
+												<img src="assets/user/images/home/gallery4.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -664,7 +661,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery4.jpg" alt="" />
+												<img src="assets/user/images/home/gallery4.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -677,7 +674,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery3.jpg" alt="" />
+												<img src="assets/user/images/home/gallery3.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -690,7 +687,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery2.jpg" alt="" />
+												<img src="assets/user/images/home/gallery2.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -703,7 +700,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery1.jpg" alt="" />
+												<img src="assets/user/images/home/gallery1.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -719,7 +716,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery3.jpg" alt="" />
+												<img src="assets/user/images/home/gallery3.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -732,7 +729,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery4.jpg" alt="" />
+												<img src="assets/user/images/home/gallery4.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -745,7 +742,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery1.jpg" alt="" />
+												<img src="assets/user/images/home/gallery1.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -758,7 +755,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery2.jpg" alt="" />
+												<img src="assets/user/images/home/gallery2.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -774,7 +771,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery1.jpg" alt="" />
+												<img src="assets/user/images/home/gallery1.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -787,7 +784,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery2.jpg" alt="" />
+												<img src="assets/user/images/home/gallery2.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -800,7 +797,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery3.jpg" alt="" />
+												<img src="assets/user/images/home/gallery3.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -813,7 +810,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery4.jpg" alt="" />
+												<img src="assets/user/images/home/gallery4.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -829,7 +826,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery2.jpg" alt="" />
+												<img src="assets/user/images/home/gallery2.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -842,7 +839,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery4.jpg" alt="" />
+												<img src="assets/user/images/home/gallery4.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -855,7 +852,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery3.jpg" alt="" />
+												<img src="assets/user/images/home/gallery3.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -868,7 +865,7 @@
 									<div class="product-image-wrapper">
 										<div class="single-products">
 											<div class="productinfo text-center">
-												<img src="images/home/gallery1.jpg" alt="" />
+												<img src="assets/user/images/home/gallery1.jpg" alt="" />
 												<h2>$56</h2>
 												<p>Easy Polo Black Edition</p>
 												<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -891,7 +888,7 @@
 										<div class="product-image-wrapper">
 											<div class="single-products">
 												<div class="productinfo text-center">
-													<img src="images/home/recommend1.jpg" alt="" />
+													<img src="assets/user/images/home/recommend1.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
 													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -904,7 +901,7 @@
 										<div class="product-image-wrapper">
 											<div class="single-products">
 												<div class="productinfo text-center">
-													<img src="images/home/recommend2.jpg" alt="" />
+													<img src="assets/user/images/home/recommend2.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
 													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -917,7 +914,7 @@
 										<div class="product-image-wrapper">
 											<div class="single-products">
 												<div class="productinfo text-center">
-													<img src="images/home/recommend3.jpg" alt="" />
+													<img src="assets/user/images/home/recommend3.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
 													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -932,7 +929,7 @@
 										<div class="product-image-wrapper">
 											<div class="single-products">
 												<div class="productinfo text-center">
-													<img src="images/home/recommend1.jpg" alt="" />
+													<img src="assets/user/images/home/recommend1.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
 													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -945,7 +942,7 @@
 										<div class="product-image-wrapper">
 											<div class="single-products">
 												<div class="productinfo text-center">
-													<img src="images/home/recommend2.jpg" alt="" />
+													<img src="assets/user/images/home/recommend2.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
 													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -958,7 +955,7 @@
 										<div class="product-image-wrapper">
 											<div class="single-products">
 												<div class="productinfo text-center">
-													<img src="images/home/recommend3.jpg" alt="" />
+													<img src="assets/user/images/home/recommend3.jpg" alt="" />
 													<h2>$56</h2>
 													<p>Easy Polo Black Edition</p>
 													<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
@@ -989,7 +986,7 @@
 					<div class="col-sm-2">
 						<div class="companyinfo">
 							<h2><span>e</span>-shopper</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,sed do eiusmod tempor</p>
+							<p>Khám phá thế giới tri thức với hàng ngàn đầu sách đa dạng từ nhiều lĩnh vực khác nhau, phù hợp với mọi lứa tuổi và sở thích.</p>
 						</div>
 					</div>
 					<div class="col-sm-7">
@@ -1003,8 +1000,8 @@
 										<i class="fa fa-play-circle-o"></i>
 									</div>
 								</a>
-								<p>Circle of Hands</p>
-								<h2>24 DEC 2014</h2>
+								<p>Hỗ trợ khách hàng</p>
+								<h2>24 DEC 2024</h2>
 							</div>
 						</div>
 						
@@ -1018,8 +1015,8 @@
 										<i class="fa fa-play-circle-o"></i>
 									</div>
 								</a>
-								<p>Circle of Hands</p>
-								<h2>24 DEC 2014</h2>
+								<p>Hỗ trợ khách hàng</p>
+								<h2>24 DEC 2024</h2>
 							</div>
 						</div>
 						
@@ -1033,8 +1030,8 @@
 										<i class="fa fa-play-circle-o"></i>
 									</div>
 								</a>
-								<p>Circle of Hands</p>
-								<h2>24 DEC 2014</h2>
+								<p>Hỗ trợ khách hàng</p>
+								<h2>24 DEC 2024</h2>
 							</div>
 						</div>
 						
@@ -1048,15 +1045,14 @@
 										<i class="fa fa-play-circle-o"></i>
 									</div>
 								</a>
-								<p>Circle of Hands</p>
-								<h2>24 DEC 2014</h2>
+								<p>Hỗ trợ khách hàng</p>
+								<h2>24 DEC 2024</h2>
 							</div>
 						</div>
 					</div>
 					<div class="col-sm-3">
 						<div class="address">
 							<img src="assets/user/images/home/map.png" alt="" />
-							<p>505 S Atlantic Ave Virginia Beach, VA(Virginia)</p>
 						</div>
 					</div>
 				</div>
@@ -1068,59 +1064,59 @@
 				<div class="row">
 					<div class="col-sm-2">
 						<div class="single-widget">
-							<h2>Service</h2>
+							<h2>DỊCH VỤ</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="">Online Help</a></li>
-								<li><a href="">Contact Us</a></li>
-								<li><a href="">Order Status</a></li>
-								<li><a href="">Change Location</a></li>
-								<li><a href="">FAQ’s</a></li>
+								<li><a href="">Trợ giúp trực tuyến</a></li>
+								<li><a href="">Liên hệ</a></li>
+								<li><a href="">Trạng thái đơn hàng</a></li>
+								<li><a href="">Thay đổi địa chỉ</a></li>
+								<li><a href="">Câu hỏi thường gặp</a></li>
 							</ul>
 						</div>
 					</div>
 					<div class="col-sm-2">
 						<div class="single-widget">
-							<h2>Quock Shop</h2>
+							<h2>WORKSHOP</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="">T-Shirt</a></li>
-								<li><a href="">Mens</a></li>
-								<li><a href="">Womens</a></li>
-								<li><a href="">Gift Cards</a></li>
-								<li><a href="">Shoes</a></li>
+								<li><a href="">Sách văn học</a></li>
+								<li><a href="">Sách khoa học</a></li>
+								<li><a href="">Sách thiếu nhi</a></li>
+								<li><a href="">Sách kỹ năng sống</a></li>
+								<li><a href="">Sách giáo dục</a></li>
 							</ul>
 						</div>
 					</div>
 					<div class="col-sm-2">
 						<div class="single-widget">
-							<h2>Policies</h2>
+							<h2>CHÍNH SÁCH</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="">Terms of Use</a></li>
-								<li><a href="">Privecy Policy</a></li>
-								<li><a href="">Refund Policy</a></li>
-								<li><a href="">Billing System</a></li>
-								<li><a href="">Ticket System</a></li>
+								<li><a href="">Điều khoản sử dụng</a></li>
+								<li><a href="">Chính sách</a></li>
+								<li><a href="">Chính sách hoàn tiền</a></li>
+								<li><a href="">Hệ thống thanh toán</a></li>
+								<li><a href="">Hệ thống vé</a></li>
 							</ul>
 						</div>
 					</div>
 					<div class="col-sm-2">
 						<div class="single-widget">
-							<h2>About Shopper</h2>
+							<h2>VỀ CHÚNG TÔI</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="">Company Information</a></li>
-								<li><a href="">Careers</a></li>
-								<li><a href="">Store Location</a></li>
-								<li><a href="">Affillate Program</a></li>
-								<li><a href="">Copyright</a></li>
+								<li><a href="">Thông tin công ty</a></li>
+								<li><a href="">Nhân viên</a></li>
+								<li><a href="">Vị trí cửa hàng</a></li>
+								<li><a href="">Chương trình liên kết</a></li>
+								<li><a href="">Bản quyền</a></li>
 							</ul>
 						</div>
 					</div>
 					<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
-							<h2>About Shopper</h2>
+							<h2>VỀ NGƯỜI MUA</h2>
 							<form action="#" class="searchform">
-								<input type="text" placeholder="Your email address" />
+								<input type="text" placeholder="Địa chỉ email của bạn..." />
 								<button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
-								<p>Get the most recent updates from <br />our site and be updated your self...</p>
+								<p>Nhận thông tin cập nhật mới nhất từ <br />trang web của chúng tôi và tự cập nhật...</p>
 							</form>
 						</div>
 					</div>
@@ -1132,8 +1128,8 @@
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright © 2013 E-Shopper. All rights reserved.</p>
-					<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
+					<p class="pull-left">Học viện Công nghệ Bưu chính Viễn thông - Cở sở tại TP.Hồ Chí Minh</p>
+					<p class="pull-right">Thiết kế bởi <span>Nguyễn Văn Dũng - Trần Kim An - Nguyễn Hữu Vinh</span></p>
 				</div>
 			</div>
 		</div>
