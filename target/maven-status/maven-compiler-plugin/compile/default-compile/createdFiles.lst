@@ -1,0 +1,5 @@
+Dao\CategoriesDao.class
+bookstorePTIT\bean\Categories.class
+HibernateUtils\HibernateUtils.class
+SpringMVC\UserController\HomeController.class
+Dao\productDao.class
