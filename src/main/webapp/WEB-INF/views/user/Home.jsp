@@ -5,7 +5,6 @@
 <head>
 <meta charset="utf-8">
 <title>Mua Sách Online</title>
-<!-- <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/assets/user/css/Home.css"> -->
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -35,6 +34,7 @@
 <link rel="apple-touch-icon-precomposed"
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 </head>
 <body>
@@ -303,7 +303,6 @@
 							<img src="assets/user/images/home/shipping.jpg" alt="" />
 						</div>
 						<!--/shipping-->
-
 					</div>
 				</div>
 
@@ -313,11 +312,12 @@
 						<h2 class="title text-center">SẢN PHẨM</h2>
 						<c:forEach var="book" items="${books}">
 							<div class="col-sm-4">
+							<a href="${pageContext.request.contextPath}/book-detail/${book.id}">
 								<div class="product-image-wrapper">
 									<div class="single-products">
 										<div class="productinfo text-center">
 											<img src="assets/user/images/home/${book.image}" alt="" />
-											<h2>${book.price}</h2>
+											<h2><fmt:formatNumber value="${book.price}" type="number" groupingUsed="true" />  đ</h2>
 											<p>${book.name}</p>
 											<a href="#" class="btn btn-default add-to-cart"> <i
 												class="fa fa-shopping-cart"></i>Thêm vào giỏ
@@ -331,6 +331,7 @@
 										</ul>
 									</div>
 								</div>
+							</a>
 							</div>
 						</c:forEach>
 						<ul class="pagination">
