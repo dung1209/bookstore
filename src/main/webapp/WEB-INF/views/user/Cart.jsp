@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Chi tiết sản phẩm</title>
+<title>Giỏ hàng</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -39,6 +39,7 @@
 </head>
 <body>
 	<header id="header">
+		<!--header-->
 		<!--header-->
 		<div class="header_top">
 			<!--header_top-->
@@ -78,7 +79,7 @@
 						<div class="logo pull-left">
 							<a href="http://localhost:8080/bookstorePTIT/"><img
 								src="${pageContext.request.contextPath}/assets/user/images/home/logo.png"
-								alt="Logo"></a>
+								alt="Logo" /></a>
 						</div>
 						<div class="btn-group pull-right">
 							<div class="btn-group">
@@ -113,8 +114,9 @@
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
 								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i>
 										Thanh toán</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/shop-cart/"><i class="fa fa-shopping-cart"></i>
-										Giỏ hàng</a></li>
+								<li><a
+									href="http://localhost:8080/bookstorePTIT/shop-cart/"
+									id="cart-link"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i>
 										Đăng nhập</a></li>
 							</ul>
@@ -140,7 +142,8 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="http://localhost:8080/bookstorePTIT/">Trang chủ</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/">Trang
+										chủ</a></li>
 								<li class="dropdown"><a href="#" class="active">Cửa
 										hàng<i class="fa fa-angle-down"></i>
 								</a>
@@ -173,294 +176,150 @@
 	</header>
 	<!--/header-->
 
-	<section>
+	<section id="cart_items">
 		<div class="container">
-			<div class="row">
-				<div class="col-sm-3">
-					<div class="left-sidebar">
-						<h2>DANH MỤC</h2>
-						<div class="panel-group category-products" id="accordian">
-							<!--category-productsr-->
-							<c:forEach var="category" items="${categories}">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h4 class="panel-title">
-											<a href="#">${category.name}</a>
-										</h4>
+			<div class="breadcrumbs">
+				<ol class="breadcrumb">
+					<li><a href="http://localhost:8080/bookstorePTIT/">Home</a></li>
+					<li class="active">Giỏ hàng</li>
+				</ol>
+			</div>
+			<div class="table-responsive cart_info">
+				<table class="table table-condensed">
+					<thead>
+						<tr class="cart_menu">
+							<td class="select">Chọn</td>
+							<td class="image">Ảnh</td>
+							<td class="description">Tên sản phẩm</td>
+							<td class="price">Giá</td>
+							<td class="quantity">Số lượng</td>
+							<td class="total">Tổng</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="cart" items="${carts}" varStatus="loop">
+							<tr>
+								<td class="cart_select"><input type="checkbox"
+									name="selectCartItem" value="${booksInCart[loop.index].id}"
+									data-quantity="${cart.quantity}"
+									data-price="${booksInCart[loop.index].price}"
+									data-productID="${booksInCart[loop.index].id}"
+									>
+								</td>
+								<td class="cart_product"><a href=""> <img
+										src="${pageContext.request.contextPath}/assets/user/images/home/${booksInCart[loop.index].image}"
+										alt="Logo" style="width: 100px; height: auto;" /></a></td>
+								<td class="cart_description">
+									<h4>
+										<a href="">${booksInCart[loop.index].name}</a>
+									</h4>
+									<p>Web ID: ${booksInCart[loop.index].id}</p>
+								</td>
+								<td class="cart_price">
+									<p id="price_${loop.index}">
+										<fmt:formatNumber value="${booksInCart[loop.index].price}"
+											type="number" groupingUsed="true" />
+										đ
+									</p>
+								</td>
+								<td class="cart_quantity">
+									<div class="cart_quantity_button">
+										<a class="cart_quantity_down"
+											onclick="decreaseQuantity(${loop.index});"> - </a> <input
+											id="quantity_${loop.index}" class="cart_quantity_input"
+											type="text" name="quantity" value="${cart.quantity}"
+											autocomplete="off" size="2"> <a
+											class="cart_quantity_up"
+											onclick="increaseQuantity(${loop.index});"> + </a>
 									</div>
-								</div>
-							</c:forEach>
-						</div>
-						<!--/category-products-->
+								</td>
+								<td class="cart_total">
+									<p class="cart_total_price" id="total_${loop.index}">
+										<fmt:formatNumber
+											value="${booksInCart[loop.index].price * cart.quantity}"
+											type="number" groupingUsed="true" />
+										đ
+									</p>
+								</td>
+								<td class="cart_delete"><a class="cart_quantity_delete"
+									href=""><i class="fa fa-times"></i></a></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+	
+	<div style="display: flex; align-items: center;margin-top: 10px; margin-left: 60%;">
+    	<strong id="totalSumMoney">Tổng tiền:</strong>
+    	<p id="totalSum" class="cart_total_price">0 đ</p>
+	</div>
+	<!--/#cart_items-->
 
-						<div class="brands_products">
-							<!--brands_products-->
-							<h2>Tác giả</h2>
-							<div class="brands-name">
-								<ul class="nav nav-pills nav-stacked">
-									<c:forEach var="author" items="${authors}">
-										<li><a href=""> <span class="pull-right">(50)</span>${author.name}</a></li>
-									</c:forEach>
-								</ul>
-							</div>
-						</div>
-						<!--/brands_products-->
-
-						<div class="price-range">
-							<!--price-range-->
-							<h2>MỨC GIÁ</h2>
-							<div class="well">
-								<input type="text" class="span2" value="" data-slider-min="0"
-									data-slider-max="600" data-slider-step="5"
-									data-slider-value="[250,450]" id="sl2"><br /> <b>$
-									0</b> <b class="pull-right">$ 600</b>
-							</div>
-						</div>
-						<!--/price-range-->
-
-						<div class="shipping text-center">
-							<!--shipping-->
-							<img
-								src="${pageContext.request.contextPath}/assets/user/images/home/shipping.jpg"
-								alt="Logo" />
-						</div>
-						<!--/shipping-->
+	<section id="do_action">
+		<div class="container">
+			<div class="heading">
+				<h3>What would you like to do next?</h3>
+				<p>Choose if you have a discount code or reward points you want
+					to use or would like to estimate your delivery cost.</p>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="chose_area">
+						<ul class="user_option">
+							<li><input type="checkbox"> <label>Use
+									Coupon Code</label></li>
+							<li><input type="checkbox"> <label>Use Gift
+									Voucher</label></li>
+							<li><input type="checkbox"> <label>Estimate
+									Shipping & Taxes</label></li>
+						</ul>
+						<ul class="user_info">
+							<li class="single_field"><label>Country:</label> <select>
+									<option>United States</option>
+									<option>Bangladesh</option>
+									<option>UK</option>
+									<option>India</option>
+									<option>Pakistan</option>
+									<option>Ucrane</option>
+									<option>Canada</option>
+									<option>Dubai</option>
+							</select></li>
+							<li class="single_field"><label>Region / State:</label> <select>
+									<option>Select</option>
+									<option>Dhaka</option>
+									<option>London</option>
+									<option>Dillih</option>
+									<option>Lahore</option>
+									<option>Alaska</option>
+									<option>Canada</option>
+									<option>Dubai</option>
+							</select></li>
+							<li class="single_field zip-field"><label>Zip Code:</label>
+								<input type="text"></li>
+						</ul>
+						<a class="btn btn-default update" href="">Get Quotes</a> <a
+							class="btn btn-default check_out" href="">Continue</a>
 					</div>
 				</div>
-
-				<div class="col-sm-9 padding-right">
-					<div class="product-details">
-						<!--product-details-->
-						<div class="col-sm-5">
-							<div class="view-product">
-								<img
-									src="${pageContext.request.contextPath}/assets/user/images/home/${book.image}"
-									alt="Logo" />
-								<h3>ZOOM</h3>
-							</div>
-							<div id="similar-product" class="carousel slide"
-								data-ride="carousel">
-
-								<!-- Wrapper for slides -->
-								<div class="carousel-inner">
-									<div class="item active">
-										<a href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar1.jpg"
-											alt=""></a> <a href=""><img
-											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar2.jpg" alt=""></a> <a
-											href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar3.jpg"
-											alt=""></a>
-									</div>
-									<div class="item">
-										<a href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar1.jpg"
-											alt=""></a> <a href=""><img
-											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar2.jpg" alt=""></a> <a
-											href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar3.jpg"
-											alt=""></a>
-									</div>
-									<div class="item">
-										<a href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar1.jpg"
-											alt=""></a> <a href=""><img
-											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar2.jpg" alt=""></a> <a
-											href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar3.jpg"
-											alt=""></a>
-									</div>
-
-								</div>
-
-								<!-- Controls -->
-								<a class="left item-control" href="#similar-product"
-									data-slide="prev"> <i class="fa fa-angle-left"></i>
-								</a> <a class="right item-control" href="#similar-product"
-									data-slide="next"> <i class="fa fa-angle-right"></i>
-								</a>
-							</div>
-
-						</div>
-						<div class="col-sm-7">
-							<div class="product-information">
-								<!--/product-information-->
-								<img src="images/product-details/new.jpg" class="newarrival"
-									alt="" />
-								<h2>${book.name}</h2>
-								<p>Web ID: ${book.id}</p>
-								<img src="images/product-details/rating.png" alt="" /> <span>
-									<span><fmt:formatNumber value="${book.price}"
-											type="number" groupingUsed="true" /> đ</span> 
-									<label>Số lượng:</label>
-									<div class="quantity-controls">
-										<button type="button" class="btn-decrease" onclick="decreaseQuantity()">-</button> 
-										<input type="text" id="quantity" value="1" min="1" readonly />
-										<button type="button" class="btn-increase" onclick="increaseQuantity()">+</button>
-									</div>
-									<button type="button" class="btn btn-fefault cart">
-										<i class="fa fa-shopping-cart"></i> Thêm vào giỏ
-									</button>
-								</span>
-								<p>
-									<b>Thể loại:</b> ${categoryName}
-								</p>
-								<p>
-									<b>Tác giả:</b> ${authorName}
-								</p>
-								<p>
-									<b>Tình trạng:</b>
-									<c:choose>
-										<c:when test="${book.stock - book.sold > 0}">
-            								Còn hàng
-        								</c:when>
-										<c:otherwise>
-            								Hết hàng
-        								</c:otherwise>
-									</c:choose>
-								</p>
-								<p>
-									<b>Brand:</b> E-SHOPPER
-								</p>
-								<a href=""><img src="images/product-details/share.png"
-									class="share img-responsive" alt="" /></a>
-							</div>
-							<!--/product-information-->
-						</div>
+				<div class="col-sm-6">
+					<div class="total_area">
+						<ul>
+							<li>Cart Sub Total <span>$59</span></li>
+							<li>Eco Tax <span>$2</span></li>
+							<li>Shipping Cost <span>Free</span></li>
+							<li>Total <span>$61</span></li>
+						</ul>
+						<a class="btn btn-default update" href="">Update</a> <a
+							class="btn btn-default check_out" href="">Check Out</a>
 					</div>
-					<!--/product-details-->
-
-					<div class="category-tab shop-details-tab">
-						<!--category-tab-->
-						<div class="col-sm-12">
-							<ul class="nav nav-tabs">
-								<li><a href="#details" data-toggle="tab">Nội dung</a></li>
-							</ul>
-						</div>
-						<div class="tab-content">
-							<div class="tab-pane fade active in" id="reviews">
-								<div class="col-sm-12">
-									<ul>
-										<li><a href=""><i class="fa fa-user"></i>TÁC GIẢ</a></li>
-										<li><a href=""><i class="fa fa-clock-o"></i>12:41 PM</a></li>
-										<li><a href=""><i class="fa fa-calendar-o"></i>31/12/2014</a></li>
-									</ul>
-									<p>${book.title}</p>
-									<form action="#">
-										<textarea name=""></textarea>
-									</form>
-								</div>
-							</div>
-
-						</div>
-					</div>
-					<!--/category-tab-->
-
-					<div class="recommended_items">
-						<!--recommended_items-->
-						<h2 class="title text-center">GỢI Ý SẢN PHẨM</h2>
-
-						<div id="recommended-item-carousel" class="carousel slide"
-							data-ride="carousel">
-							<div class="carousel-inner">
-								<div class="item active">
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="item">
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<a class="left recommended-item-control"
-								href="#recommended-item-carousel" data-slide="prev"> <i
-								class="fa fa-angle-left"></i>
-							</a> <a class="right recommended-item-control"
-								href="#recommended-item-carousel" data-slide="next"> <i
-								class="fa fa-angle-right"></i>
-							</a>
-						</div>
-					</div>
-					<!--/recommended_items-->
-
 				</div>
 			</div>
 		</div>
 	</section>
+	<!--/#do_action-->
 
 	<footer id="footer">
 		<!--Footer-->
@@ -483,8 +342,8 @@
 								<a href="#">
 									<div class="iframe-img">
 										<img
-											src="${pageContext.request.contextPath}/assets/user/images/home/iframe1.png"
-											alt="" />
+											src="<%=request.getContextPath()%>/assets/user/images/home/iframe1.png"
+											alt="Logo" />
 									</div>
 									<div class="overlay-icon">
 										<i class="fa fa-play-circle-o"></i>
@@ -500,8 +359,8 @@
 								<a href="#">
 									<div class="iframe-img">
 										<img
-											src="${pageContext.request.contextPath}/assets/user/images/home/iframe2.png"
-											alt="" />
+											src="<%=request.getContextPath()%>/assets/user/images/home/iframe2.png"
+											alt="Logo" />
 									</div>
 									<div class="overlay-icon">
 										<i class="fa fa-play-circle-o"></i>
@@ -517,8 +376,8 @@
 								<a href="#">
 									<div class="iframe-img">
 										<img
-											src="${pageContext.request.contextPath}/assets/user/images/home/iframe3.png"
-											alt="" />
+											src="<%=request.getContextPath()%>/assets/user/images/home/iframe3.png"
+											alt="Logo" />
 									</div>
 									<div class="overlay-icon">
 										<i class="fa fa-play-circle-o"></i>
@@ -534,8 +393,8 @@
 								<a href="#">
 									<div class="iframe-img">
 										<img
-											src="${pageContext.request.contextPath}/assets/user/images/home/iframe4.png"
-											alt="" />
+											src="<%=request.getContextPath()%>/assets/user/images/home/iframe4.png"
+											alt="Logo" />
 									</div>
 									<div class="overlay-icon">
 										<i class="fa fa-play-circle-o"></i>
@@ -549,8 +408,8 @@
 					<div class="col-sm-3">
 						<div class="address">
 							<img
-								src="${pageContext.request.contextPath}/assets/user/images/home/map.png"
-								alt="" />
+								src="<%=request.getContextPath()%>/assets/user/images/home/map.png"
+								alt="Logo" />
 						</div>
 					</div>
 				</div>
@@ -655,19 +514,32 @@
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
 	<script>
-		function decreaseQuantity() {
-			var quantityInput = document.getElementById('quantity');
+		function decreaseQuantity(index) {
+			var quantityInput = document.getElementById('quantity_' + index);
 			var currentValue = parseInt(quantityInput.value);
 			if (currentValue > 1) {
 				quantityInput.value = currentValue - 1;
+				updateTotal(index);
 			}
 		}
 
-		function increaseQuantity() {
-			var quantityInput = document.getElementById('quantity');
+		function increaseQuantity(index) {
+			var quantityInput = document.getElementById('quantity_' + index);
 			var currentValue = parseInt(quantityInput.value);
 			quantityInput.value = currentValue + 1;
+			updateTotal(index);
 		}
+
+		function updateTotal(index) {
+			var quantityInput = document.getElementById('quantity_' + index);
+			var price = parseFloat(document.getElementById('price_' + index).innerText
+					.replace(/[^0-9.-]+/g, ""));
+			var total = quantityInput.value * price * 1000;
+			document.getElementById('total_' + index).innerText = total
+					.toLocaleString()
+					+ ' đ';
+		}
+
 	</script>
 </body>
 </html>

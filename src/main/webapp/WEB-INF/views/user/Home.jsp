@@ -76,7 +76,7 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="logo pull-left">
-							<a href="index.html"><img
+							<a href="http://localhost:8080/bookstorePTIT/"><img
 								src="assets/user/images/home/logo.png" alt="" /></a>
 						</div>
 						<div class="btn-group pull-right">
@@ -112,7 +112,7 @@
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
 								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i>
 										Thanh toán</a></li>
-								<li><a href="cart.html"><i class="fa fa-shopping-cart"></i>
+								<li><a href="http://localhost:8080/bookstorePTIT/shop-cart/"><i class="fa fa-shopping-cart"></i>
 										Giỏ hàng</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i>
 										Đăng nhập</a></li>
@@ -139,7 +139,7 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="index.html">Trang chủ</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/">Trang chủ</a></li>
 								<li class="dropdown"><a href="#" class="active">Cửa
 										hàng<i class="fa fa-angle-down"></i>
 								</a>
@@ -934,8 +934,6 @@
 
 	</footer>
 	<!--/Footer-->
-
-
 
 	<script src="assets/user/js/jquery.js"></script>
 	<script src="assets/user/js/price-range.js"></script>

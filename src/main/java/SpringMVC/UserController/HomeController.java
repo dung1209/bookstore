@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import Dao.CategoriesDao;
 import Dao.AuthorsDao;
 import Dao.BooksDao;
+import Dao.CartsDao;
 import bookstorePTIT.bean.Categories;
 import bookstorePTIT.bean.Authors;
 import bookstorePTIT.bean.Books;
+import bookstorePTIT.bean.Carts;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -55,6 +59,27 @@ public class HomeController {
         model.addAttribute("authorName", authorName);
         model.addAttribute("categoryName", categoryName); 
 		return "user/BookDetail";
+	}
+    
+    @RequestMapping("/shop-cart")
+	public String shopCart(Model model) {
+    	int customerID = 2; 
+    	CartsDao cartDao = new CartsDao();
+    	BooksDao booksDao = new BooksDao();
+
+        List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
+        List<Books> booksInCart = new ArrayList<>();
+
+        for (Carts cart : carts) {
+            int bookID = cart.getBookID();
+            Books book = booksDao.findBookById(bookID);
+            if (book != null) {
+                booksInCart.add(book);
+            }
+        }
+        model.addAttribute("booksInCart", booksInCart);
+        model.addAttribute("carts", carts); 
+		return "user/Cart";
 	}
     
 }
