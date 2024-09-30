@@ -1,8 +1,12 @@
 package SpringMVC.UserController;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import Dao.CategoriesDao;
 import Dao.AuthorsDao;
@@ -14,7 +18,9 @@ import bookstorePTIT.bean.Books;
 import bookstorePTIT.bean.Carts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -81,5 +87,17 @@ public class HomeController {
         model.addAttribute("carts", carts); 
 		return "user/Cart";
 	}
+    
+    @PostMapping("/cart/add")
+    public ResponseEntity<Map<String, String>> addToCart(@RequestBody Carts cart) {
+        CartsDao cartsDao = new CartsDao();
+        cart.setCustomerID(2);
+        cart.setQuantity(1);
+        cartsDao.save(cart);
+        //return ResponseEntity.ok("Sản phẩm đã được thêm vào giỏ hàng!");
+        return ResponseEntity.ok(Collections.singletonMap("", "Sản phẩm đã được thêm vào giỏ hàng!"));
+
+    }
+
     
 }

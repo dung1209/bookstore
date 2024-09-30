@@ -319,9 +319,10 @@
 											<img src="assets/user/images/home/${book.image}" alt="" />
 											<h2><fmt:formatNumber value="${book.price}" type="number" groupingUsed="true" />  đ</h2>
 											<p>${book.name}</p>
-											<a href="#" class="btn btn-default add-to-cart"> <i
-												class="fa fa-shopping-cart"></i>Thêm vào giỏ
-											</a>
+											<a href="#" class="btn btn-default add-to-cart" onclick="confirmAddToCart(event, ${book.id})"> 
+    <i class="fa fa-shopping-cart"></i> Thêm vào giỏ
+</a>
+
 										</div>
 									</div>
 									<div class="choose">
@@ -941,6 +942,43 @@
 	<script src="assets/user/js/bootstrap.min.js"></script>
 	<script src="assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="assets/user/js/main.js"></script>
+	<script>
+	function confirmAddToCart(event, bookId) {
+	    event.preventDefault();
+
+	    if (confirm("Bạn có muốn thêm sản phẩm vào giỏ hàng không?")) {
+	        addToCart(bookId); 
+	    } else {
+	        return;
+	    }
+	}
+
+	function addToCart(bookId) {
+	    fetch('/bookstorePTIT/cart/add', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({ bookID: bookId })
+	    })
+	    .then(response => {
+	        if (!response.ok) {
+	            throw new Error('Network response was not ok');
+	        }
+	        return response.text();
+	    })
+	    .then(data => {
+	        alert(data);
+	    })
+	    .catch(error => {
+	        console.error('Error:', error);
+	    });
+	}
+
+
+
+
+	</script>
 
 </body>
 </html>

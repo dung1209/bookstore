@@ -6,23 +6,26 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateUtils {
-	public static SessionFactory getSessionFactory() {
-        SessionFactory sessionFactory = null;
+    private static SessionFactory sessionFactory;
+
+    static {
         try {
             Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
             configuration.addAnnotatedClass(bookstorePTIT.bean.Categories.class);
             configuration.addAnnotatedClass(bookstorePTIT.bean.Authors.class);
             configuration.addAnnotatedClass(bookstorePTIT.bean.Books.class);
             configuration.addAnnotatedClass(bookstorePTIT.bean.Carts.class);
-            StandardServiceRegistryBuilder builder 
-                = new StandardServiceRegistryBuilder();
+            StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
             builder.applySettings(configuration.getProperties());
             StandardServiceRegistry serviceRegistry = builder.build();
             sessionFactory = configuration.buildSessionFactory(serviceRegistry);
         } catch (Throwable ex) {
-        	System.out.println("error at session");
+            System.out.println("Error at session factory initialization");
             ex.printStackTrace();
         }
+    }
+
+    public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 }
