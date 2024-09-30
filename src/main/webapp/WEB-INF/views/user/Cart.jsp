@@ -205,8 +205,7 @@
 									data-quantity="${cart.quantity}"
 									data-price="${booksInCart[loop.index].price}"
 									data-productID="${booksInCart[loop.index].id}"
-									>
-								</td>
+									onclick="toggleCheckbox()"></td>
 								<td class="cart_product"><a href=""> <img
 										src="${pageContext.request.contextPath}/assets/user/images/home/${booksInCart[loop.index].image}"
 										alt="Logo" style="width: 100px; height: auto;" /></a></td>
@@ -251,43 +250,31 @@
 			</div>
 		</div>
 	</section>
-	
-	<div style="display: flex; align-items: center;margin-top: 10px; margin-left: 60%;">
-    	<strong id="totalSumMoney">Tổng tiền:</strong>
-    	<p id="totalSum" class="cart_total_price">0 đ</p>
-	</div>
+
 	<!--/#cart_items-->
 
 	<section id="do_action">
 		<div class="container">
-			<div class="heading">
-				<h3>What would you like to do next?</h3>
-				<p>Choose if you have a discount code or reward points you want
-					to use or would like to estimate your delivery cost.</p>
-			</div>
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="chose_area">
 						<ul class="user_option">
-							<li><input type="checkbox"> <label>Use
-									Coupon Code</label></li>
-							<li><input type="checkbox"> <label>Use Gift
-									Voucher</label></li>
-							<li><input type="checkbox"> <label>Estimate
-									Shipping & Taxes</label></li>
+							<li><input type="checkbox"> <label>Phiếu giảm giá</label></li>
+							<li><input type="checkbox"> <label>Phiếu quà tặng</label></li>
+							<li><input type="checkbox"> <label>Vận chuyển & Thuế</label></li>
 						</ul>
 						<ul class="user_info">
-							<li class="single_field"><label>Country:</label> <select>
-									<option>United States</option>
+							<li class="single_field"><label>Đất nước:</label> <select>
+									<option>Việt Nam</option>
 									<option>Bangladesh</option>
 									<option>UK</option>
 									<option>India</option>
-									<option>Pakistan</option>
+									<option>United States</option>
 									<option>Ucrane</option>
 									<option>Canada</option>
 									<option>Dubai</option>
 							</select></li>
-							<li class="single_field"><label>Region / State:</label> <select>
+							<li class="single_field"><label>Khu vực:</label> <select>
 									<option>Select</option>
 									<option>Dhaka</option>
 									<option>London</option>
@@ -297,23 +284,21 @@
 									<option>Canada</option>
 									<option>Dubai</option>
 							</select></li>
-							<li class="single_field zip-field"><label>Zip Code:</label>
+							<li class="single_field zip-field"><label>Mã Code:</label>
 								<input type="text"></li>
 						</ul>
-						<a class="btn btn-default update" href="">Get Quotes</a> <a
-							class="btn btn-default check_out" href="">Continue</a>
+						<a class="btn btn-default update" href="">Quay lại</a> <a
+							class="btn btn-default update" href="">Tiếp tục</a>
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="total_area">
-						<ul>
-							<li>Cart Sub Total <span>$59</span></li>
-							<li>Eco Tax <span>$2</span></li>
-							<li>Shipping Cost <span>Free</span></li>
-							<li>Total <span>$61</span></li>
-						</ul>
-						<a class="btn btn-default update" href="">Update</a> <a
-							class="btn btn-default check_out" href="">Check Out</a>
+						<div
+							style="display: flex; align-items: center; margin-top: 10px; margin-left: 15%;">
+							<strong id="totalSumMoney">Tổng tiền:</strong>
+							<p id="totalSum" class="cart_total_price">0 đ</p>
+						</div>
+						<a class="btn btn-default check_out" href="">Thanh toán</a>
 					</div>
 				</div>
 			</div>
@@ -514,31 +499,56 @@
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
 	<script>
-		function decreaseQuantity(index) {
-			var quantityInput = document.getElementById('quantity_' + index);
-			var currentValue = parseInt(quantityInput.value);
-			if (currentValue > 1) {
-				quantityInput.value = currentValue - 1;
-				updateTotal(index);
-			}
-		}
+	function decreaseQuantity(index) {
+	    var quantityInput = document.getElementById('quantity_' + index);
+	    var currentValue = parseInt(quantityInput.value);
+	    if (currentValue > 1) {
+	        quantityInput.value = currentValue - 1; 
+	        updateTotal(index); 
+	    }
+	    updateGrandTotal();
+	}
 
-		function increaseQuantity(index) {
-			var quantityInput = document.getElementById('quantity_' + index);
-			var currentValue = parseInt(quantityInput.value);
-			quantityInput.value = currentValue + 1;
-			updateTotal(index);
-		}
+	function increaseQuantity(index) {
+	    var quantityInput = document.getElementById('quantity_' + index);
+	    var currentValue = parseInt(quantityInput.value);
+	    quantityInput.value = currentValue + 1; 
+	    updateTotal(index);
+	    updateGrandTotal(); 
+	}
 
-		function updateTotal(index) {
-			var quantityInput = document.getElementById('quantity_' + index);
-			var price = parseFloat(document.getElementById('price_' + index).innerText
-					.replace(/[^0-9.-]+/g, ""));
-			var total = quantityInput.value * price * 1000;
-			document.getElementById('total_' + index).innerText = total
-					.toLocaleString()
-					+ ' đ';
-		}
+	function updateTotal(index) {
+	    var quantityInput = document.getElementById('quantity_' + index);
+	    var price = parseFloat(document.getElementById('price_' + index).innerText.replace(/[^0-9.-]+/g, ''));
+	    var quantity = parseInt(quantityInput.value);
+	    var total = quantity * price * 1000;
+
+	    document.getElementById('total_' + index).innerText = total.toLocaleString() + ' đ';
+	    updateGrandTotal(); 
+	}
+
+	function updateGrandTotal() {
+	    var totalPrice = 0; 
+
+	    var rows = document.querySelectorAll('.cart_select');
+	    rows.forEach(function(checkbox) {
+	        var input = checkbox.querySelector('input[name="selectCartItem"]');
+	        if (input.checked) {
+	            var row = checkbox.closest('tr'); // Lấy hàng tương ứng
+	            var quantityInput = row.querySelector('.cart_quantity_input');
+	            var quantity = parseInt(quantityInput.value); 
+	            var priceCell = row.querySelector('.cart_price p');
+	            var price = parseFloat(priceCell.innerText.replace(/[^0-9.-]+/g, ''));
+	            totalPrice += quantity * price * 1000; 
+	        }
+	    });
+
+	    document.getElementById('totalSum').innerText = totalPrice.toLocaleString() + ' đ';
+	}
+
+	function toggleCheckbox() {
+	    updateGrandTotal(); 
+	}
 
 	</script>
 </body>

@@ -1547,7 +1547,7 @@ h2.title {
 
 .breadcrumbs .breadcrumb {
   background:transparent;
-  margin-bottom: 75px;
+  margin-bottom: 30px;
   padding-left: 0;
 }
 
@@ -1858,7 +1858,7 @@ h2.title {
   background: #FE980F;
   border-radius: 0;
   color: #FFFFFF;
-  margin-top: 18px;
+  margin-top: 10px;
   border: none;
   padding: 5px 15px;
 }
@@ -1867,7 +1867,8 @@ h2.title {
 }
 
 .check_out {
-  margin-left: 20px
+  margin-left: 65%;
+  padding: 10px 20px;
 }
 
 
@@ -2657,6 +2658,10 @@ h2.title {
 
 #cart-link {
     color: #FE980F;
+}
+
+#do_action .chose_area {
+    margin-bottom: 0px;
 }
 
 
