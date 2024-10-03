@@ -142,6 +142,10 @@ public class HomeController {
         model.addAttribute("selectedBooks", selectedBooks);
         return "user/Checkout";
     }
-
+    
+    @RequestMapping("/thankyou")
+	public String checkout() {
+		return "user/Thankyou";
+	}
 
 }
