@@ -11,7 +11,7 @@ import bookstorePTIT.bean.Authors;
 import bookstorePTIT.bean.Carts;
 import bookstorePTIT.bean.Categories;
 import HibernateUtils.HibernateUtils;
-
+import java.util.Optional;
 import java.util.List;
 
 @Repository
@@ -67,6 +67,35 @@ public class CartsDao {
                 session.close(); 
             }
         }
+    }
+	
+	public Optional<Carts> findByCustomerIdAndBookId(int customerId, int bookId) {
+        Session session = null;
+        Transaction transaction = null;
+        Carts cart = null;
+
+        try {
+            session = HibernateUtils.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+
+            String hql = "FROM Carts WHERE customerID = :customerId AND bookID = :bookId";
+            Query<Carts> query = session.createQuery(hql, Carts.class);
+            query.setParameter("customerId", customerId);
+            query.setParameter("bookId", bookId);
+            cart = query.uniqueResult();
+
+            transaction.commit(); 
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close(); 
+            }
+        }
+        return Optional.ofNullable(cart); 
     }
 
 }

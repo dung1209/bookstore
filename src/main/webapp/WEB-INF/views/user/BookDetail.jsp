@@ -292,7 +292,7 @@
 										<input type="text" id="quantity" value="1" min="1" readonly />
 										<button type="button" class="btn-increase" onclick="increaseQuantity()">+</button>
 									</div>
-									<button type="button" class="btn btn-fefault cart">
+									<button type="button" class="btn btn-fefault cart" onclick="addToCart(2)">
 										<i class="fa fa-shopping-cart"></i> Thêm vào giỏ
 									</button>
 								</span>
@@ -667,6 +667,48 @@
 			var quantityInput = document.getElementById('quantity');
 			var currentValue = parseInt(quantityInput.value);
 			quantityInput.value = currentValue + 1;
+		}
+		
+		function addToCart(customerId) {
+		    // Lấy bookID từ URL
+		    const pathSegments = window.location.pathname.split('/');
+		    const bookId = pathSegments[pathSegments.length - 1]; // Lấy phần cuối cùng (bookID)
+
+		    // Lấy giá trị quantity từ input
+		    const quantityInput = document.getElementById('quantity');
+		    const quantity = parseInt(quantityInput.value);
+
+		    // Kiểm tra tính hợp lệ của bookID và quantity
+		    if (isNaN(bookId) || bookId === "") {
+		        alert("ID sách không hợp lệ!");
+		        return;
+		    }
+		    if (isNaN(quantity) || quantity <= 0) {
+		        alert("Số lượng không hợp lệ!");
+		        return;
+		    }
+
+		    const cartData = {
+		        customerID: customerId,
+		        bookID: bookId, // Sử dụng bookID từ URL
+		        quantity: quantity // Lấy quantity từ input
+		    };
+
+		    fetch('/bookstorePTIT/cart/add', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json'
+		        },
+		        body: JSON.stringify(cartData)
+		    })
+		    .then(response => response.json())
+		    .then(data => {
+		        alert(data.message); // Hiển thị thông báo
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		        alert('Có lỗi xảy ra!');
+		    });
 		}
 	</script>
 </body>

@@ -1576,9 +1576,13 @@ h2.title {
 
 #cart_items .cart_info {
   border: 1px solid #E6E4DF;
-  margin-bottom: 50px
+  margin-bottom: 70px
 }
 
+#cart_items .cart_info .cart_menu .custom-image {
+    width: 20% !important; 
+    padding-left: 0px !important;
+}
 
 #cart_items .cart_info .cart_menu {
   background: #FE980F;
@@ -2660,8 +2664,15 @@ h2.title {
     color: #FE980F;
 }
 
+#checkout-link {
+    color: #FE980F;
+}
+
 #do_action .chose_area {
     margin-bottom: 0px;
 }
 
+.logocheckout img {
+	width: 450px;
+}
 

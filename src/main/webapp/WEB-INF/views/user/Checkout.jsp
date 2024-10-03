@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Giỏ hàng</title>
+<title>Thanh toán</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -34,14 +34,11 @@
 <link rel="apple-touch-icon-precomposed"
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 </head>
 <body>
-	<header id="header">
-		<!--header-->
-		<!--header-->
-		<div class="header_top">
+	<div class="header_top">
 			<!--header_top-->
 			<div class="container">
 				<div class="row">
@@ -70,7 +67,7 @@
 			</div>
 		</div>
 		<!--/header_top-->
-
+		
 		<div class="header-middle">
 			<!--header-middle-->
 			<div class="container">
@@ -79,7 +76,7 @@
 						<div class="logo pull-left">
 							<a href="http://localhost:8080/bookstorePTIT/"><img
 								src="${pageContext.request.contextPath}/assets/user/images/home/logo.png"
-								alt="Logo" /></a>
+								alt="Logo"></a>
 						</div>
 						<div class="btn-group pull-right">
 							<div class="btn-group">
@@ -112,11 +109,10 @@
 							<ul class="nav navbar-nav">
 								<li><a href=""><i class="fa fa-user"></i> Tài khoản</a></li>
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i>
+								<li><a href="checkout.html" id="checkout-link"><i class="fa fa-crosshairs"></i>
 										Thanh toán</a></li>
-								<li><a
-									href="http://localhost:8080/bookstorePTIT/shop-cart/"
-									id="cart-link"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/shop-cart/"><i class="fa fa-shopping-cart"></i>
+										Giỏ hàng</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i>
 										Đăng nhập</a></li>
 							</ul>
@@ -126,7 +122,7 @@
 			</div>
 		</div>
 		<!--/header-middle-->
-
+	
 		<div class="header-bottom">
 			<!--header-bottom-->
 			<div class="container">
@@ -142,8 +138,7 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="http://localhost:8080/bookstorePTIT/">Trang
-										chủ</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/">Trang chủ</a></li>
 								<li class="dropdown"><a href="#" class="active">Cửa
 										hàng<i class="fa fa-angle-down"></i>
 								</a>
@@ -151,7 +146,7 @@
 										<li><a href="shop.html" class="active">Sản phẩm</a></li>
 										<li><a href="product-details.html">Mô tả sản phẩm</a></li>
 										<li><a href="checkout.html">Thanh toán</a></li>
-										<li><a href="cart.html">Giỏ hàng</a></li>
+										<li><a href="http://localhost:8080/bookstorePTIT/shop-cart/">Giỏ hàng</a></li>
 										<li><a href="login.html">Đăng nhập</a></li>
 									</ul></li>
 								<li class="dropdown"><a href="#">Blog<i
@@ -180,132 +175,116 @@
 		<div class="container">
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
-					<li><a href="http://localhost:8080/bookstorePTIT/">Home</a></li>
-					<li class="active">Giỏ hàng</li>
+				  <li><a href="#">Home</a></li>
+				  <li class="active">Thanh toán</li>
 				</ol>
+			</div><!--/breadcrums-->
+
+			<div class="register-req">
+				<p>Vui lòng nhập thông tin của bạn để hoàn tất quá trình mua hàng.</p>
+			</div><!--/register-req-->
+
+			<div class="shopper-informations">
+				<div class="row">
+					<div class="col-sm-5">
+						<div class="logocheckout">
+							<img src="${pageContext.request.contextPath}/assets/user/images/home/checkout.jpg" alt="Logo">
+						</div>
+					</div>	
+					<div class="col-sm-3">
+						<div class="shopper-info">
+							<p>Thông tin người đặt hàng</p>
+							<form>
+								<input type="text" placeholder="Tên">
+								<input type="text" placeholder="Số điện thoại">
+								<input type="text" placeholder="Email">
+								<input type="text" placeholder="Địa chỉ">
+							</form>
+							<a class="btn btn-primary" href="">Thanh toán</a>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="order-message">
+							<p>Ghi chú</p>
+							<textarea name="message"  placeholder="Ghi chú về đơn hàng của bạn..." rows="16"></textarea>
+						</div>	
+					</div>			
+				</div>
 			</div>
+			<div class="review-payment">
+				<h2>Đánh giá & Thanh toán</h2>
+			</div>
+
 			<div class="table-responsive cart_info">
 				<table class="table table-condensed">
-					<thead>
-						<tr class="cart_menu">
-							<td class="select">Chọn</td>
-							<td class="image">Ảnh</td>
-							<td class="description">Tên sản phẩm</td>
-							<td class="price">Giá</td>
-							<td class="quantity">Số lượng</td>
-							<td class="total">Tổng</td>
-							<td></td>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach var="cart" items="${carts}" varStatus="loop">
-							<tr>
-								<td class="cart_select"><input type="checkbox"
-									name="selectCartItem" value="${booksInCart[loop.index].id}"
-									data-quantity="${cart.quantity}"
-									data-price="${booksInCart[loop.index].price}"
-									data-productID="${booksInCart[loop.index].id}"
-									data-index="${loop.index}"
-									onclick="toggleCheckbox()"></td>
-								<td class="cart_product"><a href=""> <img
-										src="${pageContext.request.contextPath}/assets/user/images/home/${booksInCart[loop.index].image}"
-										alt="Logo" style="width: 100px; height: auto;" /></a></td>
-								<td class="cart_description">
-									<h4>
-										<a href="">${booksInCart[loop.index].name}</a>
-									</h4>
-									<p>Web ID: ${booksInCart[loop.index].id}</p>
-								</td>
-								<td class="cart_price">
-									<p id="price_${loop.index}">
-										<fmt:formatNumber value="${booksInCart[loop.index].price}"
+    <thead>
+        <tr class="cart_menu">
+            <td class="image custom-image">Ảnh</td>
+            <td class="description">Tên sản phẩm</td>
+            <td class="price">Giá</td>
+            <td class="quantity">Số lượng</td>
+            <td class="total">Tổng</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        <c:forEach var="book" items="${selectedBooks}">
+            <tr>
+                <td class="cart_product checkout">
+                    <a href=""><img src="${pageContext.request.contextPath}/assets/user/images/home/${book.image}" alt="" style="width: 100px; height: auto; margin-left: 20px;"></a>
+                </td>
+                <td class="cart_description">
+                    <h4><a href="">${book.name}</a></h4>
+                    <p>Web ID: ${book.productId}</p>
+                </td>
+                <td class="cart_price">
+                    <p><fmt:formatNumber value="${book.price}"
 											type="number" groupingUsed="true" />
-										đ
-									</p>
-								</td>
-								<td class="cart_quantity">
-									<div class="cart_quantity_button">
-										<a class="cart_quantity_down"
-											onclick="decreaseQuantity(${loop.index});"> - </a> <input
-											id="quantity_${loop.index}" class="cart_quantity_input"
-											type="text" name="quantity" value="${cart.quantity}"
-											autocomplete="off" size="2"> <a
-											class="cart_quantity_up"
-											onclick="increaseQuantity(${loop.index});"> + </a>
-									</div>
-								</td>
-								<td class="cart_total">
-									<p class="cart_total_price" id="total_${loop.index}">
-										<fmt:formatNumber
-											value="${booksInCart[loop.index].price * cart.quantity}"
+										đ</p>
+                </td>
+                <td class="cart_quantity">
+                    <div class="cart_quantity_button">
+                        <input class="cart_quantity_input" type="text" name="quantity" value="${book.quantity}" autocomplete="off" size="2">
+                    </div>
+                </td>
+                <td class="cart_total">
+                    <p class="cart_total_price"><fmt:formatNumber value="${book.price*book.quantity}"
 											type="number" groupingUsed="true" />
-										đ
-									</p>
-								</td>
-								<td class="cart_delete"><a class="cart_quantity_delete"
-									href=""><i class="fa fa-times"></i></a></td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
+										đ</p>
+                </td>
+                <td class="cart_delete">
+                    <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+                </td>
+            </tr>
+            <c:set var="totalSum" value="${totalSum + (book.price * book.quantity)}"/>
+        </c:forEach>
+        <tr>
+            <td colspan="3">&nbsp;</td>
+            <td colspan="3">
+                <table class="table table-condensed total-result">
+                    <tr>
+                        <td>Tổng tiền giỏ hàng</td>
+                        <td>
+        					<fmt:formatNumber value="${totalSum}" type="number" groupingUsed="true" /> đ
+    					</td>
+                    </tr>
+                    <tr class="shipping-cost">
+                        <td>Phí giao hàng</td>
+                        <td>Miễn phí</td>
+                    </tr>
+                    <tr>
+                        <td id="totalSumMoney" style="padding-top:20px">Tổng tiền</td>
+                        <td style="padding-top:20px"><span style="font-size: 20px;"><fmt:formatNumber value="${totalSum}" type="number" groupingUsed="true" /> đ</span></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 			</div>
 		</div>
-	</section>
-
-	<!--/#cart_items-->
-
-	<section id="do_action">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="chose_area">
-						<ul class="user_option">
-							<li><input type="checkbox"> <label>Phiếu giảm giá</label></li>
-							<li><input type="checkbox"> <label>Phiếu quà tặng</label></li>
-							<li><input type="checkbox"> <label>Vận chuyển & Thuế</label></li>
-						</ul>
-						<ul class="user_info">
-							<li class="single_field"><label>Đất nước:</label> <select>
-									<option>Việt Nam</option>
-									<option>Bangladesh</option>
-									<option>UK</option>
-									<option>India</option>
-									<option>United States</option>
-									<option>Ucrane</option>
-									<option>Canada</option>
-									<option>Dubai</option>
-							</select></li>
-							<li class="single_field"><label>Khu vực:</label> <select>
-									<option>Select</option>
-									<option>Dhaka</option>
-									<option>London</option>
-									<option>Dillih</option>
-									<option>Lahore</option>
-									<option>Alaska</option>
-									<option>Canada</option>
-									<option>Dubai</option>
-							</select></li>
-							<li class="single_field zip-field"><label>Mã Code:</label>
-								<input type="text"></li>
-						</ul>
-						<a class="btn btn-default update" href="">Quay lại</a> <a
-							class="btn btn-default update" href="">Tiếp tục</a>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="total_area">
-						<div
-							style="display: flex; align-items: center; margin-top: 10px; margin-left: 15%;">
-							<strong id="totalSumMoney">Tổng tiền:</strong>
-							<p id="totalSum" class="cart_total_price">0 đ</p>
-						</div>
-						<a class="btn btn-default check_out" href="javascript:void(0);" onclick="redirectToCheckout()">Thanh toán</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!--/#do_action-->
+	</section> <!--/#cart_items-->
 
 	<footer id="footer">
 		<!--Footer-->
@@ -328,8 +307,8 @@
 								<a href="#">
 									<div class="iframe-img">
 										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe1.png"
-											alt="Logo" />
+											src="${pageContext.request.contextPath}/assets/user/images/home/iframe1.png"
+											alt="" />
 									</div>
 									<div class="overlay-icon">
 										<i class="fa fa-play-circle-o"></i>
@@ -345,8 +324,8 @@
 								<a href="#">
 									<div class="iframe-img">
 										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe2.png"
-											alt="Logo" />
+											src="${pageContext.request.contextPath}/assets/user/images/home/iframe2.png"
+											alt="" />
 									</div>
 									<div class="overlay-icon">
 										<i class="fa fa-play-circle-o"></i>
@@ -362,8 +341,8 @@
 								<a href="#">
 									<div class="iframe-img">
 										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe3.png"
-											alt="Logo" />
+											src="${pageContext.request.contextPath}/assets/user/images/home/iframe3.png"
+											alt="" />
 									</div>
 									<div class="overlay-icon">
 										<i class="fa fa-play-circle-o"></i>
@@ -379,8 +358,8 @@
 								<a href="#">
 									<div class="iframe-img">
 										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe4.png"
-											alt="Logo" />
+											src="${pageContext.request.contextPath}/assets/user/images/home/iframe4.png"
+											alt="" />
 									</div>
 									<div class="overlay-icon">
 										<i class="fa fa-play-circle-o"></i>
@@ -394,8 +373,8 @@
 					<div class="col-sm-3">
 						<div class="address">
 							<img
-								src="<%=request.getContextPath()%>/assets/user/images/home/map.png"
-								alt="Logo" />
+								src="${pageContext.request.contextPath}/assets/user/images/home/map.png"
+								alt="" />
 						</div>
 					</div>
 				</div>
@@ -499,88 +478,6 @@
 	<script
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
-	<script>
-	function decreaseQuantity(index) {
-	    var quantityInput = document.getElementById('quantity_' + index);
-	    var currentValue = parseInt(quantityInput.value);
-	    if (currentValue > 1) {
-	        quantityInput.value = currentValue - 1; 
-	        updateTotal(index); 
-	    }
-	    updateGrandTotal();
-	}
 
-	function increaseQuantity(index) {
-	    var quantityInput = document.getElementById('quantity_' + index);
-	    var currentValue = parseInt(quantityInput.value);
-	    quantityInput.value = currentValue + 1; 
-	    updateTotal(index);
-	    updateGrandTotal(); 
-	}
-
-	function updateTotal(index) {
-	    var quantityInput = document.getElementById('quantity_' + index);
-	    var price = parseFloat(document.getElementById('price_' + index).innerText.replace(/[^0-9.-]+/g, ''));
-	    var quantity = parseInt(quantityInput.value);
-	    var total = quantity * price * 1000;
-
-	    document.getElementById('total_' + index).innerText = total.toLocaleString() + ' đ';
-	    updateGrandTotal(); 
-	}
-
-	function updateGrandTotal() {
-	    var totalPrice = 0; 
-
-	    var rows = document.querySelectorAll('.cart_select');
-	    rows.forEach(function(checkbox) {
-	        var input = checkbox.querySelector('input[name="selectCartItem"]');
-	        if (input.checked) {
-	            var row = checkbox.closest('tr'); // Lấy hàng tương ứng
-	            var quantityInput = row.querySelector('.cart_quantity_input');
-	            var quantity = parseInt(quantityInput.value); 
-	            var priceCell = row.querySelector('.cart_price p');
-	            var price = parseFloat(priceCell.innerText.replace(/[^0-9.-]+/g, ''));
-	            totalPrice += quantity * price * 1000; 
-	        }
-	    });
-
-	    document.getElementById('totalSum').innerText = totalPrice.toLocaleString() + ' đ';
-	}
-
-	function toggleCheckbox() {
-	    updateGrandTotal(); 
-	}
-	
-	function redirectToCheckout() {
-	    console.log("Checkout function called.");
-
-	    const checkedProducts = document.querySelectorAll('input[name="selectCartItem"]:checked');
-
-	    if (checkedProducts.length === 0) {
-	        alert("Vui lòng chọn ít nhất một sản phẩm để thanh toán.");
-	        return;
-	    }
-
-	    let queryParams = Array.from(checkedProducts).map(checkbox => {
-	        const row = checkbox.closest('tr');
-	        const quantityInput = row.querySelector('.cart_quantity_input'); 
-	        const quantity = parseInt(quantityInput.value) || 0; 
-	        //const productId = checkbox.getAttribute('data-productID');
-	        const productId = checkbox.dataset.productid;
-	        console.log("Product ID: ", productId, " Quantity: ", quantity);
-
-
-	        // Kiểm tra nếu productId hoặc quantity là undefined
-	        if (!productId || !quantity) {
-	            console.warn("Missing productId or quantity.");
-	        }
-	        return 'productId=' + productId + '&quantity=' + quantity;
-	    });
-	    const queryString = queryParams.join('&');
-	    console.log("Query String: ", queryString);
-	    window.location.href = 'checkout?' + queryString;
-	}
-
-	</script>
 </body>
 </html>

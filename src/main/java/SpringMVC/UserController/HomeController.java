@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import Dao.CategoriesDao;
 import Dao.AuthorsDao;
 import Dao.BooksDao;
@@ -16,9 +19,10 @@ import bookstorePTIT.bean.Categories;
 import bookstorePTIT.bean.Authors;
 import bookstorePTIT.bean.Books;
 import bookstorePTIT.bean.Carts;
-
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,12 +96,52 @@ public class HomeController {
     public ResponseEntity<Map<String, String>> addToCart(@RequestBody Carts cart) {
         CartsDao cartsDao = new CartsDao();
         cart.setCustomerID(2);
-        cart.setQuantity(1);
+        Optional<Carts> existingCart = cartsDao.findByCustomerIdAndBookId(cart.getCustomerID(), cart.getBookID());
+        if (existingCart.isPresent()) {
+            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã có trong giỏ hàng!"));
+        } else {
+        	saveCart(cart);
+            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã được thêm vào giỏ hàng!"));
+        }
+    }
+    
+    private void saveCart(Carts cart) {
+        CartsDao cartsDao = new CartsDao();
+        if (cart.getQuantity() <= 0) {
+            cart.setQuantity(1);
+        }
         cartsDao.save(cart);
-        //return ResponseEntity.ok("Sản phẩm đã được thêm vào giỏ hàng!");
-        return ResponseEntity.ok(Collections.singletonMap("", "Sản phẩm đã được thêm vào giỏ hàng!"));
-
     }
 
-    
+    @GetMapping("/shop-cart/checkout")
+    public String checkout(@RequestParam("productId") List<String> productIds,
+                           @RequestParam("quantity") List<String> quantities, 
+                           Model model) {
+        List<Map<String, String>> selectedBooks = new ArrayList<>();
+        BooksDao booksDao = new BooksDao();
+
+        for (int i = 0; i < productIds.size(); i++) {
+            String productId = productIds.get(i);
+            String quantity = quantities.get(i);
+            
+            int bookId = Integer.parseInt(productId);
+            Books book = booksDao.findBookById(bookId);
+
+            if (book != null) {
+                Map<String, String> bookDetails = new HashMap<>();
+                bookDetails.put("productId", productId);
+                bookDetails.put("quantity", quantity);
+                bookDetails.put("title", book.getTitle());
+                bookDetails.put("name", book.getName());
+                bookDetails.put("image", book.getImage());
+                bookDetails.put("price", String.valueOf(book.getPrice()));
+                
+                selectedBooks.add(bookDetails);
+            }
+        }
+        model.addAttribute("selectedBooks", selectedBooks);
+        return "user/Checkout";
+    }
+
+
 }
