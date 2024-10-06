@@ -12,14 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import Dao.CategoriesDao;
+import Dao.Order_ItemsDao;
+import Dao.OrdersDao;
 import Dao.AuthorsDao;
 import Dao.BooksDao;
 import Dao.CartsDao;
 import bookstorePTIT.bean.Categories;
+import bookstorePTIT.bean.Orders;
 import bookstorePTIT.bean.Authors;
 import bookstorePTIT.bean.Books;
 import bookstorePTIT.bean.Carts;
+import bookstorePTIT.bean.Order_Items;
 import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -147,5 +153,23 @@ public class HomeController {
 	public String checkout() {
 		return "user/Thankyou";
 	}
+    
+    @PostMapping("/create")
+    public ResponseEntity<String> createOrder(@RequestBody Orders order) {
+    	OrdersDao ordersDao = new OrdersDao();
+        order.setCustomerID(2);
+        order.setStatus(1);
+        order.setOrderDate(LocalDateTime.now()); 
+        ordersDao.createOrder(
+                order.getName(),
+                order.getPhone(),
+                order.getEmail(),
+                order.getAddress(),
+                order.getNote(),
+                order.getTotal()
+        );
+
+        return ResponseEntity.ok("Đơn hàng đã được tạo thành công!");
+    }
 
 }

@@ -15,6 +15,8 @@ public class HibernateUtils {
             configuration.addAnnotatedClass(bookstorePTIT.bean.Authors.class);
             configuration.addAnnotatedClass(bookstorePTIT.bean.Books.class);
             configuration.addAnnotatedClass(bookstorePTIT.bean.Carts.class);
+            configuration.addAnnotatedClass(bookstorePTIT.bean.Orders.class);
+            configuration.addAnnotatedClass(bookstorePTIT.bean.Order_Items.class);
             StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
             builder.applySettings(configuration.getProperties());
             StandardServiceRegistry serviceRegistry = builder.build();
