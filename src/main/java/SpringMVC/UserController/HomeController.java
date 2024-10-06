@@ -18,6 +18,7 @@ import Dao.AuthorsDao;
 import Dao.BooksDao;
 import Dao.CartsDao;
 import bookstorePTIT.bean.Categories;
+import bookstorePTIT.bean.OrderRequest;
 import bookstorePTIT.bean.Orders;
 import bookstorePTIT.bean.Authors;
 import bookstorePTIT.bean.Books;
@@ -155,21 +156,31 @@ public class HomeController {
 	}
     
     @PostMapping("/create")
-    public ResponseEntity<String> createOrder(@RequestBody Orders order) {
-    	OrdersDao ordersDao = new OrdersDao();
+    public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
+        OrdersDao ordersDao = new OrdersDao();
+        Order_ItemsDao orderItemsDao = new Order_ItemsDao();
+        Orders order = orderRequest.getOrder();
         order.setCustomerID(2);
         order.setStatus(1);
-        order.setOrderDate(LocalDateTime.now()); 
-        ordersDao.createOrder(
-                order.getName(),
-                order.getPhone(),
-                order.getEmail(),
-                order.getAddress(),
-                order.getNote(),
-                order.getTotal()
+        order.setOrderDate(LocalDateTime.now());
+        int orderId = ordersDao.createOrder(
+            order.getName(),
+            order.getPhone(),
+            order.getEmail(),
+            order.getAddress(),
+            order.getNote(),
+            order.getTotal()
         );
+
+        for (Order_Items item : orderRequest.getOrderItems()) {
+            item.setOrderID(order.getId());
+            item.setOrderID(orderId);
+            item.setPrice(item.getPrice() * 1000);
+            orderItemsDao.createOrderItems(item);
+        }
 
         return ResponseEntity.ok("Đơn hàng đã được tạo thành công!");
     }
+
 
 }

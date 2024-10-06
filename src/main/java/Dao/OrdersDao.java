@@ -12,41 +12,11 @@ import java.time.LocalDateTime;
 @Repository
 public class OrdersDao {  
     private static SessionFactory factory = HibernateUtils.getSessionFactory();
-    
-    /*public void createOrder(String name, String phone, String email, String address, String note, BigDecimal total) {
-        Session session = factory.openSession();
-        Transaction transaction = null;
 
-        try {
-            transaction = session.beginTransaction();
-
-            Orders order = new Orders();
-            order.setCustomerID(2);
-            order.setName(name);
-            order.setPhone(phone);
-            order.setEmail(email);
-            order.setAddress(address);
-            order.setNote(note);
-            order.setOrderDate(LocalDateTime.now());
-            order.setTotal(total);
-            order.setStatus(1); 
-
-            session.save(order); 
-            transaction.commit(); 
-
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close(); 
-        }
-    }*/
     public int createOrder(String name, String phone, String email, String address, String note, BigDecimal total) {
         Session session = factory.openSession();
         Transaction transaction = null;
-        int orderId = 0; // Khởi tạo ID đơn hàng
+        int orderId = 0; 
 
         try {
             transaction = session.beginTransaction();
@@ -62,7 +32,7 @@ public class OrdersDao {
             order.setTotal(total);
             order.setStatus(1);
 
-            orderId = (Integer) session.save(order); // Lưu đơn hàng và lấy ID
+            orderId = (Integer) session.save(order);
             transaction.commit(); 
 
         } catch (Exception e) {
@@ -74,7 +44,7 @@ public class OrdersDao {
             session.close(); 
         }
 
-        return orderId; // Trả về ID của đơn hàng
+        return orderId;
     }
 
     

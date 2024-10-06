@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "Order_Items")
@@ -26,10 +25,10 @@ public class Order_Items {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(name = "price", nullable = false)
+    private int price;
 
-    public Order_Items(int id, int orderID, int bookID, int quantity, BigDecimal price) {
+    public Order_Items(int id, int orderID, int bookID, int quantity, int price) {
         this.id = id;
         this.orderID = orderID;
         this.bookID = bookID;
@@ -72,11 +71,11 @@ public class Order_Items {
         this.quantity = quantity;
     }
 
-    public BigDecimal getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

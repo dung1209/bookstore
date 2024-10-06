@@ -11,30 +11,14 @@ import java.math.BigDecimal;
 @Repository
 public class Order_ItemsDao {  
     private static SessionFactory factory = HibernateUtils.getSessionFactory();
-
-    public void addOrderItem(int orderId, int bookId, int quantity, BigDecimal price) {
-        Session session = factory.openSession();
-        Transaction transaction = null;
-
-        try {
-            transaction = session.beginTransaction();
-
-            Order_Items orderItem = new Order_Items();
-            orderItem.setOrderID(orderId);
-            orderItem.setBookID(bookId);
-            orderItem.setQuantity(quantity);
-            orderItem.setPrice(price);
-
+    
+    public void createOrderItems(Order_Items orderItem) {
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
             session.save(orderItem); 
-            transaction.commit(); 
-
+            transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             e.printStackTrace();
-        } finally {
-            session.close(); 
         }
     }
 }
