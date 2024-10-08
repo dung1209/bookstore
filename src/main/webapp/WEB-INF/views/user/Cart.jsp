@@ -522,7 +522,7 @@
 	    var quantityInput = document.getElementById('quantity_' + index);
 	    var price = parseFloat(document.getElementById('price_' + index).innerText.replace(/[^0-9.-]+/g, ''));
 	    var quantity = parseInt(quantityInput.value);
-	    var total = quantity * price * 1000;
+	    var total = quantity * price ;
 
 	    document.getElementById('total_' + index).innerText = total.toLocaleString() + ' đ';
 	    updateGrandTotal(); 

@@ -26,6 +26,15 @@ public class HibernateUtils {
     }
 
     public static SessionFactory getSessionFactory() {
+        //return sessionFactory;
+    	if (sessionFactory == null) {
+            try {
+                Configuration configuration = new Configuration().configure();
+                sessionFactory = configuration.buildSessionFactory();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return sessionFactory;
     }
 }
