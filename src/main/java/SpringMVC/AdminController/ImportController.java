@@ -39,7 +39,7 @@ public class ImportController {
 	@RequestMapping(value = "/admin/import-manage/add-new-import", method = RequestMethod.POST)
 	public String addNewImport(@ModelAttribute("newimport") Imports newImport, @RequestParam("bookID") int bookID) {
 		Books book = new Books();
-		book.setId(bookID);
+		book.setBookID(bookID);
 		
 		newImport.setReceived_at(new Date());
 		newImport.setBook(book);

@@ -61,8 +61,8 @@ public class Books {
     @OneToMany(mappedBy = "book")
     private Set<Imports> books = new HashSet<>();
 
-    public Books(int id, String name, Authors author, Categories category, Publishers publisher,String title, double price, String image, int stock, int sold,int publicationDate, Date createdAt) {
-        this.bookID = id;
+    public Books(int bookID, String name, Authors author, Categories category, Publishers publisher,String title, double price, String image, int stock, int sold,int publicationDate, Date createdAt) {
+        this.bookID = bookID;
         this.name = name;
         this.author = author;
         this.category = category;
@@ -85,8 +85,8 @@ public class Books {
         return bookID;
     }
 
-    public void setId(int id) {
-        this.bookID = id;
+    public void setBookID(int bookID) {
+        this.bookID = bookID;
     }
 
     public String getName() {
@@ -180,7 +180,7 @@ public class Books {
     @Override
     public String toString() {
         return "Books{" +
-                "id=" + bookID +
+                "bookID=" + bookID +
                 ", name='" + name + '\'' +
                 ", author=" + author +
                 ", category=" + category +

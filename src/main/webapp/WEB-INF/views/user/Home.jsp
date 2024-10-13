@@ -312,14 +312,14 @@
 						<h2 class="title text-center">SẢN PHẨM</h2>
 						<c:forEach var="book" items="${books}">
 							<div class="col-sm-4">
-							<a href="${pageContext.request.contextPath}/book-detail/${book.id}">
+							<a href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
 								<div class="product-image-wrapper">
 									<div class="single-products">
 										<div class="productinfo text-center">
 											<img src="assets/user/images/home/${book.image}" alt="" />
 											<h2><fmt:formatNumber value="${book.price}" type="number" groupingUsed="true" />  đ</h2>
 											<p>${book.name}</p>
-											<a href="#" class="btn btn-default add-to-cart" onclick="confirmAddToCart(event, ${book.id})"> 
+											<a href="#" class="btn btn-default add-to-cart" onclick="confirmAddToCart(event, ${book.bookID})"> 
     <i class="fa fa-shopping-cart"></i> Thêm vào giỏ
 </a>
 

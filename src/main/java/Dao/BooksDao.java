@@ -127,7 +127,7 @@ public class BooksDao {
             session = factory.openSession();
             transaction = session.beginTransaction();
 
-            String hql = "from Books where id = :bookId";
+            String hql = "from Books where bookID = :bookId";
             Query<Books> query = session.createQuery(hql, Books.class);
             query.setParameter("bookId", bookId);
             book = query.uniqueResult();

@@ -201,10 +201,10 @@
 						<c:forEach var="cart" items="${carts}" varStatus="loop">
 							<tr>
 								<td class="cart_select"><input type="checkbox"
-									name="selectCartItem" value="${booksInCart[loop.index].id}"
+									name="selectCartItem" value="${booksInCart[loop.index].bookID}"
 									data-quantity="${cart.quantity}"
 									data-price="${booksInCart[loop.index].price}"
-									data-productID="${booksInCart[loop.index].id}"
+									data-productID="${booksInCart[loop.index].bookID}"
 									data-index="${loop.index}"
 									onclick="toggleCheckbox()"></td>
 								<td class="cart_product"><a href=""> <img
@@ -214,7 +214,7 @@
 									<h4>
 										<a href="">${booksInCart[loop.index].name}</a>
 									</h4>
-									<p>Web ID: ${booksInCart[loop.index].id}</p>
+									<p>Web ID: ${booksInCart[loop.index].bookID}</p>
 								</td>
 								<td class="cart_price">
 									<p id="price_${loop.index}">
@@ -522,7 +522,7 @@
 	    var quantityInput = document.getElementById('quantity_' + index);
 	    var price = parseFloat(document.getElementById('price_' + index).innerText.replace(/[^0-9.-]+/g, ''));
 	    var quantity = parseInt(quantityInput.value);
-	    var total = quantity * price ;
+	    var total = quantity * price * 1000;
 
 	    document.getElementById('total_' + index).innerText = total.toLocaleString() + ' đ';
 	    updateGrandTotal(); 

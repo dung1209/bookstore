@@ -113,7 +113,7 @@ public class BookController {
 		Publishers publisher = new Publishers();
 		publisher.setPublisherID(publisherID);
 		
-		newBook.setId(id);
+		newBook.setBookID(id);
 		newBook.setName(name);
 		newBook.setAuthor(author);
 		newBook.setCategory(cate);

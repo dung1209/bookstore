@@ -282,7 +282,7 @@
 								<img src="images/product-details/new.jpg" class="newarrival"
 									alt="" />
 								<h2>${book.name}</h2>
-								<p>Web ID: ${book.id}</p>
+								<p>Web ID: ${book.bookID}</p>
 								<img src="images/product-details/rating.png" alt="" /> <span>
 									<span><fmt:formatNumber value="${book.price}"
 											type="number" groupingUsed="true" /> đ</span> 
