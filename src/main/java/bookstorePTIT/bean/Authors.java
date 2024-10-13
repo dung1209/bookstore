@@ -5,8 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="Authors")
@@ -15,19 +18,23 @@ public class Authors {
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int authorID;
 
     @Column(name="name", nullable=false, length=255)
     private String name;
 
-    @Column(name="bio", nullable=true, length=1000)
+    @Column(name="bio", length=1000)
     private String bio;
 
     @Column(name="birthdate", nullable=true)
     private Date birthdate;
+    
+    @OneToMany(mappedBy = "author")
+    private Set<Books> books = new HashSet<>();
+    
 
     public Authors(int id, String name, String bio, Date birthdate) {
-        this.id = id;
+        this.authorID = id;
         this.name = name;
         this.bio = bio;
         this.birthdate = birthdate;
@@ -37,11 +44,11 @@ public class Authors {
     }
 
     public int getId() {
-        return id;
+        return authorID;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.authorID = id;
     }
 
     public String getName() {
@@ -70,6 +77,6 @@ public class Authors {
 
     @Override
     public String toString() {
-        return "Authors{id=" + id + ", name='" + name + "', bio='" + bio + "', birthdate=" + birthdate + "}";
+        return "Authors{id=" + authorID + ", name='" + name + "', bio='" + bio + "', birthdate=" + birthdate + "}";
     }
 }

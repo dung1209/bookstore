@@ -5,26 +5,37 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Books")
 public class Books {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "bookID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int bookID;
 
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "authorID", nullable = false)
-    private int authorID;
+    @ManyToOne
+    @JoinColumn(name = "authorID")
+    private Authors author;
 
-    @Column(name = "categoryID", nullable = false)
-    private int categoryID;
+    @ManyToOne
+    @JoinColumn(name = "categoryID")
+    private Categories category;
+    
+    @ManyToOne
+    @JoinColumn(name = "publisherID")
+    private Publishers publisher;
 
     @Column(name = "title", nullable = false, length = 255)
     private String title;
@@ -41,31 +52,41 @@ public class Books {
     @Column(name = "sold", nullable = false)
     private int sold;
 
+    @Column(name = "publication_date", nullable = false)
+    private int publicationDate;
+    
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
+    
+    @OneToMany(mappedBy = "book")
+    private Set<Imports> books = new HashSet<>();
 
-    public Books(int id, String name, int authorID, int categoryID, String title, double price, String image, int stock, int sold, Date createdAt) {
-        this.id = id;
+    public Books(int id, String name, Authors author, Categories category, Publishers publisher,String title, double price, String image, int stock, int sold,int publicationDate, Date createdAt) {
+        this.bookID = id;
         this.name = name;
-        this.authorID = authorID;
-        this.categoryID = categoryID;
+        this.author = author;
+        this.category = category;
+        this.publisher = publisher;
         this.title = title;
         this.price = price;
         this.image = image;
         this.stock = stock;
         this.sold = sold;
+        this.publicationDate = publicationDate;
         this.createdAt = createdAt;
     }
 
-    public Books() {
+    
+
+	public Books() {
     }
 
-    public int getId() {
-        return id;
+    public int getbookID() {
+        return bookID;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.bookID = id;
     }
 
     public String getName() {
@@ -76,23 +97,31 @@ public class Books {
         this.name = name;
     }
 
-    public int getAuthorID() {
-        return authorID;
+    public Authors getAuthor() {
+        return author;
     }
 
-    public void setAuthorID(int authorID) {
-        this.authorID = authorID;
+    public void setAuthor(Authors author) {
+        this.author = author;
     }
 
-    public int getCategoryID() {
-        return categoryID;
+    public Categories getCategory() {
+        return category;
     }
 
-    public void setCategoryID(int categoryID) {
-        this.categoryID = categoryID;
+    public void setCategory(Categories category) {
+    	this.category = category;
     }
 
-    public String getTitle() {
+    public Publishers getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(Publishers publisher) {
+		this.publisher = publisher;
+	}
+
+	public String getTitle() {
         return title;
     }
 
@@ -131,6 +160,14 @@ public class Books {
     public void setSold(int sold) {
         this.sold = sold;
     }
+    
+    public int getPublicationDate() {
+		return publicationDate;
+	}
+
+	public void setPublicationDate(int publicationDate) {
+		this.publicationDate = publicationDate;
+	}
 
     public Date getCreatedAt() {
         return createdAt;
@@ -143,10 +180,10 @@ public class Books {
     @Override
     public String toString() {
         return "Books{" +
-                "id=" + id +
+                "id=" + bookID +
                 ", name='" + name + '\'' +
-                ", authorID=" + authorID +
-                ", categoryID=" + categoryID +
+                ", author=" + author +
+                ", category=" + category +
                 ", title='" + title + '\'' +
                 ", price=" + price +
                 ", image='" + image + '\'' +

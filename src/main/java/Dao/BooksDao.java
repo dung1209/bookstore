@@ -13,10 +13,13 @@ import HibernateUtils.HibernateUtils;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @Repository
 public class BooksDao {  
     private static SessionFactory factory = HibernateUtils.getSessionFactory();
-
+    
     public List<Books> getBooks() {
         List<Books> booksList = null;
         Session session = null;
@@ -31,7 +34,6 @@ public class BooksDao {
             String hql = "from Books";
             Query<Books> query = session.createQuery(hql, Books.class);
             booksList = query.getResultList();
-
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -67,6 +69,53 @@ public class BooksDao {
         }
     }
     
+    public void update(Books book) {
+    	Session session = null;
+        Transaction transaction = null;
+
+        try {
+            session = HibernateUtils.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            session.update(book);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close(); 
+            }
+        }
+    }
+    
+    public void deleteById(int id) {
+    	Session session = null;
+        Transaction transaction = null;
+    	
+        try {
+        	session = HibernateUtils.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            
+            Books book = session.get(Books.class, id);
+            
+            if (book != null) {
+                session.delete(book);
+                System.out.println("Sách đã được xóa thành công!");
+            }
+            
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+    
     public Books findBookById(int bookId) {
         Books book = null;
         Session session = null;
@@ -97,8 +146,8 @@ public class BooksDao {
         return book;
     }
     
-    public Authors findAuthorById(int authorId) {
-        Authors author = null;
+    public List<Books> findBooksByName(String name) {
+    	List<Books> books = null;
         Session session = null;
         Transaction transaction = null;
         try {
@@ -108,69 +157,10 @@ public class BooksDao {
             session = factory.openSession();
             transaction = session.beginTransaction();
 
-            String hql = "from Authors where id = :authorId";
-            Query<Authors> query = session.createQuery(hql, Authors.class);
-            query.setParameter("authorId", authorId);
-            author = query.uniqueResult();
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-        return author;
-    }
-    
-    public Categories findCategoryById(int categoryId) {
-        Categories category = null;
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            if (factory == null) {
-                factory = HibernateUtils.getSessionFactory();
-            }
-            session = factory.openSession();
-            transaction = session.beginTransaction();
-
-            String hql = "from Categories where id = :categoryId";
-            Query<Categories> query = session.createQuery(hql, Categories.class);
-            query.setParameter("categoryId", categoryId);
-            category = query.uniqueResult();
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-        return category;
-    }
-    public Books findBookByName(String name) {
-    	Books book = null;
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            if (factory == null) {
-                factory = HibernateUtils.getSessionFactory();
-            }
-            session = factory.openSession();
-            transaction = session.beginTransaction();
-
-            String hql = "from Books where name = :name";
+            String hql = "from Books where name LIKE :name";
             Query<Books> query = session.createQuery(hql, Books.class);
-            query.setParameter("name", name);
-            book = query.uniqueResult();
+            query.setParameter("name", "%" + name + "%");
+            books = query.list();
             
             transaction.commit();
         } catch (Exception e) {
@@ -183,11 +173,11 @@ public class BooksDao {
                 session.close();
             }
         }
-        return book;
+        return books;
     }
     
-    public Books findBookByAuthor(String author) {
-    	Books book = null;
+    public List<Books> findBooksByAuthor(String author) {
+    	List<Books> books = null;
         Session session = null;
         Transaction transaction = null;
         try {
@@ -197,10 +187,10 @@ public class BooksDao {
             session = factory.openSession();
             transaction = session.beginTransaction();
 
-            String hql = "from Books where authorID.name = :author";
+            String hql = "from Books where author.name LIKE :author";
             Query<Books> query = session.createQuery(hql, Books.class);
-            query.setParameter("author", author);
-            book = query.uniqueResult();
+            query.setParameter("author", "%" + author + "%");
+            books = query.list();
             
             transaction.commit();
         } catch (Exception e) {
@@ -213,11 +203,11 @@ public class BooksDao {
                 session.close();
             }
         }
-        return book;
+        return books;
     }
     
-    public Books findBookByCategory(String category) {
-    	Books book = null;
+    public List<Books> findBooksByCategory(String category) {
+    	List<Books> books = null;
         Session session = null;
         Transaction transaction = null;
         try {
@@ -227,10 +217,10 @@ public class BooksDao {
             session = factory.openSession();
             transaction = session.beginTransaction();
 
-            String hql = "from Books where categoryID.name = :category";
+            String hql = "from Books where category.name LIKE :category";
             Query<Books> query = session.createQuery(hql, Books.class);
-            query.setParameter("category", category);
-            book = query.uniqueResult();
+            query.setParameter("category", "%" + category + "%");
+            books = query.list();
             
             transaction.commit();
         } catch (Exception e) {
@@ -243,6 +233,36 @@ public class BooksDao {
                 session.close();
             }
         }
-        return book;
+        return books;
+    }
+    
+    public List<Books> findBooksByPublisher(String publisher) {
+    	List<Books> books = null;
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            if (factory == null) {
+                factory = HibernateUtils.getSessionFactory();
+            }
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+
+            String hql = "from Books where publisher.name LIKE :publisher";
+            Query<Books> query = session.createQuery(hql, Books.class);
+            query.setParameter("publisher", "%" + publisher + "%");
+            books = query.list();
+            
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return books;
     }
 }

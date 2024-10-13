@@ -12,14 +12,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import Dao.CategoriesDao;
+import Dao.Order_ItemsDao;
+import Dao.OrdersDao;
 import Dao.AuthorsDao;
 import Dao.BooksDao;
 import Dao.CartsDao;
 import bookstorePTIT.bean.Categories;
+import bookstorePTIT.bean.OrderRequest;
+import bookstorePTIT.bean.Orders;
 import bookstorePTIT.bean.Authors;
 import bookstorePTIT.bean.Books;
 import bookstorePTIT.bean.Carts;
+import bookstorePTIT.bean.Order_Items;
 import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,10 +64,10 @@ public class HomeController {
         String categoryName = "Không rõ";
 
         if (book != null) {
-            Authors author = booksDao.findAuthorById(book.getAuthorID());
+            Authors author = authorsDao.findAuthorById(book.getAuthor().getId());
             authorName = (author != null) ? author.getName() : "Không rõ";
-            Categories category = booksDao.findCategoryById(book.getCategoryID());
-            categoryName = (category != null) ? category.getName() : "Không rõ";
+            //Categories category = booksDao.findCategoryById(book.getCategoryID());
+            //categoryName = (category != null) ? category.getName() : "Không rõ";
         }
         
         model.addAttribute("categories", categories);
@@ -147,5 +154,33 @@ public class HomeController {
 	public String checkout() {
 		return "user/Thankyou";
 	}
+    
+    @PostMapping("/create")
+    public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
+        OrdersDao ordersDao = new OrdersDao();
+        Order_ItemsDao orderItemsDao = new Order_ItemsDao();
+        Orders order = orderRequest.getOrder();
+        order.setCustomerID(2);
+        order.setStatus(1);
+        order.setOrderDate(LocalDateTime.now());
+        int orderId = ordersDao.createOrder(
+            order.getName(),
+            order.getPhone(),
+            order.getEmail(),
+            order.getAddress(),
+            order.getNote(),
+            order.getTotal()
+        );
+
+        for (Order_Items item : orderRequest.getOrderItems()) {
+            item.setOrderID(order.getId());
+            item.setOrderID(orderId);
+            item.setPrice(item.getPrice() * 1000);
+            orderItemsDao.createOrderItems(item);
+        }
+
+        return ResponseEntity.ok("Đơn hàng đã được tạo thành công!");
+    }
+
 
 }

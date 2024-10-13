@@ -1,0 +1,153 @@
+/* Reset margin and padding */
+* {
+    margin: 0;
+    padding: 0; 
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background-color: #343a40;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sidebar ul.sidebar-menu {
+	padding: 0px;
+}
+
+.sidebar-title {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.sidebar-menu {
+    list-style: none;
+    width: 100%;
+}
+
+.sidebar-menu li {
+    margin: 10px 0;
+}
+
+.sidebar-menu li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border-radius: 25px;
+    white-space: nowrap; 
+    width: 100%;
+    transition: background-color 0.3s ease, font-weight 0.3s ease;
+}
+
+.sidebar-menu li a i {
+    margin-right: 10px;
+}
+
+.sidebar-menu li a:hover {
+    background-color: #007bff;
+    font-weight: bold;
+    color: #fff;
+}
+
+.sidebar-menu li a.active {
+    background-color: #007bff;
+    font-weight: bold;
+    color: #fff;
+}
+
+
+
+/* Main content styles */
+.main-content {
+    margin-left: 280px; /* Đẩy nội dung sang phải để không bị sidebar che mất */
+    padding: 20px;
+    width: calc(100% - 280px);
+}
+
+.dashboard h2 {
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 22%;
+    text-align: center;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-icon {
+    font-size: 3rem;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    margin-bottom: 10px;
+    color: #343a40;
+}
+
+.card p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Footer styles */
+.footer {
+    background-color: #343a40;
+    padding: 15px 0;
+    text-align: center;
+    color: #fff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+td.title-column {
+    max-width: 50px; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+td.name-col {
+    max-width: 150px; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+} 

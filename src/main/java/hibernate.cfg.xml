@@ -27,7 +27,16 @@
 		<property name="show_sql">true</property>
 
 		<!-- List mapping annotation classes -->
-		<mapping class="bookstorePTIT.bean" />
+		<!--  <mapping class="bookstorePTIT.bean" />-->
+		<mapping class="bookstorePTIT.bean.Books" />
+		<mapping class="bookstorePTIT.bean.Categories" />
+		<mapping class="bookstorePTIT.bean.Authors" />
+		<mapping class="bookstorePTIT.bean.Publishers" />
+		<mapping class="bookstorePTIT.bean.Carts" />
+		<mapping class="bookstorePTIT.bean.Orders" />
+		<mapping class="bookstorePTIT.bean.Order_Items" />
+		<mapping class="bookstorePTIT.bean.OrderRequest" />
+		<mapping class="bookstorePTIT.bean.Imports" />
 	</session-factory>
 
 </hibernate-configuration>
