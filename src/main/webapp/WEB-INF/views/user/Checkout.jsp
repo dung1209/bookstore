@@ -43,6 +43,21 @@
 </head>
 <body>
 	<div id="toast"></div>
+	<div id="confirmModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title">Xác nhận đơn hàng</h2>
+				<span class="close" id="modalClose">&times;</span>
+			</div>
+			<div class="modal-body">
+				<p class="title-question">Bạn có muốn xác nhận đơn hàng không?</p>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmYes" class="btn btn-yes">Có</button>
+				<button id="confirmNo" class="btn btn-no">Không</button>
+			</div>
+		</div>
+	</div>
 	<div class="header_top">
 		<!--header_top-->
 		<div class="container">
@@ -503,7 +518,7 @@
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
 	<script>
-    document.getElementById('submitOrder').addEventListener('click', function(event) {
+    /*document.getElementById('submitOrder').addEventListener('click', function(event) {
         event.preventDefault();
 
         const name = document.querySelector('input[placeholder="Tên"]').value;
@@ -605,7 +620,139 @@
         	    console.error('Error:', error);
         	});
         }
+    });*/
+    document.getElementById('submitOrder').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        const name = document.querySelector('input[placeholder="Tên"]').value;
+        const phone = document.querySelector('input[placeholder="Số điện thoại"]').value;
+        const email = document.querySelector('input[placeholder="Email"]').value;
+        const address = document.querySelector('input[placeholder="Địa chỉ"]').value;
+        const note = document.querySelector('textarea[name="message"]').value;
+
+        let isValid = true;
+
+        // Kiểm tra các trường
+        if (!name.trim()) {
+            toast({
+                title: "Chú ý!",
+                message: "Vui lòng điền đầy đủ họ tên.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+        if (!phone.trim()) {
+            toast({
+                title: "Chú ý!",
+                message: "Vui lòng điền đầy đủ số điện thoại.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+        if (!email.trim()) {
+            toast({
+                title: "Chú ý!",
+                message: "Vui lòng điền đầy đủ email.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+        if (!address.trim()) {
+            toast({
+                title: "Chú ý!",
+                message: "Vui lòng điền đầy đủ địa chỉ.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+
+        // Nếu các trường hợp hợp lệ, hiển thị modal
+        if (isValid) {
+            const confirmModal = document.getElementById('confirmModal');
+            confirmModal.style.display = "block";
+
+            // Nếu nhấn nút "Có"
+            document.getElementById('confirmYes').onclick = function() {
+                confirmModal.style.display = "none"; // Ẩn modal
+                // Thực hiện hành động đặt hàng
+                const total = Array.from(document.querySelectorAll('.cart_total_price'))
+                    .reduce((acc, el) => acc + parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim()), 0) * 1000;
+
+                const orderItems = Array.from(document.querySelectorAll('.cart_total_price')).map((el) => {
+                    const productRow = el.closest('tr');
+                    const productName = productRow.querySelector('.cart_description a').textContent;
+                    const productPrice = parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim());
+                    const quantity = parseInt(productRow.querySelector('.cart_quantity_input').value);
+                    const bookIdText = productRow.querySelector('.cart_description p').textContent;
+                    const bookId = bookIdText.split(': ')[1] ? bookIdText.split(': ')[1].trim() : null;
+
+                    return {
+                        bookID: bookId,
+                        quantity: quantity,
+                        price: productPrice
+                    };
+                }).filter(item => item !== null);
+
+                const order = {
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    address: address,
+                    note: note,
+                    total: total
+                };
+
+                fetch('/bookstorePTIT/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ order: order, orderItems: orderItems })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text(); 
+                    }
+                    throw new Error('Có lỗi xảy ra!');
+                })
+                .then(data => {
+                    toast({
+                        title: "Thành công!",
+                        message: "Đơn hàng của bạn đã được đặt thành công.",
+                        type: "success",
+                        duration: 1000
+                    });
+                    window.location.href = "http://localhost:8080/bookstorePTIT/thankyou";
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            };
+
+            // Nếu nhấn nút "Không"
+            document.getElementById('confirmNo').onclick = function() {
+                confirmModal.style.display = "none"; // Ẩn modal
+            };
+        }
     });
+
+    // Đóng modal khi nhấn vào nút đóng
+    document.getElementById('modalClose').onclick = function() {
+        document.getElementById('confirmModal').style.display = "none";
+    };
+
+    // Đóng modal khi nhấn ra ngoài modal
+    window.onclick = function(event) {
+        const confirmModal = document.getElementById('confirmModal');
+        if (event.target === confirmModal) {
+            confirmModal.style.display = "none";
+        }
+    };
+
     
     function toast({ title = "", message = "", type = "info", duration = 3000 }) {
 		const main = document.getElementById("toast");
