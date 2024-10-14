@@ -115,19 +115,6 @@ public class HomeController {
 		return "user/Cart";
 	}
     
-    /*@PostMapping("/cart/add")
-    public ResponseEntity<Map<String, String>> addToCart(@RequestBody Carts cart) {
-        CartsDao cartsDao = new CartsDao();
-        cart.setCustomerID(2);
-        Optional<Carts> existingCart = cartsDao.findByCustomerIdAndBookId(cart.getCustomerID(), cart.getBookID());
-        if (existingCart.isPresent()) {
-            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã có trong giỏ hàng!"));
-        } else {
-        	saveCart(cart);
-            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã được thêm vào giỏ hàng!"));
-        }
-    }*/
-    
     @PostMapping("/cart/add")
     public ResponseEntity<Map<String, Integer>> addToCart(@RequestBody Carts cart) {
         CartsDao cartsDao = new CartsDao();
@@ -140,7 +127,6 @@ public class HomeController {
             return ResponseEntity.ok(Collections.singletonMap("status", 1));
         }
     }
-
 
     private void saveCart(Carts cart) {
         CartsDao cartsDao = new CartsDao();
@@ -188,6 +174,7 @@ public class HomeController {
     @PostMapping("/create")
     public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
         OrdersDao ordersDao = new OrdersDao();
+        CartsDao cartsDao = new CartsDao();
         Order_ItemsDao orderItemsDao = new Order_ItemsDao();
         Orders order = orderRequest.getOrder();
         order.setCustomerID(2);
@@ -207,6 +194,7 @@ public class HomeController {
             item.setOrderID(orderId);
             item.setPrice(item.getPrice() * 1000);
             orderItemsDao.createOrderItems(item);
+            cartsDao.deleteFromCart(2, item.getBookID());
         }
 
         return ResponseEntity.ok("Đơn hàng đã được tạo thành công!");
