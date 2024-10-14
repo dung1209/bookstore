@@ -2636,7 +2636,7 @@ h2.title {
 .quantity-controls {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Hoặc 'center' để căn giữa */
+    justify-content: flex-start; 
 }
 
 .quantity-controls button {
@@ -2714,7 +2714,7 @@ h2.title {
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.08);
   transition: all linear 0.3s;
   height: 80px;
-  color: #ff623d;
+  color: #56c0ee;
 }
 
 @keyframes slideInLeft {
@@ -2805,5 +2805,9 @@ h2.title {
 
 .fa-exclamation-circle:before {
     color: #ff623d;
+}
+
+.fa-check-circle:before {
+    color: #47d864;
 }
 

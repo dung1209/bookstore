@@ -503,66 +503,6 @@
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
 	<script>
-    /*
-    document.getElementById('submitOrder').addEventListener('click', function(event) {
-        event.preventDefault();
-
-        const name = document.querySelector('input[placeholder="Tên"]').value;
-        const phone = document.querySelector('input[placeholder="Số điện thoại"]').value;
-        const email = document.querySelector('input[placeholder="Email"]').value;
-        const address = document.querySelector('input[placeholder="Địa chỉ"]').value;
-        const note = document.querySelector('textarea[name="message"]').value;
-
-        const total = Array.from(document.querySelectorAll('.cart_total_price'))
-            .reduce((acc, el) => acc + parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim()), 0) * 1000;
-
-        const orderItems = Array.from(document.querySelectorAll('.cart_total_price')).map((el) => {
-            const productRow = el.closest('tr');
-            const productName = productRow.querySelector('.cart_description a').textContent;
-            const productPrice = parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim());
-            const quantity = parseInt(productRow.querySelector('.cart_quantity_input').value);
-            const bookIdText = productRow.querySelector('.cart_description p').textContent;
-            const bookId = bookIdText.split(': ')[1] ? bookIdText.split(': ')[1].trim() : null;
-
-            return {
-            	bookID: bookId,
-                quantity: quantity,
-                price: productPrice
-            };
-        }).filter(item => item !== null);
-
-        const order = {
-            name: name,
-            phone: phone,
-            email: email,
-            address: address,
-            note: note,
-            total: total
-        };
-
-        fetch('/bookstorePTIT/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ order: order, orderItems: orderItems })
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text(); 
-            }
-            throw new Error('Có lỗi xảy ra!');
-        })
-        .then(data => {
-            alert(data); 
-            window.location.href = "http://localhost:8080/bookstorePTIT/thankyou";
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
-    */
-    /************************************************************************************************/
     document.getElementById('submitOrder').addEventListener('click', function(event) {
         event.preventDefault();
 
@@ -609,7 +549,7 @@
         	});
         	isValid = false;
         }
-	
+		
         if (isValid) {
         	const total = Array.from(document.querySelectorAll('.cart_total_price'))
             	.reduce((acc, el) => acc + parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim()), 0) * 1000;
@@ -653,6 +593,12 @@
         	})
         	.then(data => {
             	alert(data); 
+            	toast({
+                	title: "Thành công!",
+                	message: "Đơn hàng của bạn đã được đặt thành công.",
+                	type: "success",
+                	duration: 1000
+            	});
             	window.location.href = "http://localhost:8080/bookstorePTIT/thankyou";
         	})
         	.catch(error => {
@@ -662,16 +608,14 @@
     });
     
     function toast({ title = "", message = "", type = "info", duration = 3000 }) {
-    	  const main = document.getElementById("toast");
-    	  if (main) {
-    	    const toast = document.createElement("div");
-			console.log("message:", message);
-    	    // Auto remove toast
+		const main = document.getElementById("toast");
+		if (main) {
+			const toast = document.createElement("div");
+			
     	    const autoRemoveId = setTimeout(function () {
     	      main.removeChild(toast);
     	    }, duration + 1000);
 
-    	    // Remove toast when clicked
     	    toast.onclick = function (e) {
     	      if (e.target.closest(".toast__close")) {
     	        main.removeChild(toast);
@@ -686,6 +630,7 @@
     	      error: "fas fa-exclamation-circle"
     	    };
     	    const icon = icons[type];
+    	    console.log("icon:",icon);
     	    const delay = (duration / 1000).toFixed(2);
 
     	    toast.classList.add("toast", `toast--${type}`);
@@ -693,27 +638,29 @@
 
     	    toast.innerHTML = `
     	                    <div class="toast__icon">
-    	                        <i class="fas fa-exclamation-circle"></i>
+    	                        <i class="${icon}"></i>
     	                    </div>
     	                    <div class="toast__body">
-    	                        <h3 class="toast__title">Chú ý!</h3>
+    	                        <h3 class="toast__title">${title}</h3>
     	                        <p class="toast__msg">${message}</p>
     	                    </div>
     	                    <div class="toast__close">
     	                        <i class="fas fa-times"></i>
     	                    </div>
     	                `;
-    	    const toastMessageElement = toast.querySelector('.toast__msg');
-			if (toastMessageElement) {
-    			toastMessageElement.textContent = message; 
+    	    const toastIcon = toast.querySelector('.toast__icon');
+			if (toastIcon) {
+    			const iconElement = document.createElement('i');
+    			iconElement.className = icon;
+    			toastIcon.appendChild(iconElement);
 			}
+    	    const toastMessage = toast.querySelector('.toast__msg');
+    	    toastMessage.textContent = message; 
+    	    const toastTitle = toast.querySelector('.toast__title');
+    	    toastTitle.textContent = title; 
     	    main.appendChild(toast);
-    	  }
-    	}
-
-    /************************************************************************************************/
-
-
+		}
+    }
 	</script>
 
 </body>
