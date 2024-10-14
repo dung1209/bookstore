@@ -115,7 +115,7 @@ public class HomeController {
 		return "user/Cart";
 	}
     
-    @PostMapping("/cart/add")
+    /*@PostMapping("/cart/add")
     public ResponseEntity<Map<String, String>> addToCart(@RequestBody Carts cart) {
         CartsDao cartsDao = new CartsDao();
         cart.setCustomerID(2);
@@ -126,28 +126,22 @@ public class HomeController {
         	saveCart(cart);
             return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã được thêm vào giỏ hàng!"));
         }
-    }
-    /*@PostMapping("/cart/add")
-    public ResponseEntity<Map<String, String>> addToCart(@RequestBody Carts cart) {
-        if (cart == null ) {
-            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Dữ liệu không hợp lệ!"));
-        }
-
+    }*/
+    
+    @PostMapping("/cart/add")
+    public ResponseEntity<Map<String, Integer>> addToCart(@RequestBody Carts cart) {
         CartsDao cartsDao = new CartsDao();
-        cart.setCustomerID(2); // Cần xác thực customerID trong thực tế
-
+        cart.setCustomerID(2); 
         Optional<Carts> existingCart = cartsDao.findByCustomerIdAndBookId(cart.getCustomerID(), cart.getBookID());
         if (existingCart.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                                 .body(Collections.singletonMap("message", "Sản phẩm đã có trong giỏ hàng!"));
+            return ResponseEntity.ok(Collections.singletonMap("status", 0));
         } else {
             saveCart(cart);
-            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã được thêm vào giỏ hàng!"));
+            return ResponseEntity.ok(Collections.singletonMap("status", 1));
         }
-    }*/
+    }
 
 
-    
     private void saveCart(Carts cart) {
         CartsDao cartsDao = new CartsDao();
         if (cart.getQuantity() <= 0) {

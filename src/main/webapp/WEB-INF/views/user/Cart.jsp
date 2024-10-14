@@ -35,9 +35,27 @@
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+	crossorigin="anonymous" />
 
 </head>
 <body>
+	<div id="confirmModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title">Thông báo</h2>
+				<span class="close" id="modalClose">&times;</span>
+			</div>
+			<div class="modal-body">
+				<p class="title-question">Chọn ít nhất 1 sản phẩm để thanh toán?</p>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmNo" class="btn btn-no">Huỷ</button>
+			</div>
+		</div>
+	</div>
 	<header id="header">
 		<!--header-->
 		<!--header-->
@@ -543,7 +561,6 @@
 	            totalPrice += quantity * price * 1000; 
 	        }
 	    });
-
 	    document.getElementById('totalSum').innerText = totalPrice.toLocaleString() + ' đ';
 	}
 
@@ -557,7 +574,11 @@
 	    const checkedProducts = document.querySelectorAll('input[name="selectCartItem"]:checked');
 
 	    if (checkedProducts.length === 0) {
-	        alert("Vui lòng chọn ít nhất một sản phẩm để thanh toán.");
+	        const confirmModal = document.getElementById('confirmModal');
+            confirmModal.style.display = "block";
+            document.getElementById('confirmNo').onclick = function() {
+                confirmModal.style.display = "none";
+            };
 	        return;
 	    }
 
@@ -565,12 +586,9 @@
 	        const row = checkbox.closest('tr');
 	        const quantityInput = row.querySelector('.cart_quantity_input'); 
 	        const quantity = parseInt(quantityInput.value) || 0; 
-	        //const productId = checkbox.getAttribute('data-productID');
 	        const productId = checkbox.dataset.productid;
 	        console.log("Product ID: ", productId, " Quantity: ", quantity);
 
-
-	        // Kiểm tra nếu productId hoặc quantity là undefined
 	        if (!productId || !quantity) {
 	            console.warn("Missing productId or quantity.");
 	        }
@@ -580,6 +598,17 @@
 	    console.log("Query String: ", queryString);
 	    window.location.href = 'checkout?' + queryString;
 	}
+	
+	document.getElementById('modalClose').onclick = function() {
+        document.getElementById('confirmModal').style.display = "none";
+    };
+
+    window.onclick = function(event) {
+        const confirmModal = document.getElementById('confirmModal');
+        if (event.target === confirmModal) {
+            confirmModal.style.display = "none";
+        }
+    };
 
 	</script>
 </body>

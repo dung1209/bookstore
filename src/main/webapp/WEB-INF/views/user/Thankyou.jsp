@@ -140,7 +140,7 @@
 							<div class="register-req">
 								<p id="thank-you-message1">Cảm ơn bạn đã ủng hộ sản phẩm bên chúng tôi, nếu có bất kì thắc mắc xin hãy liên hệ  với chúng tôi để được hỗ trợ sớm nhất.</p>
 							</div>
-							<a class="btn btn-primary" href="" id="back-home">Về trang chủ</a>
+							<a class="btn btn-primary" href="http://localhost:8080/bookstorePTIT/" id="back-home">Về trang chủ</a>
 							<a class="btn btn-primary" href="" id="history-order">Đơn hàng</a>
 						</div>	
 					</div>	

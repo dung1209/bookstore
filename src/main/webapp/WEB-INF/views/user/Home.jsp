@@ -35,11 +35,29 @@
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
- -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+	crossorigin="anonymous" />
+	
 </head>
 <body>
-	<!-- <div id="toast"></div> -->
+	<div id="toast"></div>
+	<div id="confirmModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title">Xác nhận đơn hàng</h2>
+				<span class="close" id="modalClose">&times;</span>
+			</div>
+			<div class="modal-body">
+				<p class="title-question">Bạn có muốn xác nhận đơn hàng không?</p>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmYes" class="btn btn-yes">Có</button>
+				<button id="confirmNo" class="btn btn-no">Không</button>
+			</div>
+		</div>
+	</div>
 	<header id="header">
 		<!--header-->
 		<div class="header_top">
@@ -328,7 +346,7 @@
 													đ
 												</h2>
 												<p>${book.name}</p>
-												<a href="#" class="btn btn-default add-to-cart"
+												<a id="submitOrder" href="#" class="btn btn-default add-to-cart"
 													onclick="confirmAddToCart(event, ${book.bookID})"> <i
 													class="fa fa-shopping-cart"></i> Thêm vào giỏ
 												</a>
@@ -1001,12 +1019,28 @@
 	function confirmAddToCart(event, bookId) {
 	    event.preventDefault();
 
-	    if (confirm("Bạn có muốn thêm sản phẩm vào giỏ hàng không?")) {
-	        addToCart(bookId); 
-	    } else {
-	        return;
-	    }
+	    const confirmModal = document.getElementById('confirmModal');
+        confirmModal.style.display = "block";
+
+        document.getElementById('confirmYes').onclick = function() {
+        	confirmModal.style.display = "none";
+        	addToCart(bookId);
+        }
+        document.getElementById('confirmNo').onclick = function() {
+            confirmModal.style.display = "none";
+        };
 	}
+	
+	document.getElementById('modalClose').onclick = function() {
+        document.getElementById('confirmModal').style.display = "none";
+    };
+
+    window.onclick = function(event) {
+        const confirmModal = document.getElementById('confirmModal');
+        if (event.target === confirmModal) {
+            confirmModal.style.display = "none";
+        }
+    };
 
 	function addToCart(bookId) {
 	    fetch('/bookstorePTIT/cart/add', {
@@ -1020,131 +1054,84 @@
 	        if (!response.ok) {
 	            throw new Error('Network response was not ok');
 	        }
-	        return response.text();
+	        return response.json();
 	    })
 	    .then(data => {
-	        alert(data);
+	    	if (data.status === 0) {
+	            toast({
+	                title: "Chú ý!",
+	                message: "Sách đã có trong giỏ hàng.",
+	                type: "error",
+	                duration: 1000
+	            });
+	        } else if (data.status === 1) {
+	            toast({
+	                title: "Thành công!",
+	                message: "Sản phẩm đã được thêm vào giỏ hàng!",
+	                type: "success",
+	                duration: 1000
+	            });
+	        }
 	    })
 	    .catch(error => {
 	        console.error('Error:', error);
 	    });
 	}
-	/*function addToCart(bookId) {
-	    fetch('/bookstorePTIT/cart/add', {
-	        method: 'POST',
-	        headers: {
-	            'Content-Type': 'application/json'
-	        },
-	        body: JSON.stringify({ bookID: bookId })
-	    })
-	    .then(response => {
-	        if (!response.ok) {
-	            // Kiểm tra nếu mã trạng thái là 409 (Conflict)
-	            if (response.status === 409) {
-	                return response.json().then(data => {
-	                    const message = data.message || "Sản phẩm đã có trong giỏ hàng!";
-	                    
-	                    // Gọi hàm toast để hiển thị thông báo lỗi mà không ném lỗi ra console
-	                    toast({
-	                        title: "Thông báo",
-	                        message: message,
-	                        type: "error",
-	                        duration: 5000
-	                    });
-	                });
-	            } else {
-	                // Xử lý các lỗi khác và hiển thị thông báo tương ứng
-	                return response.json().then(data => {
-	                    const message = data.message || "Đã có lỗi xảy ra. Vui lòng thử lại.";
-	                    
-	                    toast({
-	                        title: "Lỗi!",
-	                        message: message,
-	                        type: "error",
-	                        duration: 5000
-	                    });
-	                });
-	            }
-	        }
-	        return response.json(); // Chuyển đổi phản hồi thành JSON nếu thành công
-	    })
-	    .then(data => {
-	        // Nếu thêm thành công
-	        if (data.message === "Sản phẩm đã được thêm vào giỏ hàng!") {
-	            showSuccessToast(); // Gọi hàm hiển thị thông báo thành công
-	        }
-	    })
-	    .catch(error => {
-	        // Nếu có lỗi mạng hoặc lỗi khác
-	        toast({
-	            title: "Lỗi!",
-	            message: "Đã có lỗi xảy ra. Vui lòng thử lại.",
-	            type: "error",
-	            duration: 5000
-	        });
-	    });
-	}
-
-
-
-	function toast({ title = "", message = "", type = "info", duration = 3000 }) {
-	    const main = document.getElementById("toast");
-	    if (main) {
-	        const toast = document.createElement("div");
-
-	        const icons = {
-	            success: "fas fa-check-circle",
-	            info: "fas fa-info-circle",
-	            warning: "fas fa-exclamation-circle",
-	            error: "fas fa-exclamation-circle"
-	        };
-	        const icon = icons[type] || icons["info"]; 
-	        console.log("icon:", icon);
-	        console.log("title:", title);
-	        console.log("message:", message);
-
-	        toast.classList.add("toast", `toast--${type}`);
-	        toast.innerHTML = `
-	            <div class="toast__icon">
-	                <i class="${icon}"></i>
-	            </div>
-	            <div class="toast__body">
-	                <h3 class="toast__title">${title}</h3>
-	                <p class="toast__msg">${message}</p>
-	            </div>
-	            <div class="toast__close">
-	                <i class="fas fa-times"></i>
-	            </div>
-	        `;
-
-	        main.appendChild(toast);
-	        console.log("Toast đã được thêm vào DOM:", toast); // Kiểm tra phần tử đã được thêm
-
-	        setTimeout(() => {
-	            main.removeChild(toast);
-	        }, duration);
-	    }
-	}
-
 	
-	function showSuccessToast() {
-	    toast({
-	      title: "Thành công!",
-	      message: "Bạn đã thêm vào giỏ hàng thành công.",
-	      type: "success",
-	      duration: 5000000
-	    });
-	  }
+	function toast({ title = "", message = "", type = "info", duration = 3000 }) {
+		const main = document.getElementById("toast");
+		if (main) {
+			const toast = document.createElement("div");
+			
+    	    const autoRemoveId = setTimeout(function () {
+    	      main.removeChild(toast);
+    	    }, duration + 1000);
 
-	  function showErrorToast() {
-	    toast({
-	      title: "Thất bại!",
-	      message: "Sản phẩn đã có trong giỏ hàng.",
-	      type: "error",
-	      duration: 5000000
-	    });
-	  }*/
+    	    toast.onclick = function (e) {
+    	      if (e.target.closest(".toast__close")) {
+    	        main.removeChild(toast);
+    	        clearTimeout(autoRemoveId);
+    	      }
+    	    };
 
+    	    const icons = {
+    	      success: "fas fa-check-circle",
+    	      info: "fas fa-info-circle",
+    	      warning: "fas fa-exclamation-circle",
+    	      error: "fas fa-exclamation-circle"
+    	    };
+    	    const icon = icons[type];
+    	    console.log("icon:",icon);
+    	    const delay = (duration / 1000).toFixed(2);
+
+    	    toast.classList.add("toast", `toast--${type}`);
+    	    toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards`;
+
+    	    toast.innerHTML = `
+    	                    <div class="toast__icon">
+    	                        <i class="${icon}"></i>
+    	                    </div>
+    	                    <div class="toast__body">
+    	                        <h3 class="toast__title">${title}</h3>
+    	                        <p class="toast__msg">${message}</p>
+    	                    </div>
+    	                    <div class="toast__close">
+    	                        <i class="fas fa-times"></i>
+    	                    </div>
+    	                `;
+    	    const toastIcon = toast.querySelector('.toast__icon');
+			if (toastIcon) {
+    			const iconElement = document.createElement('i');
+    			iconElement.className = icon;
+    			toastIcon.appendChild(iconElement);
+			}
+    	    const toastMessage = toast.querySelector('.toast__msg');
+    	    toastMessage.textContent = message; 
+    	    const toastTitle = toast.querySelector('.toast__title');
+    	    toastTitle.textContent = title; 
+    	    main.appendChild(toast);
+		}
+    }
 	</script>
 
 </body>
