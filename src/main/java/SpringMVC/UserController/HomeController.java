@@ -1,6 +1,7 @@
 package SpringMVC.UserController;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,16 +38,31 @@ import java.util.Map;
 public class HomeController {
 
     @RequestMapping("/")
-    public String index(Model model) {
+    //public String index(Model model) {
+    public String index(@RequestParam(defaultValue = "1") int page, Model model) {
         CategoriesDao categoriesDao = new CategoriesDao();
         AuthorsDao authorsDao = new AuthorsDao();
         BooksDao booksDao = new BooksDao();
+        
         List<Categories> categories = categoriesDao.getCategories();
         List<Authors> authors = authorsDao.getAuthors();
-        List<Books> books = booksDao.getBooks();
+        //List<Books> books = booksDao.getBooks();
+        /**/
+        int booksPerPage = 6;
+        int totalBooks = booksDao.countTotalBooks();
+        int totalPages = (int) Math.ceil((double) totalBooks / booksPerPage);
+
+        List<Books> paginatedBooks = booksDao.getBooks(page, booksPerPage);
+        /**/
+        
         model.addAttribute("categories", categories);
         model.addAttribute("authors", authors);
-        model.addAttribute("books", books);
+        //model.addAttribute("books", books);
+        /**/
+        model.addAttribute("books", paginatedBooks);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        /**/
         return "user/Home";
     }
     
@@ -111,6 +127,26 @@ public class HomeController {
             return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã được thêm vào giỏ hàng!"));
         }
     }
+    /*@PostMapping("/cart/add")
+    public ResponseEntity<Map<String, String>> addToCart(@RequestBody Carts cart) {
+        if (cart == null ) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Dữ liệu không hợp lệ!"));
+        }
+
+        CartsDao cartsDao = new CartsDao();
+        cart.setCustomerID(2); // Cần xác thực customerID trong thực tế
+
+        Optional<Carts> existingCart = cartsDao.findByCustomerIdAndBookId(cart.getCustomerID(), cart.getBookID());
+        if (existingCart.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                                 .body(Collections.singletonMap("message", "Sản phẩm đã có trong giỏ hàng!"));
+        } else {
+            saveCart(cart);
+            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã được thêm vào giỏ hàng!"));
+        }
+    }*/
+
+
     
     private void saveCart(Carts cart) {
         CartsDao cartsDao = new CartsDao();

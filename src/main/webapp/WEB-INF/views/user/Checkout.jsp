@@ -35,9 +35,14 @@
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+	crossorigin="anonymous" />
 
 </head>
 <body>
+	<div id="toast"></div>
 	<div class="header_top">
 		<!--header_top-->
 		<div class="container">
@@ -200,20 +205,20 @@
 					<div class="col-sm-3">
 						<div class="shopper-info">
 							<p>Thông tin người đặt hàng</p>
-							<form>
-								<input type="text" placeholder="Tên"> <input type="text"
-									placeholder="Số điện thoại"> <input type="text"
-									placeholder="Email"> <input type="text"
-									placeholder="Địa chỉ">
+							<form id="checkoutForm">
+								<input type="text" id="name" placeholder="Tên"> <input
+									type="text" id="phone" placeholder="Số điện thoại"> <input
+									type="text" id="email" placeholder="Email"> <input
+									type="text" id="address" placeholder="Địa chỉ">
 							</form>
-							<a id="submitOrder" class="btn btn-primary" href="">Thanh
-								toán</a>
+							<a id="submitOrder" class="btn btn-primary"
+								href="javascript:void(0)">Thanh toán</a>
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="order-message">
 							<p>Ghi chú</p>
-							<textarea name="message"
+							<textarea name="message" id="orderMessage"
 								placeholder="Ghi chú về đơn hàng của bạn..." rows="16"></textarea>
 						</div>
 					</div>
@@ -498,48 +503,7 @@
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
 	<script>
-    /*document.getElementById('submitOrder').addEventListener('click', function(event) {
-        event.preventDefault();
-
-        const name = document.querySelector('input[placeholder="Tên"]').value;
-        const phone = document.querySelector('input[placeholder="Số điện thoại"]').value;
-        const email = document.querySelector('input[placeholder="Email"]').value;
-        const address = document.querySelector('input[placeholder="Địa chỉ"]').value;
-        const note = document.querySelector('textarea[name="message"]').value;
-
-        const total = Array.from(document.querySelectorAll('.cart_total_price'))
-            .reduce((acc, el) => acc + parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim()), 0) * 1000;
-
-        const order = {
-            name: name,
-            phone: phone,
-            email: email,
-            address: address,
-            note: note,
-            total: total
-        };
-
-        fetch('/bookstorePTIT/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(order)
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text(); 
-            }
-            throw new Error('Có lỗi xảy ra!');
-        })
-        .then(data => {
-            alert(data); 
-            window.location.href = "http://localhost:8080/bookstorePTIT/thankyou";
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });*/
+    /*
     document.getElementById('submitOrder').addEventListener('click', function(event) {
         event.preventDefault();
 
@@ -597,6 +561,157 @@
             console.error('Error:', error);
         });
     });
+    */
+    /************************************************************************************************/
+    document.getElementById('submitOrder').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        const name = document.querySelector('input[placeholder="Tên"]').value;
+        const phone = document.querySelector('input[placeholder="Số điện thoại"]').value;
+        const email = document.querySelector('input[placeholder="Email"]').value;
+        const address = document.querySelector('input[placeholder="Địa chỉ"]').value;
+        const note = document.querySelector('textarea[name="message"]').value;
+
+        let isValid = true;
+        if(!name.trim()){
+        	toast({
+            	title: "Chú ý!",
+            	message: "Vui lòng điền đầy đủ họ tên.",
+            	type: "error",
+            	duration: 1000
+        	});
+        	isValid = false;
+        }
+        if(!phone.trim()){
+        	toast({
+            	title: "Chú ý!",
+            	message: "Vui lòng điền đầy đủ số điện thoại.",
+            	type: "error",
+            	duration: 1000
+        	});
+        	isValid = false;
+        }
+        if(!email.trim()){
+        	toast({
+            	title: "Chú ý!",
+            	message: "Vui lòng điền đầy đủ email.",
+            	type: "error",
+            	duration: 1000
+        	});
+        	isValid = false;
+        }
+        if(!address.trim()){
+        	toast({
+            	title: "Chú ý!",
+            	message: "Vui lòng điền đầy đủ địa chỉ.",
+            	type: "error",
+            	duration: 1000
+        	});
+        	isValid = false;
+        }
+	
+        if (isValid) {
+        	const total = Array.from(document.querySelectorAll('.cart_total_price'))
+            	.reduce((acc, el) => acc + parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim()), 0) * 1000;
+
+        	const orderItems = Array.from(document.querySelectorAll('.cart_total_price')).map((el) => {
+            	const productRow = el.closest('tr');
+            	const productName = productRow.querySelector('.cart_description a').textContent;
+            	const productPrice = parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim());
+            	const quantity = parseInt(productRow.querySelector('.cart_quantity_input').value);
+            	const bookIdText = productRow.querySelector('.cart_description p').textContent;
+            	const bookId = bookIdText.split(': ')[1] ? bookIdText.split(': ')[1].trim() : null;
+
+            	return {
+            		bookID: bookId,
+                	quantity: quantity,
+                	price: productPrice
+            	};
+        	}).filter(item => item !== null);
+
+        	const order = {
+            	name: name,
+            	phone: phone,
+            	email: email,
+            	address: address,
+            	note: note,
+            	total: total
+        	};
+
+        	fetch('/bookstorePTIT/create', {
+            	method: 'POST',
+            	headers: {
+                	'Content-Type': 'application/json'
+            	},
+            	body: JSON.stringify({ order: order, orderItems: orderItems })
+        	})
+        	.then(response => {
+            	if (response.ok) {
+                	return response.text(); 
+            	}
+            	throw new Error('Có lỗi xảy ra!');
+        	})
+        	.then(data => {
+            	alert(data); 
+            	window.location.href = "http://localhost:8080/bookstorePTIT/thankyou";
+        	})
+        	.catch(error => {
+        	    console.error('Error:', error);
+        	});
+        }
+    });
+    
+    function toast({ title = "", message = "", type = "info", duration = 3000 }) {
+    	  const main = document.getElementById("toast");
+    	  if (main) {
+    	    const toast = document.createElement("div");
+			console.log("message:", message);
+    	    // Auto remove toast
+    	    const autoRemoveId = setTimeout(function () {
+    	      main.removeChild(toast);
+    	    }, duration + 1000);
+
+    	    // Remove toast when clicked
+    	    toast.onclick = function (e) {
+    	      if (e.target.closest(".toast__close")) {
+    	        main.removeChild(toast);
+    	        clearTimeout(autoRemoveId);
+    	      }
+    	    };
+
+    	    const icons = {
+    	      success: "fas fa-check-circle",
+    	      info: "fas fa-info-circle",
+    	      warning: "fas fa-exclamation-circle",
+    	      error: "fas fa-exclamation-circle"
+    	    };
+    	    const icon = icons[type];
+    	    const delay = (duration / 1000).toFixed(2);
+
+    	    toast.classList.add("toast", `toast--${type}`);
+    	    toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards`;
+
+    	    toast.innerHTML = `
+    	                    <div class="toast__icon">
+    	                        <i class="fas fa-exclamation-circle"></i>
+    	                    </div>
+    	                    <div class="toast__body">
+    	                        <h3 class="toast__title">Chú ý!</h3>
+    	                        <p class="toast__msg">${message}</p>
+    	                    </div>
+    	                    <div class="toast__close">
+    	                        <i class="fas fa-times"></i>
+    	                    </div>
+    	                `;
+    	    const toastMessageElement = toast.querySelector('.toast__msg');
+			if (toastMessageElement) {
+    			toastMessageElement.textContent = message; 
+			}
+    	    main.appendChild(toast);
+    	  }
+    	}
+
+    /************************************************************************************************/
 
 
 	</script>

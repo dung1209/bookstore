@@ -47,6 +47,72 @@ public class BooksDao {
         }
         return booksList;
     }
+    /**/
+    public List<Books> getBooks(int page, int booksPerPage) {
+        List<Books> booksList = null;
+        Session session = null;
+        Transaction transaction = null;
+        
+        try {
+            if (factory == null) {
+                factory = HibernateUtils.getSessionFactory();
+            }
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+
+            String hql = "from Books";
+            Query<Books> query = session.createQuery(hql, Books.class);
+
+            // Tính toán chỉ số bắt đầu và số lượng sách
+            int startIndex = (page - 1) * booksPerPage;
+            query.setFirstResult(startIndex); // Bắt đầu từ chỉ số này
+            query.setMaxResults(booksPerPage); // Lấy số lượng sách trên mỗi trang
+
+            booksList = query.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return booksList;
+    }
+    
+    public int countTotalBooks() {
+        int totalBooks = 0;
+        Session session = null;
+        Transaction transaction = null;
+
+        try {
+            if (factory == null) {
+                factory = HibernateUtils.getSessionFactory();
+            }
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+
+            String hql = "SELECT COUNT(*) FROM Books"; // Đếm tổng số sách
+            Query<Long> query = session.createQuery(hql, Long.class);
+            totalBooks = query.uniqueResult().intValue(); // Lấy kết quả duy nhất
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return totalBooks;
+    }
+
+    /**/
     
     public void save(Books book) {
         Session session = null;
