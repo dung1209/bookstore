@@ -523,7 +523,7 @@ ul.sub-menu {
   border-radius: 0;
   margin-left: -5px;
   margin-top: -3px;
-  padding: 7px 17px;
+  /*padding: 7px 17px;*/
 }
 
 .searchform button i {

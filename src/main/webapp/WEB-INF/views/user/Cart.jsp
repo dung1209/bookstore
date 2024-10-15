@@ -42,17 +42,19 @@
 
 </head>
 <body>
+	<div id="toast"></div>
 	<div id="confirmModal" class="modal">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h2 class="modal-title">Thông báo</h2>
+				<h2 class="modal-title">Xác nhận</h2>
 				<span class="close" id="modalClose">&times;</span>
 			</div>
 			<div class="modal-body">
-				<p class="title-question">Chọn ít nhất 1 sản phẩm để thanh toán?</p>
+				<p class="title-question">Bạn có muốn xoá sản phẩm khỏi giỏ hàng không?</p>
 			</div>
 			<div class="modal-footer">
-				<button id="confirmNo" class="btn btn-no">Huỷ</button>
+				<button id="confirmYes" class="btn btn-yes">Có</button>
+				<button id="confirmNo" class="btn btn-no">Không</button>
 			</div>
 		</div>
 	</div>
@@ -217,7 +219,7 @@
 					</thead>
 					<tbody>
 						<c:forEach var="cart" items="${carts}" varStatus="loop">
-							<tr>
+							<tr data-bookid="${booksInCart[loop.index].bookID}">
 								<td class="cart_select"><input type="checkbox"
 									name="selectCartItem" value="${booksInCart[loop.index].bookID}"
 									data-quantity="${cart.quantity}"
@@ -260,8 +262,9 @@
 										đ
 									</p>
 								</td>
-								<td class="cart_delete"><a class="cart_quantity_delete"
-									href=""><i class="fa fa-times"></i></a></td>
+								<td class="cart_delete">
+									<a class="cart_quantity_delete" href="javascript:void(0)" onclick="deleteProductFromCart(${booksInCart[loop.index].bookID})"><i class="fa fa-times"></i></a>
+								</td>
 							</tr>
 						</c:forEach>
 					</tbody>
@@ -574,29 +577,29 @@
 	    const checkedProducts = document.querySelectorAll('input[name="selectCartItem"]:checked');
 
 	    if (checkedProducts.length === 0) {
-	        const confirmModal = document.getElementById('confirmModal');
-            confirmModal.style.display = "block";
-            document.getElementById('confirmNo').onclick = function() {
-                confirmModal.style.display = "none";
-            };
-	        return;
+	    	toast({
+                title: "Thông báo!",
+                message: "Vui lòng chọn ít nhất 1 sản phẩm để thanh toán.",
+                type: "error",
+                duration: 1000
+            });
+	    } else{
+	    	let queryParams = Array.from(checkedProducts).map(checkbox => {
+		        const row = checkbox.closest('tr');
+		        const quantityInput = row.querySelector('.cart_quantity_input'); 
+		        const quantity = parseInt(quantityInput.value) || 0; 
+		        const productId = checkbox.dataset.productid;
+		        console.log("Product ID: ", productId, " Quantity: ", quantity);
+
+		        if (!productId || !quantity) {
+		            console.warn("Missing productId or quantity.");
+		        }
+		        return 'productId=' + productId + '&quantity=' + quantity;
+		    });
+		    const queryString = queryParams.join('&');
+		    console.log("Query String: ", queryString);
+		    window.location.href = 'checkout?' + queryString;
 	    }
-
-	    let queryParams = Array.from(checkedProducts).map(checkbox => {
-	        const row = checkbox.closest('tr');
-	        const quantityInput = row.querySelector('.cart_quantity_input'); 
-	        const quantity = parseInt(quantityInput.value) || 0; 
-	        const productId = checkbox.dataset.productid;
-	        console.log("Product ID: ", productId, " Quantity: ", quantity);
-
-	        if (!productId || !quantity) {
-	            console.warn("Missing productId or quantity.");
-	        }
-	        return 'productId=' + productId + '&quantity=' + quantity;
-	    });
-	    const queryString = queryParams.join('&');
-	    console.log("Query String: ", queryString);
-	    window.location.href = 'checkout?' + queryString;
 	}
 	
 	document.getElementById('modalClose').onclick = function() {
@@ -609,6 +612,98 @@
             confirmModal.style.display = "none";
         }
     };
+    
+    function toast({ title = "", message = "", type = "info", duration = 3000 }) {
+		const main = document.getElementById("toast");
+		if (main) {
+			const toast = document.createElement("div");
+			
+    	    const autoRemoveId = setTimeout(function () {
+    	      main.removeChild(toast);
+    	    }, duration + 1000);
+
+    	    toast.onclick = function (e) {
+    	      if (e.target.closest(".toast__close")) {
+    	        main.removeChild(toast);
+    	        clearTimeout(autoRemoveId);
+    	      }
+    	    };
+
+    	    const icons = {
+    	      success: "fas fa-check-circle",
+    	      info: "fas fa-info-circle",
+    	      warning: "fas fa-exclamation-circle",
+    	      error: "fas fa-exclamation-circle"
+    	    };
+    	    const icon = icons[type];
+    	    console.log("icon:",icon);
+    	    const delay = (duration / 1000).toFixed(2);
+
+    	    toast.classList.add("toast", `toast--${type}`);
+    	    toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards`;
+
+    	    toast.innerHTML = `
+    	                    <div class="toast__icon">
+    	                        <i class="${icon}"></i>
+    	                    </div>
+    	                    <div class="toast__body">
+    	                        <h3 class="toast__title">${title}</h3>
+    	                        <p class="toast__msg">${message}</p>
+    	                    </div>
+    	                    <div class="toast__close">
+    	                        <i class="fas fa-times"></i>
+    	                    </div>
+    	                `;
+    	    const toastIcon = toast.querySelector('.toast__icon');
+			if (toastIcon) {
+    			const iconElement = document.createElement('i');
+    			iconElement.className = icon;
+    			toastIcon.appendChild(iconElement);
+			}
+    	    const toastMessage = toast.querySelector('.toast__msg');
+    	    toastMessage.textContent = message; 
+    	    const toastTitle = toast.querySelector('.toast__title');
+    	    toastTitle.textContent = title; 
+    	    main.appendChild(toast);
+		}
+    }
+
+    function deleteProductFromCart(bookID) {
+        const url = '/bookstorePTIT/cart/delete?bookID=' + bookID;
+        
+        const confirmModal = document.getElementById('confirmModal');
+        confirmModal.style.display = "block";
+
+        document.getElementById('confirmYes').onclick = function() {
+        	confirmModal.style.display = "none";
+        	fetch(url, {
+                method: 'POST',
+            })
+            .then(response => {
+                if (response.ok) {
+                	toast({
+    	                title: "Thành công!",
+    	                message: "Sách đã được xoá khỏi giỏ hàng thành công.",
+    	                type: "success",
+    	                duration: 1000
+    	            });
+                	
+                	const rowToDelete = document.querySelector(`tbody tr[data-bookid='${bookID}']`);
+                    if (rowToDelete) {
+                        rowToDelete.remove();
+                    }
+                } else {
+                    throw new Error('Có lỗi xảy ra khi xóa sản phẩm!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        document.getElementById('confirmNo').onclick = function() {
+            confirmModal.style.display = "none";
+        };
+    }
 
 	</script>
 </body>

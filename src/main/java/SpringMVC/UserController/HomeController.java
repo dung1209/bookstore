@@ -196,9 +196,21 @@ public class HomeController {
             orderItemsDao.createOrderItems(item);
             cartsDao.deleteFromCart(2, item.getBookID());
         }
-
         return ResponseEntity.ok("Đơn hàng đã được tạo thành công!");
     }
+    
+    @PostMapping("/cart/delete")
+    public ResponseEntity<String> deleteFromCart(@RequestParam("bookID") int bookID) {
+        int customerID = 2;
+        CartsDao cartsDao = new CartsDao();
 
+        Optional<Carts> cartItem = cartsDao.findByCustomerIdAndBookId(customerID, bookID);
+        if (cartItem.isPresent()) {
+            cartsDao.delete(cartItem.get());
+            return ResponseEntity.ok("Sản phẩm đã được xóa khỏi giỏ hàng!");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sản phẩm không tồn tại trong giỏ hàng!");
+        }
+    }
 
 }

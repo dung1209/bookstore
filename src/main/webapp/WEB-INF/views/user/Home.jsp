@@ -46,11 +46,11 @@
 	<div id="confirmModal" class="modal">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h2 class="modal-title">Xác nhận đơn hàng</h2>
+				<h2 class="modal-title">Xác nhận sản phẩm</h2>
 				<span class="close" id="modalClose">&times;</span>
 			</div>
 			<div class="modal-body">
-				<p class="title-question">Bạn có muốn xác nhận đơn hàng không?</p>
+				<p class="title-question">Bạn có muốn thêm sản phẩm vào giỏ hàng không?</p>
 			</div>
 			<div class="modal-footer">
 				<button id="confirmYes" class="btn btn-yes">Có</button>
