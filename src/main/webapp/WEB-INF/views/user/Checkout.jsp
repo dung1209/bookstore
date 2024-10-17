@@ -221,10 +221,10 @@
 						<div class="shopper-info">
 							<p>Thông tin người đặt hàng</p>
 							<form id="checkoutForm">
-								<input type="text" id="name" placeholder="Tên"> <input
-									type="text" id="phone" placeholder="Số điện thoại"> <input
-									type="text" id="email" placeholder="Email"> <input
-									type="text" id="address" placeholder="Địa chỉ">
+								<input type="text" id="name" placeholder="Tên" value="${customerInfo['name']}" /> <input
+									type="text" id="phone" placeholder="Số điện thoại" value="${customerInfo['phone']}" /> <input
+									type="text" id="email" placeholder="Email" value="${customerInfo['email']}" /> <input
+									type="text" id="address" placeholder="Địa chỉ" value="${customerInfo['address']}" />
 							</form>
 							<a id="submitOrder" class="btn btn-primary"
 								href="javascript:void(0)">Thanh toán</a>

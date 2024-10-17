@@ -33,7 +33,9 @@
 		<mapping class="bookstorePTIT.bean.Authors" />
 		<mapping class="bookstorePTIT.bean.Publishers" />
 		<mapping class="bookstorePTIT.bean.Carts" />
+		<mapping class="bookstorePTIT.bean.Customers" />
 		<mapping class="bookstorePTIT.bean.Orders" />
+		<mapping class="bookstorePTIT.bean.Accounts" />
 		<mapping class="bookstorePTIT.bean.Order_Items" />
 		<mapping class="bookstorePTIT.bean.OrderRequest" />
 		<mapping class="bookstorePTIT.bean.Imports" />

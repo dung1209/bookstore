@@ -11,14 +11,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Dao.CategoriesDao;
+import Dao.CustomersDao;
 import Dao.Order_ItemsDao;
 import Dao.OrdersDao;
+import Dao.AccountsDao;
 import Dao.AuthorsDao;
 import Dao.BooksDao;
 import Dao.CartsDao;
 import bookstorePTIT.bean.Categories;
+import bookstorePTIT.bean.Customers;
 import bookstorePTIT.bean.OrderRequest;
 import bookstorePTIT.bean.Orders;
 import bookstorePTIT.bean.Authors;
@@ -142,6 +149,18 @@ public class HomeController {
                            Model model) {
         List<Map<String, String>> selectedBooks = new ArrayList<>();
         BooksDao booksDao = new BooksDao();
+        CustomersDao customersDao = new CustomersDao();
+        AccountsDao accountsDao = new AccountsDao();
+        
+        int customerId = 2;
+        Customers customer = customersDao.getCustomerById(customerId);
+        String email = accountsDao.getEmailByAccountId(customer.getAccountID());
+        
+        Map<String, String> customerInfo = new HashMap<>();
+        customerInfo.put("name", customer.getName());
+        customerInfo.put("phone", customer.getPhone());
+        customerInfo.put("address", customer.getAddress());
+        customerInfo.put("email", email);
 
         for (int i = 0; i < productIds.size(); i++) {
             String productId = productIds.get(i);
@@ -163,6 +182,8 @@ public class HomeController {
             }
         }
         model.addAttribute("selectedBooks", selectedBooks);
+        model.addAttribute("customerInfo", customerInfo);
+        
         return "user/Checkout";
     }
     
@@ -208,9 +229,49 @@ public class HomeController {
         if (cartItem.isPresent()) {
             cartsDao.delete(cartItem.get());
             return ResponseEntity.ok("Sản phẩm đã được xóa khỏi giỏ hàng!");
+            /*
+            CartsDao cartDao = new CartsDao();
+            List<Carts> updatedCart = cartDao.findCartsByCustomerId(customerID);  // Giả sử phương thức này trả về danh sách giỏ hàng mới
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String updatedCartJson = objectMapper.writeValueAsString(updatedCart);
+                return ResponseEntity.ok(updatedCartJson);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi chuyển đổi dữ liệu thành JSON");
+            }
+            */
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sản phẩm không tồn tại trong giỏ hàng!");
         }
     }
+    
+    @GetMapping("/cart/data")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> getCartData() {
+        int customerID = 2;
+        CartsDao cartDao = new CartsDao();
+        BooksDao booksDao = new BooksDao();
+
+        List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
+        List<Map<String, Object>> booksInCart = new ArrayList<>();
+
+        for (Carts cart : carts) {
+            int bookID = cart.getBookID();
+            Books book = booksDao.findBookById(bookID);
+            if (book != null) {
+                Map<String, Object> bookInfo = new HashMap<>();
+                bookInfo.put("bookID", book.getbookID());
+                bookInfo.put("name", book.getName());
+                bookInfo.put("price", book.getPrice());
+                bookInfo.put("quantity", cart.getQuantity());
+                bookInfo.put("image", book.getImage());
+                booksInCart.add(bookInfo);
+            }
+        }
+
+        return ResponseEntity.ok(booksInCart); // Trả về JSON của giỏ hàng
+    }
+
 
 }
