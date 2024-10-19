@@ -50,8 +50,7 @@
 				<span class="close" id="modalClose">&times;</span>
 			</div>
 			<div class="modal-body">
-				<p class="title-question">Bạn có muốn xoá sản phẩm khỏi giỏ hàng
-					không?</p>
+				<p class="title-question">Bạn có muốn huỷ đơn hàng không?</p>
 			</div>
 			<div class="modal-footer">
 				<button id="confirmYes" class="btn btn-yes">Có</button>
@@ -148,11 +147,11 @@
 		</div>
 		<!--/header-middle-->
 
-		<div class="header-bottom">
+		<div class="header-bottom" style="padding-bottom: 0px">
 			<!--header-bottom-->
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-9">
+					<div class="col-sm-7">
 						<div class="navbar-header">
 							<button type="button" class="navbar-toggle"
 								data-toggle="collapse" data-target=".navbar-collapse">
@@ -186,9 +185,20 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-sm-5">
+						<div class="filter-search">
+							<label class="filter loc" for="orderStatus">Lọc:</label> <select
+								id="orderStatus" name="orderStatus"
+								class="form-control filter-order" onchange="filterOrders()">
+								<option value="all">Tất cả</option>
+								<option value="1">Đang chờ</option>
+								<option value="2">Thành công</option>
+								<option value="0">Đã huỷ</option>
+							</select>
+						</div>
 						<div class="search_box pull-right">
-							<input type="text" placeholder="Tìm kiếm..." />
+							<input type="text" id="searchInput" placeholder="Tìm kiếm..." />
+							<button class="search-button" onclick="searchData()">Tìm kiếm</button>
 						</div>
 					</div>
 				</div>
@@ -220,15 +230,17 @@
 					</thead>
 					<tbody>
 						<c:forEach var="order" items="${orders}">
-							<tr>
+							<tr class="order-row" data-order-status-id="${order.status}">
 								<td class="id_order">${order.id}</td>
 								<td class="product_info">
 									<div class="product_list">
 										<c:forEach var="item" items="${order.orderItems}">
 											<div class="product_item">
-												<img src="<%=request.getContextPath()%>/assets/user/images/home/b1.jpg" alt="${item.bookID}" />
+												<img
+													src="<%=request.getContextPath()%>/assets/user/images/home/b1.jpg"
+													alt="${item.bookID}" />
 												<div class="product_name" id="bookName-${item.bookID}">Loading...</div>
-    											<div class="quantity" style="margin-left: 7px;">(x${item.quantity})</div>
+												<div class="quantity" style="margin-left: 7px;">(x${item.quantity})</div>
 											</div>
 										</c:forEach>
 									</div>
@@ -236,7 +248,7 @@
 								<td class="price_order">
 									<div class="price_list">
 										<c:forEach var="item" items="${order.orderItems}">
-											<div class="price_item">${item.price}đ</div>
+											<div class="price_item"><fmt:formatNumber value="${item.price}" type="number" groupingUsed="true" /> đ</div>
 										</c:forEach>
 									</div>
 								</td>
@@ -253,17 +265,18 @@
 								<td class="status_order"><c:choose>
 										<c:when test="${order.status == 0}">
 											<button
-												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
+												style="background-color: #e12e2bf2; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
 												Đã huỷ</button>
 										</c:when>
 										<c:when test="${order.status == 1}">
 											<button
-												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
-												Đang giao</button>
+												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;"
+												onclick="deleteProductFromCart(${order.id})">Đang
+												chờ</button>
 										</c:when>
 										<c:when test="${order.status == 2}">
 											<button
-												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
+												style="background-color: #3292e4; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
 												Thành công</button>
 										</c:when>
 										<c:otherwise>
@@ -271,8 +284,7 @@
 												style="background-color: gray; color: white; border: none; padding: 5px 10px; cursor: pointer;">
 												Trạng thái không xác định</button>
 										</c:otherwise>
-									</c:choose>
-								</td>
+									</c:choose></td>
 							</tr>
 						</c:forEach>
 				</table>
@@ -492,7 +504,7 @@
 	                bookID: bookID
 	            },
 	            success: function(response) {
-	                bookNameElement.text(response.name); // Lấy tên từ đối tượng JSON
+	                bookNameElement.text(response.name); 
 	            },
 	            error: function() {
 	                bookNameElement.text("Error loading book name");
@@ -500,7 +512,7 @@
 	        });
 
 	        $.ajax({
-	            url: '<%=request.getContextPath()%>/getBookImage', // URL để lấy hình ảnh
+	            url: '<%=request.getContextPath()%>/getBookImage', 
 	            type: 'GET',
 	            data: {
 	                bookID: bookID
@@ -514,6 +526,141 @@
 	        });
 	    });
 	});
+	
+	document.getElementById('modalClose').onclick = function() {
+        document.getElementById('confirmModal').style.display = "none";
+    };
+
+    window.onclick = function(event) {
+        const confirmModal = document.getElementById('confirmModal');
+        if (event.target === confirmModal) {
+            confirmModal.style.display = "none";
+        }
+    };
+    
+    function toast({ title = "", message = "", type = "info", duration = 3000 }) {
+		const main = document.getElementById("toast");
+		if (main) {
+			const toast = document.createElement("div");
+			
+    	    const autoRemoveId = setTimeout(function () {
+    	      main.removeChild(toast);
+    	    }, duration + 1000);
+
+    	    toast.onclick = function (e) {
+    	      if (e.target.closest(".toast__close")) {
+    	        main.removeChild(toast);
+    	        clearTimeout(autoRemoveId);
+    	      }
+    	    };
+
+    	    const icons = {
+    	      success: "fas fa-check-circle",
+    	      info: "fas fa-info-circle",
+    	      warning: "fas fa-exclamation-circle",
+    	      error: "fas fa-exclamation-circle"
+    	    };
+    	    const icon = icons[type];
+    	    console.log("icon:",icon);
+    	    const delay = (duration / 1000).toFixed(2);
+
+    	    toast.classList.add("toast", `toast--${type}`);
+    	    toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards`;
+
+    	    toast.innerHTML = `
+    	                    <div class="toast__icon">
+    	                        <i class="${icon}"></i>
+    	                    </div>
+    	                    <div class="toast__body">
+    	                        <h3 class="toast__title">${title}</h3>
+    	                        <p class="toast__msg">${message}</p>
+    	                    </div>
+    	                    <div class="toast__close">
+    	                        <i class="fas fa-times"></i>
+    	                    </div>
+    	                `;
+    	    const toastIcon = toast.querySelector('.toast__icon');
+			if (toastIcon) {
+    			const iconElement = document.createElement('i');
+    			iconElement.className = icon;
+    			toastIcon.appendChild(iconElement);
+			}
+    	    const toastMessage = toast.querySelector('.toast__msg');
+    	    toastMessage.textContent = message; 
+    	    const toastTitle = toast.querySelector('.toast__title');
+    	    toastTitle.textContent = title; 
+    	    main.appendChild(toast);
+		}
+    }
+    
+    function deleteProductFromCart(orderID) {
+        const url = '/bookstorePTIT/order/delete?orderID=' + orderID;
+        console.log("orderID: ", orderID);
+        
+        const confirmModal = document.getElementById('confirmModal');
+        confirmModal.style.display = "block";
+
+        document.getElementById('confirmYes').onclick = function() {
+        	confirmModal.style.display = "none";
+        	fetch(url, {
+                method: 'POST',
+            })
+            .then(response => {
+                if (response.ok) {
+                	toast({
+    	                title: "Đơn hàng đã được huỷ thành công.",
+    	                type: "success",
+    	                duration: 1000
+    	            });
+                	window.location.href = window.location.href;
+                } else {
+                    throw new Error('Có lỗi xảy ra khi xóa đơn hàng!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        document.getElementById('confirmNo').onclick = function() {
+            confirmModal.style.display = "none";
+        };
+    }
+    
+    function filterOrders() {
+        var selectedStatusId = document.getElementById("orderStatus").value;
+        var orders = document.getElementsByClassName("order-row");
+
+        for (var i = 0; i < orders.length; i++) {
+            var orderStatusId = orders[i].getAttribute("data-order-status-id");
+
+            if (selectedStatusId === 'all' || selectedStatusId === orderStatusId) {
+                orders[i].style.display = "table-row";
+            } else {
+                orders[i].style.display = "none";
+            }
+        }
+    }
+    
+    function searchData() {
+        var searchInput = document.getElementById("searchInput").value.toLowerCase(); 
+        var rows = document.querySelectorAll("tbody tr.order-row");
+
+        rows.forEach(function(row) {
+            var rowText = "";
+
+            var cells = row.querySelectorAll("td");
+            cells.forEach(function(cell) {
+                rowText += cell.innerText.toLowerCase() + " ";
+            });
+
+            if (rowText.includes(searchInput)) {
+                row.style.display = "table-row";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
 	</script>
 
 </body>

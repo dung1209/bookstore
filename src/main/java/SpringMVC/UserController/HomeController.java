@@ -327,5 +327,19 @@ public class HomeController {
         }
         return "Unknown Image"; 
     }
+    
+    @PostMapping("/order/delete")
+    @ResponseBody
+    public String deleteOrder(@RequestParam("orderID") int orderID) {
+    	OrdersDao ordersDao = new OrdersDao();
+        Orders order = ordersDao.findOrderById(orderID);
+        
+        if (order != null) {
+            order.setStatus(0);
+            ordersDao.updateOrder(order);       
+            return "Success"; 
+        }
+        return "Order not found";
+    }
 
 }

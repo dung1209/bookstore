@@ -147,7 +147,7 @@
 		</div>
 		<!--/header-middle-->
 
-		<div class="header-bottom">
+		<div class="header-bottom" style="padding-bottom: 0px">
 			<!--header-bottom-->
 			<div class="container">
 				<div class="row">
@@ -187,7 +187,8 @@
 					</div>
 					<div class="col-sm-3">
 						<div class="search_box pull-right">
-							<input type="text" placeholder="Tìm kiếm..." />
+							<input type="text" id="searchInput" placeholder="Tìm kiếm..." />
+							<button class="search-button" onclick="searchData()">Tìm kiếm</button>
 						</div>
 					</div>
 				</div>
@@ -704,6 +705,29 @@
             confirmModal.style.display = "none";
         };
     }
+    
+    function searchData() {
+        var searchInput = document.getElementById("searchInput").value.toLowerCase(); 
+        var rows = document.querySelectorAll("tbody tr"); // Chọn tất cả các hàng trong tbody
+
+        rows.forEach(function(row) {
+            var rowText = ""; // Biến để chứa nội dung của hàng
+
+            var cells = row.querySelectorAll("td"); // Chọn tất cả các ô trong hàng
+            cells.forEach(function(cell) {
+                rowText += cell.innerText.toLowerCase() + " "; // Thêm nội dung của từng ô vào biến rowText
+            });
+
+            // Kiểm tra nếu nội dung hàng có chứa từ khóa tìm kiếm
+            if (rowText.includes(searchInput)) {
+                row.style.display = "table-row"; // Hiển thị hàng nếu tìm thấy
+            } else {
+                row.style.display = "none"; // Ẩn hàng nếu không tìm thấy
+            }
+        });
+    }
+
+
     
     /*function reloadCartData() {
         fetch('/bookstorePTIT/cart/data')  // Giả sử đây là API trả về dữ liệu giỏ hàng
