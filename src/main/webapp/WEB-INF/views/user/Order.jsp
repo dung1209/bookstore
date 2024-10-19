@@ -185,7 +185,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-5">
+					<div class="col-sm-5 search-order">
 						<div class="filter-search">
 							<label class="filter loc" for="orderStatus">Lọc:</label> <select
 								id="orderStatus" name="orderStatus"
