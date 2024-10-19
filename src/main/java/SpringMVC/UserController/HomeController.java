@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -40,6 +41,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 @Controller
 public class HomeController {
@@ -270,8 +274,58 @@ public class HomeController {
             }
         }
 
-        return ResponseEntity.ok(booksInCart); // Trả về JSON của giỏ hàng
+        return ResponseEntity.ok(booksInCart); 
     }
 
+    @RequestMapping("/order")
+    public String order(Model model) {
+        int customerID = 2; 
+        OrdersDao ordersDao = new OrdersDao();
+        Order_ItemsDao orderItemsDao = new Order_ItemsDao();
+
+        List<Orders> orders = ordersDao.findOrdersByCustomerId(customerID);
+        
+        Collections.reverse(orders); 
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        for (Orders order : orders) {
+            String formattedDate = order.getOrderDate().format(formatter);
+            order.setFormattedOrderDate(formattedDate); 
+            
+            List<Order_Items> orderItems = orderItemsDao.findOrderItemsByOrderId(order.getId());
+            order.setOrderItems(orderItems);
+        }
+
+        model.addAttribute("orders", orders); 
+        return "user/Order";
+    }
+
+    @RequestMapping(value = "/getBookName", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> getBookName(@RequestParam("bookID") int bookID) {
+        BooksDao booksDao = new BooksDao();
+        Books book = booksDao.findBookById(bookID);
+        
+        Map<String, String> response = new HashMap<>();
+        if (book != null) {
+            response.put("name", book.getName());
+        } else {
+            response.put("name", "Unknown Book");
+        }
+        
+        return ResponseEntity.ok(response);
+    }
+
+    @RequestMapping(value = "/getBookImage", method = RequestMethod.GET)
+    @ResponseBody
+    public String getBookImage(@RequestParam("bookID") int bookID) {
+        BooksDao booksDao = new BooksDao();
+        Books book = booksDao.findBookById(bookID);
+        
+        if (book != null) {
+            return book.getImage();
+        }
+        return "Unknown Image"; 
+    }
 
 }

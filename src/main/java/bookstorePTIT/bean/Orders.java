@@ -2,12 +2,17 @@ package bookstorePTIT.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "Orders")
@@ -155,5 +160,27 @@ public class Orders {
                 ", total=" + total +
                 ", status=" + status +
                 '}';
+    }
+    
+    @Transient 
+    private String formattedOrderDate;
+
+    public String getFormattedOrderDate() {
+        return formattedOrderDate;
+    }
+
+    public void setFormattedOrderDate(String formattedOrderDate) {
+        this.formattedOrderDate = formattedOrderDate;
+    }
+    
+    @OneToMany(mappedBy = "orderID", fetch = FetchType.LAZY)
+    private List<Order_Items> orderItems;
+
+    public List<Order_Items> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<Order_Items> orderItems) {
+        this.orderItems = orderItems;
     }
 }

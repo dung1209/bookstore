@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Cảm ơn</title>
+<title>Đơn hàng</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -35,7 +35,30 @@
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+	crossorigin="anonymous" />
+
+</head>
 <body>
+	<div id="toast"></div>
+	<div id="confirmModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title">Xác nhận</h2>
+				<span class="close" id="modalClose">&times;</span>
+			</div>
+			<div class="modal-body">
+				<p class="title-question">Bạn có muốn xoá sản phẩm khỏi giỏ hàng
+					không?</p>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmYes" class="btn btn-yes">Có</button>
+				<button id="confirmNo" class="btn btn-no">Không</button>
+			</div>
+		</div>
+	</div>
 	<header id="header">
 		<!--header-->
 		<!--header-->
@@ -110,11 +133,11 @@
 							<ul class="nav navbar-nav">
 								<li><a href=""><i class="fa fa-user"></i> Tài khoản</a></li>
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
-										Đơn hàng</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/order/"
+									id="cart-link"><i class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								<li><a
-									href="http://localhost:8080/bookstorePTIT/shop-cart/"
-									><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
+										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i>
 										Đăng nhập</a></li>
 							</ul>
@@ -124,46 +147,141 @@
 			</div>
 		</div>
 		<!--/header-middle-->
-	</header>
 
-	<section id="cart_items">
-		<div class="container">
-			<div class="register-req">
-				<p>Đơn hàng của bạn đã được đặt thành công. </p>
-			</div><!--/register-req-->
-
-			<div class="shopper-informations">
+		<div class="header-bottom">
+			<!--header-bottom-->
+			<div class="container">
 				<div class="row">
-					<div class="col-sm-4">
-						<div class="order-message">
-							<p id="thank-you-message">THANK YOU!</p>
-							<div class="register-req">
-								<p id="thank-you-message1">Cảm ơn bạn đã ủng hộ sản phẩm bên chúng tôi, nếu có bất kì thắc mắc xin hãy liên hệ  với chúng tôi để được hỗ trợ sớm nhất.</p>
-							</div>
-							<a class="btn btn-primary" href="http://localhost:8080/bookstorePTIT/" id="back-home">Về trang chủ</a>
-							<a class="btn btn-primary" href="" id="history-order">Đơn hàng</a>
-						</div>	
-					</div>	
-					<div class="col-sm-3">
-						<div class="shopper-info">
-							<p>Thông tin Shop</p>
-							<form>
-								<input type="text" placeholder="SĐT:  +2 95 01 88 821" disabled>
-								<input type="text" placeholder="Email: bansach@gmail.com" disabled>
-								<input type="text" placeholder="Địa chỉ: 97 Đ. Man Thiện, Quận 9" disabled>
-							</form>
+					<div class="col-sm-9">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle"
+								data-toggle="collapse" data-target=".navbar-collapse">
+								<span class="sr-only">Toggle navigation</span> <span
+									class="icon-bar"></span> <span class="icon-bar"></span> <span
+									class="icon-bar"></span>
+							</button>
+						</div>
+						<div class="mainmenu pull-left">
+							<ul class="nav navbar-nav collapse navbar-collapse">
+								<li><a href="http://localhost:8080/bookstorePTIT/">Trang
+										chủ</a></li>
+								<li class="dropdown"><a href="#" class="active">Cửa
+										hàng<i class="fa fa-angle-down"></i>
+								</a>
+									<ul role="menu" class="sub-menu">
+										<li><a href="shop.html" class="active">Sản phẩm</a></li>
+										<li><a href="product-details.html">Mô tả sản phẩm</a></li>
+										<li><a href="checkout.html">Thanh toán</a></li>
+										<li><a href="cart.html">Giỏ hàng</a></li>
+										<li><a href="login.html">Đăng nhập</a></li>
+									</ul></li>
+								<li class="dropdown"><a href="#">Blog<i
+										class="fa fa-angle-down"></i></a>
+									<ul role="menu" class="sub-menu">
+										<li><a href="blog.html">Danh sách Blog</a></li>
+										<li><a href="blog-single.html">Blog đơn</a></li>
+									</ul></li>
+								<li><a href="404.html">404</a></li>
+								<li><a href="contact-us.html">Liên hệ</a></li>
+							</ul>
 						</div>
 					</div>
-					<div class="col-sm-5">
-						<div class="logocheckout" style="margin-bottom: 25px;margin-top: -10px;">
-							<img src="${pageContext.request.contextPath}/assets/user/images/home/book1.jpg" alt="Logo">
+					<div class="col-sm-3">
+						<div class="search_box pull-right">
+							<input type="text" placeholder="Tìm kiếm..." />
 						</div>
-					</div>			
+					</div>
 				</div>
 			</div>
 		</div>
+	</header>
+	<!--/header-->
+
+	<section id="cart_items">
+		<div class="container">
+			<div class="breadcrumbs">
+				<ol class="breadcrumb">
+					<li><a href="http://localhost:8080/bookstorePTIT/">Home</a></li>
+					<li class="active">Đơn hàng</li>
+				</ol>
+			</div>
+			<div class="table-responsive cart_info">
+				<table class="table table-condensed">
+					<thead>
+						<tr class="order_menu">
+							<td class="order_id">Mã đơn</td>
+							<td class="product">Sản phẩm</td>
+							<td class="price">Giá</td>
+							<td class="total">Tổng tiền</td>
+							<td class="information">Thông tin người đặt</td>
+							<td class="time_order">Thời gian đặt</td>
+							<td class="status">Trạng thái</td>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="order" items="${orders}">
+							<tr>
+								<td class="id_order">${order.id}</td>
+								<td class="product_info">
+									<div class="product_list">
+										<c:forEach var="item" items="${order.orderItems}">
+											<div class="product_item">
+												<img src="<%=request.getContextPath()%>/assets/user/images/home/b1.jpg" alt="${item.bookID}" />
+												<div class="product_name" id="bookName-${item.bookID}">Loading...</div>
+    											<div class="quantity" style="margin-left: 7px;">(x${item.quantity})</div>
+											</div>
+										</c:forEach>
+									</div>
+								</td>
+								<td class="price_order">
+									<div class="price_list">
+										<c:forEach var="item" items="${order.orderItems}">
+											<div class="price_item">${item.price}đ</div>
+										</c:forEach>
+									</div>
+								</td>
+								<td class="total_order"><fmt:formatNumber
+										value="${order.total}" type="number" groupingUsed="true" /> đ
+								</td>
+								<td class="customer_info">
+									<div>Tên: ${order.name}</div>
+									<div>SĐT: ${order.phone}</div>
+									<div>Email: ${order.email}</div>
+									<div>Địa chỉ: ${order.address}</div>
+								</td>
+								<td class="time_order">${order.formattedOrderDate}</td>
+								<td class="status_order"><c:choose>
+										<c:when test="${order.status == 0}">
+											<button
+												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
+												Đã huỷ</button>
+										</c:when>
+										<c:when test="${order.status == 1}">
+											<button
+												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
+												Đang giao</button>
+										</c:when>
+										<c:when test="${order.status == 2}">
+											<button
+												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
+												Thành công</button>
+										</c:when>
+										<c:otherwise>
+											<button
+												style="background-color: gray; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+												Trạng thái không xác định</button>
+										</c:otherwise>
+									</c:choose>
+								</td>
+							</tr>
+						</c:forEach>
+				</table>
+			</div>
+		</div>
 	</section>
-	
+
+	<!--/#cart_items-->
+
 	<footer id="footer">
 		<!--Footer-->
 		<div class="footer-top">
@@ -345,4 +463,58 @@
 
 	</footer>
 	<!--/Footer-->
+
+	<script src="<%=request.getContextPath()%>/assets/user/js/jquery.js"></script>
+	<script
+		src="<%=request.getContextPath()%>/assets/user/js/price-range.js"></script>
+	<script
+		src="<%=request.getContextPath()%>/assets/user/js/jquery.scrollUp.min.js"></script>
+	<script
+		src="<%=request.getContextPath()%>/assets/user/js/bootstrap.min.js"></script>
+	<script
+		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
+	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
+	<script>
+	$(document).ready(function() {
+	    $(".product_item").each(function() {
+	        var bookID = $(this).find("img").attr("alt"); 
+	        if (!bookID) {
+	            console.error("bookID is not found for this item");
+	            return; 
+	        }
+	        var bookNameElement = $(this).find(".product_name");
+	        var imageElement = $(this).find("img"); 
+
+	        $.ajax({
+	            url: '<%=request.getContextPath()%>/getBookName',
+	            type: 'GET',
+	            data: {
+	                bookID: bookID
+	            },
+	            success: function(response) {
+	                bookNameElement.text(response.name); // Lấy tên từ đối tượng JSON
+	            },
+	            error: function() {
+	                bookNameElement.text("Error loading book name");
+	            }
+	        });
+
+	        $.ajax({
+	            url: '<%=request.getContextPath()%>/getBookImage', // URL để lấy hình ảnh
+	            type: 'GET',
+	            data: {
+	                bookID: bookID
+	            },
+	            success: function(imageResponse) {
+	                imageElement.attr("src", "<%=request.getContextPath()%>/assets/user/images/home/" + imageResponse);
+	            },
+	            error: function() {
+	                imageElement.attr("src", "<%=request.getContextPath()%>/assets/user/images/home/default.jpg");
+	            }
+	        });
+	    });
+	});
+	</script>
+
 </body>
+</html>

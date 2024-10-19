@@ -132,8 +132,8 @@
 							<ul class="nav navbar-nav">
 								<li><a href=""><i class="fa fa-user"></i> Tài khoản</a></li>
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i>
-										Thanh toán</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
+										Đơn hàng</a></li>
 								<li><a
 									href="http://localhost:8080/bookstorePTIT/shop-cart/"
 									id="cart-link"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
