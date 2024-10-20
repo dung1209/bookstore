@@ -181,7 +181,7 @@
 										<li><a href="blog-single.html">Blog đơn</a></li>
 									</ul></li>
 								<li><a href="404.html">404</a></li>
-								<li><a href="contact-us.html">Liên hệ</a></li>
+								<li><a href=http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
 							</ul>
 						</div>
 					</div>

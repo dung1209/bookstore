@@ -341,5 +341,10 @@ public class HomeController {
         }
         return "Order not found";
     }
+    
+    @RequestMapping("/contact")
+	public String register() {
+		return "user/Contact";
+	}
 
 }

@@ -160,9 +160,9 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="http://localhost:8080/bookstorePTIT/">Trang
+								<li><a href="http://localhost:8080/bookstorePTIT/"  style="color: #fdb45e">Trang
 										chủ</a></li>
-								<li class="dropdown"><a href="#" class="active">Cửa
+								<li class="dropdown"><a href="#" class="active" style="color: #696763">Cửa
 										hàng<i class="fa fa-angle-down"></i>
 								</a>
 									<ul role="menu" class="sub-menu">
@@ -179,7 +179,7 @@
 										<li><a href="blog-single.html">Blog đơn</a></li>
 									</ul></li>
 								<li><a href="404.html">404</a></li>
-								<li><a href="contact-us.html">Liên hệ</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
 							</ul>
 						</div>
 					</div>
