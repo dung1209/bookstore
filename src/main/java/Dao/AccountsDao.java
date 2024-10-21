@@ -36,4 +36,36 @@ public class AccountsDao {
         }
         return email;
     }
+    
+    public void updateEmailByAccountId(int accountId, String newEmail) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = HibernateUtils.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+
+            Query query = session.createQuery("UPDATE Accounts a SET a.email = :newEmail WHERE a.id = :accountId");
+            query.setParameter("newEmail", newEmail);
+            query.setParameter("accountId", accountId);
+
+            int result = query.executeUpdate();
+            transaction.commit();
+
+            if (result > 0) {
+                System.out.println("Email updated successfully.");
+            } else {
+                System.out.println("No account found with the specified ID.");
+            }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
 }

@@ -346,5 +346,56 @@ public class HomeController {
 	public String register() {
 		return "user/Contact";
 	}
+    
+    @RequestMapping("/account")
+	public String account(Model model) {
+    	CustomersDao customerDao = new CustomersDao();
+    	AccountsDao accountDao = new AccountsDao();
+    	int id=2;
+    	Customers customer = customerDao.getCustomerById(id);
+    	int accountID = customerDao.getAccountIDByCustomerID(id);
+    	String email = accountDao.getEmailByAccountId(accountID);
+        
+        model.addAttribute("customer", customer);
+        model.addAttribute("email", email);
+		return "user/Account";
+	}
+    
+    @PostMapping("/updateCustomer")
+    @ResponseBody
+    public Map<String, Object> updateCustomer(@RequestBody Map<String, Object> requestData) {
+        Map<String, Object> response = new HashMap<>();
+        String newEmail = (String) requestData.get("newEmail");
+        Customers customer = new ObjectMapper().convertValue(requestData.get("customer"), Customers.class); 
+
+        int customerIdToUpdate = 2;
+
+        try {
+            CustomersDao customersDao = new CustomersDao();
+            AccountsDao accountsDao = new AccountsDao();
+            
+            Customers existingCustomer = customersDao.getCustomerById(customerIdToUpdate);
+            
+            if (existingCustomer != null) {
+                existingCustomer.setName(customer.getName());
+                existingCustomer.setPhone(customer.getPhone());
+                existingCustomer.setAddress(customer.getAddress());
+
+                customersDao.updateCustomer(existingCustomer); 
+                
+                int accountId = existingCustomer.getAccountID(); 
+                accountsDao.updateEmailByAccountId(accountId, newEmail);
+                
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+                response.put("message", "Customer not found");
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+            e.printStackTrace();
+        }
+        return response;
+    }
 
 }

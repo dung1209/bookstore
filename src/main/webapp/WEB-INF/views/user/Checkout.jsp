@@ -125,7 +125,7 @@
 				<div class="col-sm-8">
 					<div class="shop-menu pull-right">
 						<ul class="nav navbar-nav">
-							<li><a href=""><i class="fa fa-user"></i> Tài khoản</a></li>
+							<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
 							<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
 							<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
 										Đơn hàng</a></li>
@@ -547,10 +547,28 @@
             });
             isValid = false;
         }
+        if (phone.length < 10 || phone.length > 11) {
+            toast({
+                title: "Chú ý!",
+                message: "Số điện thoại phải có độ dài từ 10 đến 11 chữ số.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
         if (!email.trim()) {
             toast({
                 title: "Chú ý!",
                 message: "Vui lòng điền đầy đủ email.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+        if (!email.endsWith("@gmail.com")) {
+            toast({
+                title: "Chú ý!",
+                message: "Email phải có đuôi @gmail.com",
                 type: "error",
                 duration: 1000
             });
