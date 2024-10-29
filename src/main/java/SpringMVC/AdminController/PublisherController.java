@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Dao.BooksDao;
 import Dao.CategoriesDao;
@@ -38,27 +39,30 @@ public class PublisherController {
 	PublishersDao publishersDao = new PublishersDao();
 	
 	@RequestMapping(value = "/admin/publisher-manage/add-new-publisher", method = RequestMethod.POST)
-	public String addNewPublisher(@ModelAttribute("newPublisher") Publishers newPublisher) {
+	public String addNewPublisher(@ModelAttribute("newPublisher") Publishers newPublisher, RedirectAttributes redirectAttributes) {
 		publishersDao.save(newPublisher);
 		System.out.println(">>>>check add publisher: " + newPublisher);
-		
+		redirectAttributes.addAttribute("addSuccess", "success");
 		return "redirect:/admin/publisher-manage";
 	}
 	
 	@RequestMapping(value = "/admin/publisher-manage/update/{publisherID}", method = RequestMethod.POST)
 	public String updatePublisher(@RequestParam("name") String name,
-			@PathVariable("publisherID") int publisherID) {
+			@PathVariable("publisherID") int publisherID,
+			RedirectAttributes redirectAttributes) {
 		Publishers publisher = publishersDao.findPublisherById(publisherID);
 		publisher.setName(name);
 		System.out.println(">>>check update publisher: " + publisher);
-		
+		redirectAttributes.addAttribute("updateSuccess", "success");
 		publishersDao.update(publisher);
 		return "redirect:/admin/publisher-manage";
 	}
 	
 	@RequestMapping(value = "/admin/publisher-manage/delete/{publisherID}", method = RequestMethod.POST)
-	public String deletePublisher(@PathVariable("publisherID") int categoryID) {
+	public String deletePublisher(@PathVariable("publisherID") int categoryID,
+			RedirectAttributes redirectAttributes) {
 		publishersDao.deleteById(categoryID);
+		redirectAttributes.addAttribute("deleteSuccess", "success");
 		return "redirect:/admin/publisher-manage";
 	}
 	

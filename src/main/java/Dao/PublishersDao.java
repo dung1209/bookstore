@@ -10,6 +10,7 @@ import bookstorePTIT.bean.Categories;
 import bookstorePTIT.bean.Publishers;
 import HibernateUtils.HibernateUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -17,7 +18,7 @@ public class PublishersDao {
     private static SessionFactory factory = HibernateUtils.getSessionFactory();
 
     public List<Publishers> getPublishers() {
-        List<Publishers> publishersList = null;
+        List<Publishers> publishersList = new ArrayList<>();
         Session session = null;
         Transaction transaction = null;
         try {

@@ -13,41 +13,55 @@
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
 	rel="stylesheet">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-	crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+	<!-- Toast Thông báo -->
+	<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1060">
+    	<div id="liveToast" class="toast align-items-center bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        	<div class="d-flex">
+            	<div class="toast-body" id="toastMessage"></div>
+            	<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        	</div>
+    	</div>
+	</div>
+	
 	<!-- Sidebar -->
 	<div class="sidebar">
 		<h2 class="sidebar-title">BOOK STORE PTIT</h2>
 		<ul class="sidebar-menu">
 			<li><a href="/bookstorePTIT/admin/home"><i
 					class="fas fa-home"></i> Trang Chủ</a></li>
+			<li><a href="/bookstorePTIT/admin/order"><i
+					class="fas fa-shopping-bag"></i> Quản Lý Đơn Hàng</a></li>
 			<li><a href="/bookstorePTIT/admin/book-manage"><i
-					class="fas fa-book"></i> Quản Lý Sách</a></li>
+					class="fas fa-book-open"></i> Quản Lý Sách</a></li>
 			<li><a href="/bookstorePTIT/admin/import-manage" class="active"><i
-					class="fas fa-book"></i> Quản Lý Nhập Kho</a></li>
+					class="fas fa-dolly"></i> Quản Lý Nhập Kho</a></li>
 			<li><a href="/bookstorePTIT/admin/author-manage"><i
 					class="fas fa-user"></i> Quản Lý Tác Giả</a></li>
 			<li><a href="/bookstorePTIT/admin/category-manage"><i
-					class="fas fa-user"></i> Quản Lý Thể Loại</a></li>
+					class="fas fa-layer-group"></i> Quản Lý Thể Loại</a></li>
 			<li><a href="/bookstorePTIT/admin/publisher-manage"><i
-					class="fas fa-user"></i> Quản Lý Nhà Xuất Bản</a></li>
-			<li><a href="/bookstorePTIT/admin/staff-manage"><i
+					class="fas fa-building"></i> Quản Lý Nhà Xuất Bản</a></li>
+			<li><a href="/bookstorePTIT/admin/employee-manage"><i
 					class="fas fa-users"></i> Quản Lý Nhân Viên</a></li>
 			<li><a href="/bookstorePTIT/admin/statistic-manage"><i
 					class="fas fa-chart-line"></i> Thống Kê Doanh Thu</a></li>
 		</ul>
+		<div class="logout-btn mt-auto w-100">
+				<p class="text-white fs-6 fw-bold mb-2">Xin chào, Admin!</p>
+        		<a href="/bookstorePTIT/logout" class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
+            		<i class="fas fa-sign-out-alt me-2"></i> Đăng Xuất
+        		</a>
+    	</div>
 	</div>
 
 	<!-- Main Content -->
 	<div class="main-content">
 		<section class="dashboard">
 			<div class="container">
-				<h1>Nhập kho</h1>
+				<h1><b>NHẬP KHO</b></h1>
 				<div class="d-flex justify-content-between align-items-center">
 					<!-- Add new book -->
 					<button type="button" class="btn btn-primary"
@@ -73,7 +87,7 @@
 				<div class="table-container mt-3">
 					<table class="table table-bordered table-hover table-striped">
 						<thead class="thead-dark">
-							<tr>
+							<tr style="background-color: #0d6efd; color: #fff">
 								<th>ID</th>
 								<th>Sách</th>
 								<th>Số lượng</th>
@@ -115,7 +129,7 @@
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog ">
 			<div class="modal-content">
-				<div class="modal-header">
+				<div class="modal-header bg-primary-subtle">
 					<h5 class="modal-title" id="exampleModalLabel">Nhập sách</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
@@ -161,7 +175,7 @@
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog ">
 			<div class="modal-content">
-				<div class="modal-header">
+				<div class="modal-header bg-primary-subtle">
 					<h5 class="modal-title" id="exampleModalLabel">Sửa đơn nhập sách</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
@@ -169,21 +183,16 @@
 				<div class="modal-body">
 					<form:form action="" id="updateForm" class="row g-3" modelAttribute="importupdate"
 						method="POST">
-						<div class="col-md-12">
-							<label for="importID" class="form-label">ID</label> <input
-								id="importID1" name="importID" type="number" class="form-control" required readonly/>
-						</div><div class="col-md-12">
-							<label for="oldQuantity" class="form-label">Old quantity</label> <input
-								id="oldQuantity1" name="oldQuantity" type="number" class="form-control" required readonly/>
-						</div>
+						<input id="importID1" name="importID" type="number" class="form-control" required readonly hidden/>
+						<input id="oldQuantity1" name="oldQuantity" type="number" class="form-control" required readonly hidden/>
+						
 						<div class="col-md-12">
 							<label for="bookID" class="form-label">Sách</label> <input
 								id="book2" name="bookName" type="text" class="form-control" required readonly/>
 						</div>
-						<div class="col-md-12">
-							<label for="bookID" class="form-label">bookID</label> <input
-								id="bookID1" name="bookID" type="number" class="form-control" required readonly/>
-						</div>
+						
+						<input id="bookID1" name="bookID" type="number" class="form-control" required readonly hidden/>
+						
 						<div class="col-md-12">
 							<label for="quantity" class="form-label">Số lượng</label> <input
 								id="quantity1" name="quantity" type="number" class="form-control" required />
@@ -209,7 +218,7 @@
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog ">
 			<div class="modal-content">
-				<div class="modal-header">
+				<div class="modal-header bg-primary-subtle">
 					<h4 class="modal-title" id="exampleModalLabel">Xác nhận xóa
 						đơn nhập</h4>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -229,15 +238,48 @@
 	</div>
 	<!-- End Modal xác nhận xóa-->
 
-	<footer class="footer">
-		<div class="container">
-			<p>&copy; 2024 Cửa Hàng Sách Online</p>
-		</div>
-	</footer>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Sử dụng phiên bản đầy đủ -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript">
+	function showToast(message, type) {
+    	const toastMessage = document.getElementById('toastMessage');
+    	const toastElement = document.getElementById('liveToast');
+    	
+    	toastElement.className = 'toast align-items-center border-0';
+    	toastElement.classList.add('bg-'+type, 'text-white');
+    	console.log(type)
+    	console.log(toastElement.classList)
+    	toastMessage.textContent = message; // Cập nhật nội dung Toast
+
+    	const toast = new bootstrap.Toast(toastElement);
+    	toast.show(); // Hiển thị Toast
+	}
+	
+	// Kiểm tra tham số trong URL
+	window.onload = function () {
+	    const params = new URLSearchParams(window.location.search);
+	    if (params.has('updateSuccess')) {
+	        const updateStatus = params.get('updateSuccess');
+	        if (updateStatus === 'success') {
+	            showToast('Cập nhật thành công!', 'success'); // Hiển thị thông báo thành công
+	        }
+	    }
+	    if (params.has('addSuccess')) {
+	        const updateStatus = params.get('addSuccess');
+	        if (updateStatus === 'success') {
+	            showToast('Thêm mới thành công!', 'success'); // Hiển thị thông báo thành công
+	        }
+	    }
+	    if (params.has('deleteSuccess')) {
+	        const updateStatus = params.get('deleteSuccess');
+	        if (updateStatus === 'success') {
+	            showToast('Xóa thành công!', 'success'); // Hiển thị thông báo thành công
+	        }
+	    }
+	};
+	
 		document.querySelectorAll('.btn-update').forEach(button => {
         	button.addEventListener('click', function () {
             	var modelData = this.getAttribute('data-bs-whatever');

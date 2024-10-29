@@ -11,17 +11,22 @@ import bookstorePTIT.bean.Authors;
 import bookstorePTIT.bean.Categories;
 import HibernateUtils.HibernateUtils;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Repository
 public class BooksDao {  
-    private static SessionFactory factory = HibernateUtils.getSessionFactory();
+    public static SessionFactory factory = HibernateUtils.getSessionFactory();
     
     public List<Books> getBooks() {
-        List<Books> booksList = null;
+        List<Books> booksList = new ArrayList<Books>();
         Session session = null;
         Transaction transaction = null;
         try {
@@ -265,4 +270,65 @@ public class BooksDao {
         }
         return books;
     }
+    
+    public int getTotalRemainingStock() {
+    	int totalRemainingStock = 0;
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            if (factory == null) {
+                factory = HibernateUtils.getSessionFactory();
+            }
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+
+            String hql = "SELECT SUM(b.stock - b.sold) FROM Books b";
+            totalRemainingStock = ((Long) session.createQuery(hql).uniqueResult()).intValue();
+            
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return totalRemainingStock;
+    }
+    
+    public List<Books> getTopSellingBooks() {
+    	List<Books> books = null;
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            if (factory == null) {
+                factory = HibernateUtils.getSessionFactory();
+            }
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+
+            String hql = "FROM Books ORDER BY sold DESC";
+            Query<Books> query = session.createQuery(hql, Books.class);
+            query.setMaxResults(3); // Giới hạn kết quả về 3 cuốn sách
+
+            books = query.list();
+            
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return books;
+    }
+    
+    
 }

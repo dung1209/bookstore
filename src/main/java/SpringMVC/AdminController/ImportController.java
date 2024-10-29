@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Dao.BooksDao;
 import Dao.ImportsDao;
@@ -37,7 +38,8 @@ public class ImportController {
 	BooksDao booksDao = new BooksDao();
 	
 	@RequestMapping(value = "/admin/import-manage/add-new-import", method = RequestMethod.POST)
-	public String addNewImport(@ModelAttribute("newimport") Imports newImport, @RequestParam("bookID") int bookID) {
+	public String addNewImport(@ModelAttribute("newimport") Imports newImport, @RequestParam("bookID") int bookID,
+			RedirectAttributes redirectAttributes) {
 		Books book = new Books();
 		book.setId(bookID);
 		
@@ -55,7 +57,7 @@ public class ImportController {
         } else {
             System.out.println("Sách không tồn tại với ID: " + bookID);
         }
-		
+		redirectAttributes.addAttribute("addSuccess", "success");
 		return "redirect:/admin/import-manage";
 	}
 	
@@ -63,7 +65,8 @@ public class ImportController {
 	public String updateImport(@ModelAttribute("importupdate") Imports importupdate,
 			@PathVariable("importID") int importID, 
 			@RequestParam("bookID") int bookID,
-			@RequestParam("oldQuantity") int oldQuantity) {
+			@RequestParam("oldQuantity") int oldQuantity,
+			RedirectAttributes redirectAttributes) {
 		Imports imports = importsDao.findImportByID(importID);
 		imports.setQuantity(importupdate.getQuantity());
 		imports.setPrice_import(importupdate.getPrice_import());
@@ -77,13 +80,14 @@ public class ImportController {
         existingBook.setStock(newQuantity) ; 
         
         booksDao.update(existingBook);  
-		
+        redirectAttributes.addAttribute("updateSuccess", "success");
 		return "redirect:/admin/import-manage";
 	}
 	
 	@RequestMapping(value = "/admin/import-manage/delete/{importID}", method = RequestMethod.POST)
-	public String deleteBook(@PathVariable("importID") int importID) {
+	public String deleteBook(@PathVariable("importID") int importID,RedirectAttributes redirectAttributes) {
 		importsDao.deleteById(importID);
+		redirectAttributes.addAttribute("deleteSuccess", "success");
 		return "redirect:/admin/import-manage";
 	}
 	
@@ -103,6 +107,7 @@ public class ImportController {
         		break;
 		}
 		model.addAttribute("imports", imports);
+		
 		return "admin/ImportManage";
 	}
 }

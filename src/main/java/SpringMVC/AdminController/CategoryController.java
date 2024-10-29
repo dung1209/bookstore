@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Dao.BooksDao;
 import Dao.CategoriesDao;
@@ -37,26 +38,28 @@ public class CategoryController {
 	CategoriesDao categoriesDao = new CategoriesDao();
 	
 	@RequestMapping(value = "/admin/category-manage/add-new-category", method = RequestMethod.POST)
-	public String addNewCategory(@ModelAttribute("newCategory") Categories category) {
+	public String addNewCategory(@ModelAttribute("newCategory") Categories category, RedirectAttributes redirectAttributes) {
 		categoriesDao.save(category);
 		System.out.println(">>>>check add category:" + category);
+		redirectAttributes.addAttribute("addSuccess", "success");
 		return "redirect:/admin/category-manage";
 	}
 	
 	@RequestMapping(value = "/admin/category-manage/update/{categoryID}", method = RequestMethod.POST)
 	public String updateCategory(@RequestParam("name") String name,
-			@PathVariable("categoryID") int categoryID) {
+			@PathVariable("categoryID") int categoryID, RedirectAttributes redirectAttributes) {
 		Categories category = categoriesDao.findCategoryById(categoryID);
 		category.setName(name);
 		
 		categoriesDao.update(category);
-		
+		redirectAttributes.addAttribute("updateSuccess", "success");
 		return "redirect:/admin/category-manage";
 	}
 	
 	@RequestMapping(value = "/admin/category-manage/delete/{categoryID}", method = RequestMethod.POST)
-	public String deleteBook(@PathVariable("categoryID") int categoryID) {
+	public String deleteBook(@PathVariable("categoryID") int categoryID, RedirectAttributes redirectAttributes) {
 		categoriesDao.deleteById(categoryID);
+		redirectAttributes.addAttribute("deleteSuccess", "success");
 		return "redirect:/admin/category-manage";
 	}
 	

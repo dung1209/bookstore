@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Dao.AuthorsDao;
 import Dao.BooksDao;
@@ -42,7 +43,8 @@ public class AuthorController {
 	@RequestMapping(value = "/admin/author-manage/add-new-author", method = RequestMethod.POST)
 	public String addNewAuthor(@RequestParam("name") String name,
 			@RequestParam("bio") String bio,
-			@RequestParam("birthdate") String birthdate) {
+			@RequestParam("birthdate") String birthdate,
+			RedirectAttributes redirectAttributes) {
 		System.out.println(">>>>>birthdate" + birthdate.getClass().getName());
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date dob = null;
@@ -60,7 +62,7 @@ public class AuthorController {
 		System.out.println(">>>>>>>check new author" +author);
 		authorsDao.save(author);
 		//System.out.println(">>>>>add author");
-		
+		redirectAttributes.addAttribute("addSuccess", "success");
 		return "redirect:/admin/author-manage";
 	}
 	
@@ -68,7 +70,8 @@ public class AuthorController {
 	public String updateAuthor(@PathVariable("authorID") int authorID, 
 							@RequestParam("name") String name,
 							@RequestParam("bio") String bio,
-							@RequestParam("birthdate") String birthdate) {
+							@RequestParam("birthdate") String birthdate,
+							RedirectAttributes redirectAttributes) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date dob = null;
 		try {
@@ -86,13 +89,14 @@ public class AuthorController {
 		System.out.println(">>>>Check update author: " + author);
 		
 		authorsDao.update(author);
-		
+		redirectAttributes.addAttribute("updateSuccess", "success");
 		return "redirect:/admin/author-manage";
 	}
 	
 	@RequestMapping(value = "/admin/author-manage/delete/{authorID}", method = RequestMethod.POST)
-	public String deleteAuthor(@PathVariable("authorID") int authorID) {
+	public String deleteAuthor(@PathVariable("authorID") int authorID, RedirectAttributes redirectAttributes) {
 		authorsDao.deleteById(authorID);
+		redirectAttributes.addAttribute("deleteSuccess", "success");
 		return "redirect:/admin/author-manage";
 	}
 	
@@ -100,6 +104,7 @@ public class AuthorController {
 	public String findAuthors(@RequestParam("inputText") String input, Model model) {
 		List<Authors> authors = authorsDao.findAuthorByName(input);
 		model.addAttribute("authors", authors);
+		
 		return "admin/AuthorManage";
 	}
 }

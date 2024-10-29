@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,7 +20,7 @@ public class Order_Items {
 
     @Column(name = "orderID", nullable = false)
     private int orderID;
-
+    
     @Column(name = "bookID", nullable = false)
     private int bookID;
 
@@ -35,11 +37,12 @@ public class Order_Items {
         this.quantity = quantity;
         this.price = price;
     }
+    
 
     public Order_Items() {
     }
 
-    public int getId() {
+	public int getId() {
         return id;
     }
 
@@ -54,6 +57,7 @@ public class Order_Items {
     public void setOrderID(int orderID) {
         this.orderID = orderID;
     }
+    
 
     public int getBookID() {
         return bookID;
@@ -63,7 +67,7 @@ public class Order_Items {
         this.bookID = bookID;
     }
 
-    public int getQuantity() {
+	public int getQuantity() {
         return quantity;
     }
 

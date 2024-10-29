@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Dao.BooksDao;
 import bookstorePTIT.bean.Authors;
@@ -42,7 +43,8 @@ public class BookController {
 							@RequestParam("price") Double price,
 							
 							@RequestParam("image") CommonsMultipartFile imageFile,
-							HttpServletRequest request) {
+							HttpServletRequest request,
+							RedirectAttributes redirectAttributes) {
 		//@RequestParam("stock") int stock,
 		Books newBook = new Books();
 		System.out.println("check img: " + imageFile.toString());
@@ -80,13 +82,14 @@ public class BookController {
 		System.out.println(newBook);
 		
 		bookDao.save(newBook);
-		
+		redirectAttributes.addAttribute("addSuccess", "success");
 		return "redirect:/admin/book-manage";
 	}
 	
 	@RequestMapping(value = "/admin/book-manage/delete/{id}", method = RequestMethod.POST)
-	public String deleteBook(@PathVariable("id") int id) {
+	public String deleteBook(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
 		bookDao.deleteById(id);
+		redirectAttributes.addAttribute("deleteSuccess", "success");
 		return "redirect:/admin/book-manage";
 	}
 	
@@ -102,7 +105,8 @@ public class BookController {
 			@RequestParam("stock") int stock,
 			@RequestParam("sold") int sold,
 			@RequestParam("image") String img,
-			HttpServletRequest request) {
+			HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
 		
 		Books newBook = new Books();
 		
@@ -127,7 +131,7 @@ public class BookController {
 		newBook.setImage(img);
 		
 		bookDao.update(newBook);
-		
+		redirectAttributes.addAttribute("updateSuccess", "success");
 		return "redirect:/admin/book-manage";
 	}
 	
