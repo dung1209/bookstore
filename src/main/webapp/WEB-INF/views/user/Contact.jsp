@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Cảm ơn</title>
+<title>Liên hệ</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -35,9 +35,14 @@
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+	crossorigin="anonymous" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+</head>
 <body>
 	<header id="header">
 		<!--header-->
@@ -126,46 +131,125 @@
 				</div>
 			</div>
 		</div>
-		<!--/header-middle-->
-	</header>
-
-	<section id="cart_items">
+	<!--/header-middle-->
+	
+		<div class="header-bottom">
+		<!--header-bottom-->
 		<div class="container">
-			<div class="register-req">
-				<p>Đơn hàng của bạn đã được đặt thành công. </p>
-			</div><!--/register-req-->
-
-			<div class="shopper-informations">
-				<div class="row">
-					<div class="col-sm-4">
-						<div class="order-message">
-							<p id="thank-you-message">THANK YOU!</p>
-							<div class="register-req">
-								<p id="thank-you-message1">Cảm ơn bạn đã ủng hộ sản phẩm bên chúng tôi, nếu có bất kì thắc mắc xin hãy liên hệ  với chúng tôi để được hỗ trợ sớm nhất.</p>
-							</div>
-							<a class="btn btn-primary" href="http://localhost:8080/bookstorePTIT/" id="back-home">Về trang chủ</a>
-							<a class="btn btn-primary" href="" id="history-order">Đơn hàng</a>
-						</div>	
-					</div>	
-					<div class="col-sm-3">
-						<div class="shopper-info">
-							<p>Thông tin Shop</p>
-							<form>
-								<input type="text" placeholder="SĐT:  +2 95 01 88 821" disabled>
-								<input type="text" placeholder="Email: bansach@gmail.com" disabled>
-								<input type="text" placeholder="Địa chỉ: 97 Đ. Man Thiện, Quận 9" disabled>
-							</form>
-						</div>
+			<div class="row">
+				<div class="col-sm-9">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse"
+							data-target=".navbar-collapse">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
 					</div>
-					<div class="col-sm-5">
-						<div class="logocheckout" style="margin-bottom: 25px;margin-top: -10px;">
-							<img src="${pageContext.request.contextPath}/assets/user/images/home/book1.jpg" alt="Logo">
-						</div>
-					</div>			
+					<div class="mainmenu pull-left">
+						<ul class="nav navbar-nav collapse navbar-collapse">
+							<li><a href="http://localhost:8080/bookstorePTIT/">Trang
+									chủ</a></li>
+							<li><a href="#" class="active" style="color: #696763">Cửa hàng<i
+									class="fa fa-angle-down"></i>
+							</a>
+								<ul role="menu" class="sub-menu">
+									<li><a href="shop.html" class="active">Sản phẩm</a></li>
+									<li><a href="product-details.html">Mô tả sản phẩm</a></li>
+									<li><a href="checkout.html">Thanh toán</a></li>
+									<li><a
+										href="http://localhost:8080/bookstorePTIT/shop-cart/">Giỏ
+											hàng</a></li>
+									<li><a href="login.html">Đăng nhập</a></li>
+								</ul></li>
+							<li class="dropdown"><a href="#">Blog<i
+									class="fa fa-angle-down"></i></a>
+								<ul role="menu" class="sub-menu">
+									<li><a href="blog.html">Danh sách Blog</a></li>
+									<li><a href="blog-single.html">Blog đơn</a></li>
+								</ul></li>
+							<li><a href="404.html">404</a></li>
+							<li class="dropdown"><a href="http://localhost:8080/bookstorePTIT/contact/" style="color: #fdb45e">Liên hệ</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="search_box pull-right">
+						<input type="text" placeholder="Tìm kiếm..." />
+					</div>
 				</div>
 			</div>
 		</div>
-	</section>
+	</div>
+	</header>
+	<!--/header-->
+	 
+	 <div id="contact-page" class="container">
+    	<div class="bg">
+	    	<div class="row">    		
+	    		<div class="col-sm-12">    			   			
+					<h2 class="title text-center">LIỆN HỆ <strong>CHÚNG TÔI</strong></h2>    			    				    				
+					<div id="gmap" class="contact-map">
+					</div>
+				</div>			 		
+			</div>    	
+    		<div class="row">  	
+	    		<div class="col-sm-8">
+	    			<div class="contact-form">
+	    				<h2 class="title text-center">Liên hệ</h2>
+	    				<div class="status alert alert-success" style="display: none"></div>
+				    	<form id="main-contact-form" class="contact-form row" name="contact-form" method="post">
+				            <div class="form-group col-md-6">
+				                <input type="text" name="name" class="form-control" required="required" placeholder="Tên">
+				            </div>
+				            <div class="form-group col-md-6">
+				                <input type="email" name="email" class="form-control" required="required" placeholder="Email">
+				            </div>
+				            <div class="form-group col-md-12">
+				                <input type="text" name="subject" class="form-control" required="required" placeholder="Chủ đề">
+				            </div>
+				            <div class="form-group col-md-12">
+				                <textarea name="message" id="message" required="required" class="form-control" rows="8" placeholder="Nhập nội dung..."></textarea>
+				            </div>                        
+				            <div class="form-group col-md-12">
+				                <input type="submit" name="submit" class="btn btn-primary pull-right" value="Gửi">
+				            </div>
+				        </form>
+	    			</div>
+	    		</div>
+	    		<div class="col-sm-4">
+	    			<div class="contact-info">
+	    				<h2 class="title text-center">Thông tin liên hệ</h2>
+	    				<address>
+	    					<p>E-Shopper ADV.</p>
+							<p>Học viện Bưu chính Viễn Thông cs.HCM</p>
+							<p>Quận 9, Hồ Chí Minh</p>
+							<p>Mobile: +2346 17 38 93</p>
+							<p>Fax: 1-714-252-0026</p>
+							<p>Email: bansach@e-shopper.com</p>
+	    				</address>
+	    				<div class="social-networks">
+	    					<h2 class="title text-center">Mạng xã hội</h2>
+							<ul>
+								<li>
+									<a href="#"><i class="fa fa-facebook"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="fa fa-twitter"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="fa fa-google-plus"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="fa fa-youtube"></i></a>
+								</li>
+							</ul>
+	    				</div>
+	    			</div>
+    			</div>    			
+	    	</div>  
+    	</div>	
+    </div><!--/#contact-page-->
 	
 	<footer id="footer">
 		<!--Footer-->
@@ -346,6 +430,18 @@
 			</div>
 		</div>
 
-	</footer>
-	<!--/Footer-->
+	</footer><!--/Footer-->
+	
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/assets/user/js/gmaps.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="<%=request.getContextPath()%>/assets/user/js/contact.js"></script>
+	<script src="<%=request.getContextPath()%>/assets/user/js/jquery.js"></script>
+	<script src="<%=request.getContextPath()%>/assets/user/js/price-range.js"></script>
+	<script src="<%=request.getContextPath()%>/assets/user/js/jquery.scrollUp.min.js"></script>
+	<script src="<%=request.getContextPath()%>/assets/user/js/bootstrap.min.js"></script>
+	<script src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
+	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
+	
 </body>
+</html>

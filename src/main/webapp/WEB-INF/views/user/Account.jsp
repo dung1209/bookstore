@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Giỏ hàng</title>
+<title>Tài khoản</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -46,13 +46,35 @@
 <body>
 	<div id="toast"></div>
 	<div id="confirmModal" class="modal">
-		<div class="modal-content">
+		<div class="modal-content" style="margin: 5% auto;">
 			<div class="modal-header">
-				<h2 class="modal-title">Xác nhận</h2>
+				<h2 class="modal-title">Chỉnh sửa thông tin</h2>
 				<span class="close" id="modalClose">&times;</span>
 			</div>
 			<div class="modal-body">
-				<p class="title-question">Bạn có muốn xoá sản phẩm khỏi giỏ hàng không?</p>
+				<div>
+					<div class="infor-customer1">Họ và tên:</div>
+					<input type="text" name="name" class="form-control"
+						required="required" placeholder="Tên" value="${customer.name}">
+				</div>
+				<div>
+					<div class="infor-customer1">Số điện thoại:</div>
+					<input type="text" name="phone" class="form-control"
+						required="required" placeholder="Số điện thoại"
+						value="${customer.phone}">
+
+				</div>
+				<div>
+					<div class="infor-customer1">Email:</div>
+					<input type="email" name="email" class="form-control"
+						required="required" placeholder="Email" value="${email}">
+				</div>
+				<div>
+					<div class="infor-customer1">Địa chỉ:</div>
+					<input type="email" name="address" class="form-control"
+						required="required" placeholder="Địa chỉ"
+						value="${customer.address}">
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button id="confirmYes" class="btn btn-yes">Có</button>
@@ -132,13 +154,14 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/account/"
+									style="color: #fdb45e"><i class="fa fa-user"></i> Tài khoản</a></li>
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
-										Đơn hàng</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i
+										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								<li><a
-									href="http://localhost:8080/bookstorePTIT/shop-cart/"
-									id="cart-link"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
+										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i>
 										Đăng nhập</a></li>
 							</ul>
@@ -149,7 +172,7 @@
 		</div>
 		<!--/header-middle-->
 
-		<div class="header-bottom" style="padding-bottom: 0px">
+		<div class="header-bottom">
 			<!--header-bottom-->
 			<div class="container">
 				<div class="row">
@@ -166,14 +189,16 @@
 							<ul class="nav navbar-nav collapse navbar-collapse">
 								<li><a href="http://localhost:8080/bookstorePTIT/">Trang
 										chủ</a></li>
-								<li class="dropdown"><a href="#" class="active">Cửa
+								<li><a href="#" class="active" style="color: #696763">Cửa
 										hàng<i class="fa fa-angle-down"></i>
 								</a>
 									<ul role="menu" class="sub-menu">
 										<li><a href="shop.html" class="active">Sản phẩm</a></li>
 										<li><a href="product-details.html">Mô tả sản phẩm</a></li>
 										<li><a href="checkout.html">Thanh toán</a></li>
-										<li><a href="cart.html">Giỏ hàng</a></li>
+										<li><a
+											href="http://localhost:8080/bookstorePTIT/shop-cart/">Giỏ
+												hàng</a></li>
 										<li><a href="login.html">Đăng nhập</a></li>
 									</ul></li>
 								<li class="dropdown"><a href="#">Blog<i
@@ -183,14 +208,14 @@
 										<li><a href="blog-single.html">Blog đơn</a></li>
 									</ul></li>
 								<li><a href="404.html">404</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
+								<li class="dropdown"><a
+									href="http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
 							</ul>
 						</div>
 					</div>
 					<div class="col-sm-3">
 						<div class="search_box pull-right">
-							<input type="text" id="searchInput" placeholder="Tìm kiếm..." />
-							<button class="search-button" onclick="searchData()">Tìm kiếm</button>
+							<input type="text" placeholder="Tìm kiếm..." />
 						</div>
 					</div>
 				</div>
@@ -199,137 +224,58 @@
 	</header>
 	<!--/header-->
 
-	<section id="cart_items">
-		<div class="container">
-			<div class="breadcrumbs">
-				<ol class="breadcrumb">
-					<li><a href="http://localhost:8080/bookstorePTIT/">Home</a></li>
-					<li class="active">Giỏ hàng</li>
-				</ol>
-			</div>
-			<div class="table-responsive cart_info">
-				<table class="table table-condensed">
-					<thead>
-						<tr class="cart_menu">
-							<td class="select">Chọn</td>
-							<td class="image">Ảnh</td>
-							<td class="description">Tên sản phẩm</td>
-							<td class="price">Giá</td>
-							<td class="quantity">Số lượng</td>
-							<td class="total">Tổng</td>
-							<td></td>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach var="cart" items="${carts}" varStatus="loop">
-							<tr data-bookid="${booksInCart[loop.index].bookID}">
-								<td class="cart_select"><input type="checkbox"
-									name="selectCartItem" value="${booksInCart[loop.index].bookID}"
-									data-quantity="${cart.quantity}"
-									data-price="${booksInCart[loop.index].price}"
-									data-productID="${booksInCart[loop.index].bookID}"
-									data-index="${loop.index}"
-									onclick="toggleCheckbox()"></td>
-								<td class="cart_product"><a href=""> <img
-										src="${pageContext.request.contextPath}/assets/user/images/home/${booksInCart[loop.index].image}"
-										alt="Logo" style="width: 100px; height: auto;" /></a></td>
-								<td class="cart_description">
-									<h4>
-										<a href="">${booksInCart[loop.index].name}</a>
-									</h4>
-									<p>Web ID: ${booksInCart[loop.index].bookID}</p>
-								</td>
-								<td class="cart_price">
-									<p id="price_${loop.index}">
-										<fmt:formatNumber value="${booksInCart[loop.index].price}"
-											type="number" groupingUsed="true" />
-										đ
-									</p>
-								</td>
-								<td class="cart_quantity">
-									<div class="cart_quantity_button">
-										<a class="cart_quantity_down"
-											onclick="decreaseQuantity(${loop.index});"> - </a> <input
-											id="quantity_${loop.index}" class="cart_quantity_input"
-											type="text" name="quantity" value="${cart.quantity}"
-											autocomplete="off" size="2"> <a
-											class="cart_quantity_up"
-											onclick="increaseQuantity(${loop.index});"> + </a>
-									</div>
-								</td>
-								<td class="cart_total">
-									<p class="cart_total_price" id="total_${loop.index}">
-										<fmt:formatNumber
-											value="${booksInCart[loop.index].price * cart.quantity}"
-											type="number" groupingUsed="true" />
-										đ
-									</p>
-								</td>
-								<td class="cart_delete">
-									<a class="cart_quantity_delete" href="javascript:void(0)" onclick="deleteProductFromCart(${booksInCart[loop.index].bookID})"><i class="fa fa-times"></i></a>
-								</td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</section>
-
-	<!--/#cart_items-->
-
-	<section id="do_action">
-		<div class="container">
+	<div id="contact-page" class="container">
+		<div class="bg">
 			<div class="row">
-				<div class="col-sm-6">
-					<div class="chose_area">
-						<ul class="user_option">
-							<li><input type="checkbox"> <label>Phiếu giảm giá</label></li>
-							<li><input type="checkbox"> <label>Phiếu quà tặng</label></li>
-							<li><input type="checkbox"> <label>Vận chuyển & Thuế</label></li>
-						</ul>
-						<ul class="user_info">
-							<li class="single_field"><label>Đất nước:</label> <select>
-									<option>Việt Nam</option>
-									<option>Bangladesh</option>
-									<option>UK</option>
-									<option>India</option>
-									<option>United States</option>
-									<option>Ucrane</option>
-									<option>Canada</option>
-									<option>Dubai</option>
-							</select></li>
-							<li class="single_field"><label>Khu vực:</label> <select>
-									<option>Select</option>
-									<option>Dhaka</option>
-									<option>London</option>
-									<option>Dillih</option>
-									<option>Lahore</option>
-									<option>Alaska</option>
-									<option>Canada</option>
-									<option>Dubai</option>
-							</select></li>
-							<li class="single_field zip-field"><label>Mã Code:</label>
-								<input type="text"></li>
-						</ul>
-						<a class="btn btn-default update" href="">Quay lại</a> <a
-							class="btn btn-default update" href="">Tiếp tục</a>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="total_area">
-						<div
-							style="display: flex; align-items: center; margin-top: 10px; margin-left: 15%;">
-							<strong id="totalSumMoney">Tổng tiền:</strong>
-							<p id="totalSum" class="cart_total_price">0 đ</p>
-						</div>
-						<a class="btn btn-default check_out" href="javascript:void(0);" onclick="redirectToCheckout()">Thanh toán</a>
-					</div>
+				<div class="col-sm-12">
+					<h2 class="title text-center">THÔNG TIN TÀI KHOẢN</h2>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-sm-2"></div>
+				<div class="col-sm-8">
+					<div class="contact-form">
+						<div class="status alert alert-success" style="display: none"></div>
+						<form id="main-contact-form" class="contact-form row"
+							name="contact-form" method="post">
+							<div class="form-group col-md-6">
+								<div class="infor-customer">Họ và tên:</div>
+								<input type="text" name="name" class="form-control"
+									required="required" placeholder="Tên" value="${customer.name}"
+									readonly style="cursor: default;">
+							</div>
+							<div class="form-group col-md-6">
+								<div class="infor-customer">Số điện thoại:</div>
+								<input type="text" name="name" class="form-control"
+									required="required" placeholder="Số điện thoại"
+									value="${customer.phone}" readonly style="cursor: default;">
+
+							</div>
+							<div class="form-group col-md-6">
+								<div class="infor-customer">Email:</div>
+								<input type="email" name="email" class="form-control"
+									required="required" placeholder="Email" value="${email}"
+									readonly style="cursor: default;">
+							</div>
+							<div class="form-group col-md-6">
+								<div class="infor-customer">Địa chỉ:</div>
+								<input type="email" name="email" class="form-control"
+									required="required" placeholder="Địa chỉ"
+									value="${customer.address}" readonly style="cursor: default;">
+							</div>
+							<div class="form-group col-md-12">
+								<input type="submit" name="submit"
+									class="btn btn-primary pull-right" value="Chỉnh sửa"
+									onclick="handleEdit()">
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="col-sm-2"></div>
+			</div>
 		</div>
-	</section>
-	<!--/#do_action-->
+	</div>
+	<!--/#contact-page-->
 
 	<footer id="footer">
 		<!--Footer-->
@@ -524,87 +470,6 @@
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
 	<script>
-	function decreaseQuantity(index) {
-	    var quantityInput = document.getElementById('quantity_' + index);
-	    var currentValue = parseInt(quantityInput.value);
-	    if (currentValue > 1) {
-	        quantityInput.value = currentValue - 1; 
-	        updateTotal(index); 
-	    }
-	    updateGrandTotal();
-	}
-
-	function increaseQuantity(index) {
-	    var quantityInput = document.getElementById('quantity_' + index);
-	    var currentValue = parseInt(quantityInput.value);
-	    quantityInput.value = currentValue + 1; 
-	    updateTotal(index);
-	    updateGrandTotal(); 
-	}
-
-	function updateTotal(index) {
-	    var quantityInput = document.getElementById('quantity_' + index);
-	    var price = parseFloat(document.getElementById('price_' + index).innerText.replace(/[^0-9.-]+/g, ''));
-	    var quantity = parseInt(quantityInput.value);
-	    var total = quantity * price * 1000;
-
-	    document.getElementById('total_' + index).innerText = total.toLocaleString() + ' đ';
-	    updateGrandTotal(); 
-	}
-
-	function updateGrandTotal() {
-	    var totalPrice = 0; 
-
-	    var rows = document.querySelectorAll('.cart_select');
-	    rows.forEach(function(checkbox) {
-	        var input = checkbox.querySelector('input[name="selectCartItem"]');
-	        if (input.checked) {
-	            var row = checkbox.closest('tr'); // Lấy hàng tương ứng
-	            var quantityInput = row.querySelector('.cart_quantity_input');
-	            var quantity = parseInt(quantityInput.value); 
-	            var priceCell = row.querySelector('.cart_price p');
-	            var price = parseFloat(priceCell.innerText.replace(/[^0-9.-]+/g, ''));
-	            totalPrice += quantity * price * 1000; 
-	        }
-	    });
-	    document.getElementById('totalSum').innerText = totalPrice.toLocaleString() + ' đ';
-	}
-
-	function toggleCheckbox() {
-	    updateGrandTotal(); 
-	}
-	
-	function redirectToCheckout() {
-	    console.log("Checkout function called.");
-
-	    const checkedProducts = document.querySelectorAll('input[name="selectCartItem"]:checked');
-
-	    if (checkedProducts.length === 0) {
-	    	toast({
-                title: "Thông báo!",
-                message: "Vui lòng chọn ít nhất 1 sản phẩm để thanh toán.",
-                type: "error",
-                duration: 1000
-            });
-	    } else{
-	    	let queryParams = Array.from(checkedProducts).map(checkbox => {
-		        const row = checkbox.closest('tr');
-		        const quantityInput = row.querySelector('.cart_quantity_input'); 
-		        const quantity = parseInt(quantityInput.value) || 0; 
-		        const productId = checkbox.dataset.productid;
-		        console.log("Product ID: ", productId, " Quantity: ", quantity);
-
-		        if (!productId || !quantity) {
-		            console.warn("Missing productId or quantity.");
-		        }
-		        return 'productId=' + productId + '&quantity=' + quantity;
-		    });
-		    const queryString = queryParams.join('&');
-		    console.log("Query String: ", queryString);
-		    window.location.href = 'checkout?' + queryString;
-	    }
-	}
-	
 	document.getElementById('modalClose').onclick = function() {
         document.getElementById('confirmModal').style.display = "none";
     };
@@ -670,120 +535,123 @@
     	    main.appendChild(toast);
 		}
     }
-
-    function deleteProductFromCart(bookID) {
-        const url = '/bookstorePTIT/cart/delete?bookID=' + bookID;
-        
+    
+    function handleEdit() {
+    	event.preventDefault();
         const confirmModal = document.getElementById('confirmModal');
         confirmModal.style.display = "block";
 
         document.getElementById('confirmYes').onclick = function() {
-        	confirmModal.style.display = "none";
-        	fetch(url, {
-                method: 'POST',
-            })
-            .then(response => {
-                if (response.ok) {
-                	toast({
-    	                title: "Thành công!",
-    	                message: "Sách đã được xoá khỏi giỏ hàng thành công.",
-    	                type: "success",
-    	                duration: 1000
-    	            });
-                	window.location.href = window.location.href;
-                	const rowToDelete = document.querySelector(`tbody tr[data-bookid='${bookID}']`);
-                    if (rowToDelete) {
-                        rowToDelete.remove();
+        	const name = document.querySelector('input[name="name"]').value;
+            const phone = document.querySelector('input[name="phone"]').value;
+            const email = document.querySelector('input[name="email"]').value;
+            const address = document.querySelector('input[name="address"]').value;
+
+            let valid = true;
+
+            if (!name) {
+            	toast({
+                    title: "Chú ý!",
+                    message: "Vui lòng điền đầy đủ họ tên.",
+                    type: "error",
+                    duration: 1000
+                });
+                valid = false;
+            }
+            if (!phone) {
+            	toast({
+                    title: "Chú ý!",
+                    message: "Vui lòng điền đầy đủ số điện thoại.",
+                    type: "error",
+                    duration: 1000
+                });
+                valid = false;
+            }
+            if (phone.length < 10 || phone.length > 11) {
+                toast({
+                    title: "Chú ý!",
+                    message: "Số điện thoại phải có độ dài từ 10 đến 11 chữ số.",
+                    type: "error",
+                    duration: 1000
+                });
+                valid = false;
+            }
+            if (!email) {
+            	toast({
+                    title: "Chú ý!",
+                    message: "Vui lòng điền đầy đủ email.",
+                    type: "error",
+                    duration: 1000
+                });
+                valid = false;
+            }
+            if (!email.endsWith("@gmail.com")) {
+                toast({
+                    title: "Chú ý!",
+                    message: "Email phải có đuôi @gmail.com",
+                    type: "error",
+                    duration: 1000
+                });
+                valid = false;
+            }
+            if (!address) {
+            	toast({
+                    title: "Chú ý!",
+                    message: "Vui lòng điền đầy đủ địa chỉ.",
+                    type: "error",
+                    duration: 1000
+                });
+                valid = false;
+            }
+            if (valid) {
+            	const newEmail = document.querySelector('input[name="email"]').value; 
+                const customerData = {
+                    name: document.querySelector('input[name="name"]').value, 
+                    phone: document.querySelector('input[name="phone"]').value, 
+                    address: document.querySelector('input[name="address"]').value, 
+                };
+
+                const requestData = {
+                    newEmail: newEmail,
+                    customer: customerData 
+                };
+
+                fetch('/bookstorePTIT/updateCustomer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData), 
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        toast({
+                            title: "Thành công!",
+                            message: "Thông tin của bản đã được cập nhật thành công.",
+                            type: "success",
+                            duration: 1000
+                        });
+                        window.location.href = window.location.href;
+                    } else {
+                    	toast({
+                            title: "Thất bại!",
+                            message: "Thông tin của bản đã được cập nhật thất bại.",
+                            type: "error",
+                            duration: 1000
+                        });
+                    	window.location.href = window.location.href;
                     }
-                } else {
-                    throw new Error('Có lỗi xảy ra khi xóa sản phẩm!');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        };
+
         document.getElementById('confirmNo').onclick = function() {
             confirmModal.style.display = "none";
         };
     }
-    
-    function searchData() {
-        var searchInput = document.getElementById("searchInput").value.toLowerCase(); 
-        var rows = document.querySelectorAll("tbody tr"); // Chọn tất cả các hàng trong tbody
-
-        rows.forEach(function(row) {
-            var rowText = ""; // Biến để chứa nội dung của hàng
-
-            var cells = row.querySelectorAll("td"); // Chọn tất cả các ô trong hàng
-            cells.forEach(function(cell) {
-                rowText += cell.innerText.toLowerCase() + " "; // Thêm nội dung của từng ô vào biến rowText
-            });
-
-            // Kiểm tra nếu nội dung hàng có chứa từ khóa tìm kiếm
-            if (rowText.includes(searchInput)) {
-                row.style.display = "table-row"; // Hiển thị hàng nếu tìm thấy
-            } else {
-                row.style.display = "none"; // Ẩn hàng nếu không tìm thấy
-            }
-        });
-    }
-
-
-    
-    /*function reloadCartData() {
-        fetch('/bookstorePTIT/cart/data')  // Giả sử đây là API trả về dữ liệu giỏ hàng
-            .then(response => response.json())  // Chuyển đổi phản hồi thành JSON
-            .then(data => {
-            	console.log("Dữ liệu giỏ hàng mới:", data);
-                updateCartTable(data);  // Hàm để cập nhật bảng giỏ hàng với dữ liệu mới
-            })
-            .catch(error => console.error('Error loading cart data:', error));
-    }
-
-    function updateCartTable(cartItems) {
-        const cartTableBody = document.querySelector('tbody');
-        cartTableBody.innerHTML = '';  // Xóa nội dung cũ của bảng
-
-        cartItems.forEach((item, index) => {
-            const row = `
-                <tr data-bookid="${item.bookID}">
-                    <td class="cart_select">
-                        <input type="checkbox" name="selectCartItem" value="${item.bookID}" 
-                               data-quantity="${item.quantity}" data-price="${item.price}" 
-                               data-productID="${item.bookID}" data-index="${index}" 
-                               onclick="toggleCheckbox()">
-                    </td>
-                    <td class="cart_product">
-                        <a href=""><img src="${pageContext.request.contextPath}/assets/user/images/home/b1.jpg" alt="Logo" style="width: 100px; height: auto;" /></a>
-                    </td>
-                    <td class="cart_description">
-                        <h4><a href="">${item.name}</a></h4>
-                        <p>Web ID: ${item.bookID}</p>
-                    </td>
-                    <td class="cart_price">
-                        <p id="price_${index}">${item.price} đ</p>
-                    </td>
-                    <td class="cart_quantity">
-                        <div class="cart_quantity_button">
-                            <a class="cart_quantity_down" onclick="decreaseQuantity(${index});"> - </a>
-                            <input id="quantity_${index}" class="cart_quantity_input" type="text" name="quantity" value="${item.quantity}" autocomplete="off" size="2">
-                            <a class="cart_quantity_up" onclick="increaseQuantity(${index});"> + </a>
-                        </div>
-                    </td>
-                    <td class="cart_total">
-                        <p class="cart_total_price" id="total_${index}">${item.price * item.quantity} đ</p>
-                    </td>
-                    <td class="cart_delete">
-                        <a class="cart_quantity_delete" href="javascript:void(0)" onclick="deleteProductFromCart(${item.bookID})">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </td>
-                </tr>`;
-            
-            cartTableBody.innerHTML += row;  // Thêm dòng mới vào bảng
-        });
-    }*/
 	</script>
+
 </body>
 </html>

@@ -35,9 +35,31 @@
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+	crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
+	<div id="toast"></div>
+	<div id="confirmModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title">Xác nhận đơn hàng</h2>
+				<span class="close" id="modalClose">&times;</span>
+			</div>
+			<div class="modal-body">
+				<p class="title-question">Bạn có muốn xác nhận đơn hàng không?</p>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmYes" class="btn btn-yes">Có</button>
+				<button id="confirmNo" class="btn btn-no">Không</button>
+			</div>
+		</div>
+	</div>
 	<header id="header">
 		<!--header-->
 		<div class="header_top">
@@ -109,12 +131,13 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href=""><i class="fa fa-user"></i> Tài khoản</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i>
-										Thanh toán</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/shop-cart/"><i class="fa fa-shopping-cart"></i>
-										Giỏ hàng</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
+										Đơn hàng</a></li>
+								<li><a
+									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
+										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i>
 										Đăng nhập</a></li>
 							</ul>
@@ -140,7 +163,8 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="http://localhost:8080/bookstorePTIT/">Trang chủ</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/">Trang
+										chủ</a></li>
 								<li class="dropdown"><a href="#" class="active">Cửa
 										hàng<i class="fa fa-angle-down"></i>
 								</a>
@@ -158,7 +182,7 @@
 										<li><a href="blog-single.html">Blog đơn</a></li>
 									</ul></li>
 								<li><a href="404.html">404</a></li>
-								<li><a href="contact-us.html">Liên hệ</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
 							</ul>
 						</div>
 					</div>
@@ -244,24 +268,30 @@
 								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
 									<div class="item active">
-										<a href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar1.jpg"
+										<a href=""><img
+											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar1.jpg"
 											alt=""></a> <a href=""><img
-											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar2.jpg" alt=""></a> <a
-											href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar3.jpg"
+											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar2.jpg"
+											alt=""></a> <a href=""><img
+											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar3.jpg"
 											alt=""></a>
 									</div>
 									<div class="item">
-										<a href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar1.jpg"
+										<a href=""><img
+											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar1.jpg"
 											alt=""></a> <a href=""><img
-											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar2.jpg" alt=""></a> <a
-											href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar3.jpg"
+											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar2.jpg"
+											alt=""></a> <a href=""><img
+											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar3.jpg"
 											alt=""></a>
 									</div>
 									<div class="item">
-										<a href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar1.jpg"
+										<a href=""><img
+											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar1.jpg"
 											alt=""></a> <a href=""><img
-											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar2.jpg" alt=""></a> <a
-											href=""><img src="${pageContext.request.contextPath}/assets/user/images/product-details/similar3.jpg"
+											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar2.jpg"
+											alt=""></a> <a href=""><img
+											src="${pageContext.request.contextPath}/assets/user/images/product-details/similar3.jpg"
 											alt=""></a>
 									</div>
 
@@ -282,17 +312,20 @@
 								<img src="images/product-details/new.jpg" class="newarrival"
 									alt="" />
 								<h2>${book.name}</h2>
-								<p>Web ID: ${book.id}</p>
+								<p>Web ID: ${book.bookID}</p>
 								<img src="images/product-details/rating.png" alt="" /> <span>
 									<span><fmt:formatNumber value="${book.price}"
-											type="number" groupingUsed="true" /> đ</span> 
-									<label>Số lượng:</label>
+											type="number" groupingUsed="true" /> đ</span> <label>Số
+										lượng:</label>
 									<div class="quantity-controls">
-										<button type="button" class="btn-decrease" onclick="decreaseQuantity()">-</button> 
+										<button type="button" class="btn-decrease"
+											onclick="decreaseQuantity()">-</button>
 										<input type="text" id="quantity" value="1" min="1" readonly />
-										<button type="button" class="btn-increase" onclick="increaseQuantity()">+</button>
+										<button type="button" class="btn-increase"
+											onclick="increaseQuantity()">+</button>
 									</div>
-									<button type="button" class="btn btn-fefault cart" onclick="addToCart(2)">
+									<button type="button" class="btn btn-fefault cart"
+										onclick="addToCart(2)">
 										<i class="fa fa-shopping-cart"></i> Thêm vào giỏ
 									</button>
 								</span>
@@ -670,46 +703,133 @@
 		}
 		
 		function addToCart(customerId) {
-		    // Lấy bookID từ URL
-		    const pathSegments = window.location.pathname.split('/');
-		    const bookId = pathSegments[pathSegments.length - 1]; // Lấy phần cuối cùng (bookID)
+			const confirmModal = document.getElementById('confirmModal');
+	        confirmModal.style.display = "block";
 
-		    // Lấy giá trị quantity từ input
-		    const quantityInput = document.getElementById('quantity');
-		    const quantity = parseInt(quantityInput.value);
+	        document.getElementById('confirmYes').onclick = function() {
+	        	confirmModal.style.display = "none";
 
-		    // Kiểm tra tính hợp lệ của bookID và quantity
-		    if (isNaN(bookId) || bookId === "") {
-		        alert("ID sách không hợp lệ!");
-		        return;
-		    }
-		    if (isNaN(quantity) || quantity <= 0) {
-		        alert("Số lượng không hợp lệ!");
-		        return;
-		    }
+			    const pathSegments = window.location.pathname.split('/');
+			    const bookId = pathSegments[pathSegments.length - 1];
 
-		    const cartData = {
-		        customerID: customerId,
-		        bookID: bookId, // Sử dụng bookID từ URL
-		        quantity: quantity // Lấy quantity từ input
-		    };
+			    const quantityInput = document.getElementById('quantity');
+			    const quantity = parseInt(quantityInput.value);
 
-		    fetch('/bookstorePTIT/cart/add', {
-		        method: 'POST',
-		        headers: {
-		            'Content-Type': 'application/json'
-		        },
-		        body: JSON.stringify(cartData)
-		    })
-		    .then(response => response.json())
-		    .then(data => {
-		        alert(data.message); // Hiển thị thông báo
-		    })
-		    .catch(error => {
-		        console.error('Error:', error);
-		        alert('Có lỗi xảy ra!');
-		    });
+			    if (isNaN(bookId) || bookId === "") {
+			        alert("ID sách không hợp lệ!");
+			        return;
+			    }
+			    if (isNaN(quantity) || quantity <= 0) {
+			        alert("Số lượng không hợp lệ!");
+			        return;
+			    }
+
+			    const cartData = {
+			        customerID: customerId,
+			        bookID: bookId, 
+			        quantity: quantity 
+			    };
+
+			    fetch('/bookstorePTIT/cart/add', {
+			        method: 'POST',
+			        headers: {
+			            'Content-Type': 'application/json'
+			        },
+			        body: JSON.stringify(cartData)
+			    })
+			    .then(response => response.json())
+			    .then(data => {
+			    	if (data.status === 0) {
+			            toast({
+			                title: "Chú ý!",
+			                message: "Sách đã có trong giỏ hàng.",
+			                type: "error",
+			                duration: 1000
+			            });
+			        } else if (data.status === 1) {
+			            toast({
+			                title: "Thành công!",
+			                message: "Sản phẩm đã được thêm vào giỏ hàng!",
+			                type: "success",
+			                duration: 1000
+			            });
+			        }
+			    })
+			    .catch(error => {
+			        console.error('Error:', error);
+			        alert('Có lỗi xảy ra!');
+			    });
+	        }
+	        document.getElementById('confirmNo').onclick = function() {
+	            confirmModal.style.display = "none";
+	        };
+		    
 		}
+		document.getElementById('modalClose').onclick = function() {
+	        document.getElementById('confirmModal').style.display = "none";
+	    };
+
+	    window.onclick = function(event) {
+	        const confirmModal = document.getElementById('confirmModal');
+	        if (event.target === confirmModal) {
+	            confirmModal.style.display = "none";
+	        }
+	    };
+	    
+	    function toast({ title = "", message = "", type = "info", duration = 3000 }) {
+			const main = document.getElementById("toast");
+			if (main) {
+				const toast = document.createElement("div");
+				
+	    	    const autoRemoveId = setTimeout(function () {
+	    	      main.removeChild(toast);
+	    	    }, duration + 1000);
+
+	    	    toast.onclick = function (e) {
+	    	      if (e.target.closest(".toast__close")) {
+	    	        main.removeChild(toast);
+	    	        clearTimeout(autoRemoveId);
+	    	      }
+	    	    };
+
+	    	    const icons = {
+	    	      success: "fas fa-check-circle",
+	    	      info: "fas fa-info-circle",
+	    	      warning: "fas fa-exclamation-circle",
+	    	      error: "fas fa-exclamation-circle"
+	    	    };
+	    	    const icon = icons[type];
+	    	    console.log("icon:",icon);
+	    	    const delay = (duration / 1000).toFixed(2);
+
+	    	    toast.classList.add("toast", `toast--${type}`);
+	    	    toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards`;
+
+	    	    toast.innerHTML = `
+	    	                    <div class="toast__icon">
+	    	                        <i class="${icon}"></i>
+	    	                    </div>
+	    	                    <div class="toast__body">
+	    	                        <h3 class="toast__title">${title}</h3>
+	    	                        <p class="toast__msg">${message}</p>
+	    	                    </div>
+	    	                    <div class="toast__close">
+	    	                        <i class="fas fa-times"></i>
+	    	                    </div>
+	    	                `;
+	    	    const toastIcon = toast.querySelector('.toast__icon');
+				if (toastIcon) {
+	    			const iconElement = document.createElement('i');
+	    			iconElement.className = icon;
+	    			toastIcon.appendChild(iconElement);
+				}
+	    	    const toastMessage = toast.querySelector('.toast__msg');
+	    	    toastMessage.textContent = message; 
+	    	    const toastTitle = toast.querySelector('.toast__title');
+	    	    toastTitle.textContent = title; 
+	    	    main.appendChild(toast);
+			}
+	    }
 	</script>
 </body>
 </html>

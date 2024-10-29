@@ -1,6 +1,7 @@
 package SpringMVC.UserController;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,15 +10,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Dao.CategoriesDao;
+import Dao.CustomersDao;
 import Dao.Order_ItemsDao;
 import Dao.OrdersDao;
+import Dao.AccountsDao;
 import Dao.AuthorsDao;
 import Dao.BooksDao;
 import Dao.CartsDao;
 import bookstorePTIT.bean.Categories;
+import bookstorePTIT.bean.Customers;
 import bookstorePTIT.bean.OrderRequest;
 import bookstorePTIT.bean.Orders;
 import bookstorePTIT.bean.Authors;
@@ -32,21 +41,39 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 @Controller
 public class HomeController {
 
     @RequestMapping("/")
-    public String index(Model model) {
+    //public String index(Model model) {
+    public String index(@RequestParam(defaultValue = "1") int page, Model model) {
         CategoriesDao categoriesDao = new CategoriesDao();
         AuthorsDao authorsDao = new AuthorsDao();
         BooksDao booksDao = new BooksDao();
+        
         List<Categories> categories = categoriesDao.getCategories();
         List<Authors> authors = authorsDao.getAuthors();
-        List<Books> books = booksDao.getBooks();
+        //List<Books> books = booksDao.getBooks();
+        /**/
+        int booksPerPage = 6;
+        int totalBooks = booksDao.countTotalBooks();
+        int totalPages = (int) Math.ceil((double) totalBooks / booksPerPage);
+
+        List<Books> paginatedBooks = booksDao.getBooks(page, booksPerPage);
+        /**/
+        
         model.addAttribute("categories", categories);
         model.addAttribute("authors", authors);
-        model.addAttribute("books", books);
+        //model.addAttribute("books", books);
+        /**/
+        model.addAttribute("books", paginatedBooks);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        /**/
         return "user/Home";
     }
     
@@ -100,18 +127,18 @@ public class HomeController {
 	}
     
     @PostMapping("/cart/add")
-    public ResponseEntity<Map<String, String>> addToCart(@RequestBody Carts cart) {
+    public ResponseEntity<Map<String, Integer>> addToCart(@RequestBody Carts cart) {
         CartsDao cartsDao = new CartsDao();
-        cart.setCustomerID(2);
+        cart.setCustomerID(2); 
         Optional<Carts> existingCart = cartsDao.findByCustomerIdAndBookId(cart.getCustomerID(), cart.getBookID());
         if (existingCart.isPresent()) {
-            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã có trong giỏ hàng!"));
+            return ResponseEntity.ok(Collections.singletonMap("status", 0));
         } else {
-        	saveCart(cart);
-            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã được thêm vào giỏ hàng!"));
+            saveCart(cart);
+            return ResponseEntity.ok(Collections.singletonMap("status", 1));
         }
     }
-    
+
     private void saveCart(Carts cart) {
         CartsDao cartsDao = new CartsDao();
         if (cart.getQuantity() <= 0) {
@@ -126,6 +153,18 @@ public class HomeController {
                            Model model) {
         List<Map<String, String>> selectedBooks = new ArrayList<>();
         BooksDao booksDao = new BooksDao();
+        CustomersDao customersDao = new CustomersDao();
+        AccountsDao accountsDao = new AccountsDao();
+        
+        int customerId = 2;
+        Customers customer = customersDao.getCustomerById(customerId);
+        String email = accountsDao.getEmailByAccountId(customer.getAccountID());
+        
+        Map<String, String> customerInfo = new HashMap<>();
+        customerInfo.put("name", customer.getName());
+        customerInfo.put("phone", customer.getPhone());
+        customerInfo.put("address", customer.getAddress());
+        customerInfo.put("email", email);
 
         for (int i = 0; i < productIds.size(); i++) {
             String productId = productIds.get(i);
@@ -147,6 +186,8 @@ public class HomeController {
             }
         }
         model.addAttribute("selectedBooks", selectedBooks);
+        model.addAttribute("customerInfo", customerInfo);
+        
         return "user/Checkout";
     }
     
@@ -158,6 +199,7 @@ public class HomeController {
     @PostMapping("/create")
     public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
         OrdersDao ordersDao = new OrdersDao();
+        CartsDao cartsDao = new CartsDao();
         Order_ItemsDao orderItemsDao = new Order_ItemsDao();
         Orders order = orderRequest.getOrder();
         order.setCustomerID(2);
@@ -177,10 +219,183 @@ public class HomeController {
             item.setOrderID(orderId);
             item.setPrice(item.getPrice() * 1000);
             orderItemsDao.createOrderItems(item);
+            cartsDao.deleteFromCart(2, item.getBookID());
         }
-
         return ResponseEntity.ok("Đơn hàng đã được tạo thành công!");
     }
+    
+    @PostMapping("/cart/delete")
+    public ResponseEntity<String> deleteFromCart(@RequestParam("bookID") int bookID) {
+        int customerID = 2;
+        CartsDao cartsDao = new CartsDao();
 
+        Optional<Carts> cartItem = cartsDao.findByCustomerIdAndBookId(customerID, bookID);
+        if (cartItem.isPresent()) {
+            cartsDao.delete(cartItem.get());
+            return ResponseEntity.ok("Sản phẩm đã được xóa khỏi giỏ hàng!");
+            /*
+            CartsDao cartDao = new CartsDao();
+            List<Carts> updatedCart = cartDao.findCartsByCustomerId(customerID);  // Giả sử phương thức này trả về danh sách giỏ hàng mới
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String updatedCartJson = objectMapper.writeValueAsString(updatedCart);
+                return ResponseEntity.ok(updatedCartJson);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi chuyển đổi dữ liệu thành JSON");
+            }
+            */
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sản phẩm không tồn tại trong giỏ hàng!");
+        }
+    }
+    
+    @GetMapping("/cart/data")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> getCartData() {
+        int customerID = 2;
+        CartsDao cartDao = new CartsDao();
+        BooksDao booksDao = new BooksDao();
+
+        List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
+        List<Map<String, Object>> booksInCart = new ArrayList<>();
+
+        for (Carts cart : carts) {
+            int bookID = cart.getBookID();
+            Books book = booksDao.findBookById(bookID);
+            if (book != null) {
+                Map<String, Object> bookInfo = new HashMap<>();
+                bookInfo.put("bookID", book.getbookID());
+                bookInfo.put("name", book.getName());
+                bookInfo.put("price", book.getPrice());
+                bookInfo.put("quantity", cart.getQuantity());
+                bookInfo.put("image", book.getImage());
+                booksInCart.add(bookInfo);
+            }
+        }
+
+        return ResponseEntity.ok(booksInCart); 
+    }
+
+    @RequestMapping("/order")
+    public String order(Model model) {
+        int customerID = 2; 
+        OrdersDao ordersDao = new OrdersDao();
+        Order_ItemsDao orderItemsDao = new Order_ItemsDao();
+
+        List<Orders> orders = ordersDao.findOrdersByCustomerId(customerID);
+        
+        Collections.reverse(orders); 
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        for (Orders order : orders) {
+            String formattedDate = order.getOrderDate().format(formatter);
+            order.setFormattedOrderDate(formattedDate); 
+            
+            List<Order_Items> orderItems = orderItemsDao.findOrderItemsByOrderId(order.getId());
+            order.setOrderItems(orderItems);
+        }
+
+        model.addAttribute("orders", orders); 
+        return "user/Order";
+    }
+
+    @RequestMapping(value = "/getBookName", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> getBookName(@RequestParam("bookID") int bookID) {
+        BooksDao booksDao = new BooksDao();
+        Books book = booksDao.findBookById(bookID);
+        
+        Map<String, String> response = new HashMap<>();
+        if (book != null) {
+            response.put("name", book.getName());
+        } else {
+            response.put("name", "Unknown Book");
+        }
+        
+        return ResponseEntity.ok(response);
+    }
+
+    @RequestMapping(value = "/getBookImage", method = RequestMethod.GET)
+    @ResponseBody
+    public String getBookImage(@RequestParam("bookID") int bookID) {
+        BooksDao booksDao = new BooksDao();
+        Books book = booksDao.findBookById(bookID);
+        
+        if (book != null) {
+            return book.getImage();
+        }
+        return "Unknown Image"; 
+    }
+    
+    @PostMapping("/order/delete")
+    @ResponseBody
+    public String deleteOrder(@RequestParam("orderID") int orderID) {
+    	OrdersDao ordersDao = new OrdersDao();
+        Orders order = ordersDao.findOrderById(orderID);
+        
+        if (order != null) {
+            order.setStatus(0);
+            ordersDao.updateOrder(order);       
+            return "Success"; 
+        }
+        return "Order not found";
+    }
+    
+    @RequestMapping("/contact")
+	public String register() {
+		return "user/Contact";
+	}
+    
+    @RequestMapping("/account")
+	public String account(Model model) {
+    	CustomersDao customerDao = new CustomersDao();
+    	AccountsDao accountDao = new AccountsDao();
+    	int id=2;
+    	Customers customer = customerDao.getCustomerById(id);
+    	int accountID = customerDao.getAccountIDByCustomerID(id);
+    	String email = accountDao.getEmailByAccountId(accountID);
+        
+        model.addAttribute("customer", customer);
+        model.addAttribute("email", email);
+		return "user/Account";
+	}
+    
+    @PostMapping("/updateCustomer")
+    @ResponseBody
+    public Map<String, Object> updateCustomer(@RequestBody Map<String, Object> requestData) {
+        Map<String, Object> response = new HashMap<>();
+        String newEmail = (String) requestData.get("newEmail");
+        Customers customer = new ObjectMapper().convertValue(requestData.get("customer"), Customers.class); 
+
+        int customerIdToUpdate = 2;
+
+        try {
+            CustomersDao customersDao = new CustomersDao();
+            AccountsDao accountsDao = new AccountsDao();
+            
+            Customers existingCustomer = customersDao.getCustomerById(customerIdToUpdate);
+            
+            if (existingCustomer != null) {
+                existingCustomer.setName(customer.getName());
+                existingCustomer.setPhone(customer.getPhone());
+                existingCustomer.setAddress(customer.getAddress());
+
+                customersDao.updateCustomer(existingCustomer); 
+                
+                int accountId = existingCustomer.getAccountID(); 
+                accountsDao.updateEmailByAccountId(accountId, newEmail);
+                
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+                response.put("message", "Customer not found");
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+            e.printStackTrace();
+        }
+        return response;
+    }
 
 }

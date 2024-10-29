@@ -41,7 +41,7 @@ public class ImportController {
 	public String addNewImport(@ModelAttribute("newimport") Imports newImport, @RequestParam("bookID") int bookID,
 			RedirectAttributes redirectAttributes) {
 		Books book = new Books();
-		book.setId(bookID);
+		book.setBookID(bookID);
 		
 		newImport.setReceived_at(new Date());
 		newImport.setBook(book);

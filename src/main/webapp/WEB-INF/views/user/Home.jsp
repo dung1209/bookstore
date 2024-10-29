@@ -34,10 +34,32 @@
 <link rel="apple-touch-icon-precomposed"
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+	crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
 </head>
 <body>
+	<div id="toast"></div>
+	<div id="confirmModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title">Xác nhận sản phẩm</h2>
+				<span class="close" id="modalClose">&times;</span>
+			</div>
+			<div class="modal-body">
+				<p class="title-question">Bạn có muốn thêm sản phẩm vào giỏ hàng không?</p>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmYes" class="btn btn-yes">Có</button>
+				<button id="confirmNo" class="btn btn-no">Không</button>
+			</div>
+		</div>
+	</div>
 	<header id="header">
 		<!--header-->
 		<div class="header_top">
@@ -108,12 +130,13 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href=""><i class="fa fa-user"></i> Tài khoản</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i>
-										Thanh toán</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/shop-cart/"><i class="fa fa-shopping-cart"></i>
-										Giỏ hàng</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
+										Đơn hàng</a></li>
+								<li><a
+									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
+										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i>
 										Đăng nhập</a></li>
 							</ul>
@@ -139,8 +162,9 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="http://localhost:8080/bookstorePTIT/">Trang chủ</a></li>
-								<li class="dropdown"><a href="#" class="active">Cửa
+								<li><a href="http://localhost:8080/bookstorePTIT/"  style="color: #fdb45e">Trang
+										chủ</a></li>
+								<li class="dropdown"><a href="#" class="active" style="color: #696763">Cửa
 										hàng<i class="fa fa-angle-down"></i>
 								</a>
 									<ul role="menu" class="sub-menu">
@@ -157,7 +181,7 @@
 										<li><a href="blog-single.html">Blog đơn</a></li>
 									</ul></li>
 								<li><a href="404.html">404</a></li>
-								<li><a href="contact-us.html">Liên hệ</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
 							</ul>
 						</div>
 					</div>
@@ -312,34 +336,85 @@
 						<h2 class="title text-center">SẢN PHẨM</h2>
 						<c:forEach var="book" items="${books}">
 							<div class="col-sm-4">
-							<a href="${pageContext.request.contextPath}/book-detail/${book.id}">
-								<div class="product-image-wrapper">
-									<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="assets/user/images/home/${book.image}" alt="" />
-											<h2><fmt:formatNumber value="${book.price}" type="number" groupingUsed="true" />  đ</h2>
-											<p>${book.name}</p>
-											<a href="#" class="btn btn-default add-to-cart" onclick="confirmAddToCart(event, ${book.id})"> 
-    <i class="fa fa-shopping-cart"></i> Thêm vào giỏ
-</a>
-
+								<a
+									href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
+									<div class="product-image-wrapper">
+										<div class="single-products">
+											<div class="productinfo text-center">
+												<img src="assets/user/images/home/${book.image}" alt="" />
+												<h2>
+													<fmt:formatNumber value="${book.price}" type="number"
+														groupingUsed="true" />
+													đ
+												</h2>
+												<p>${book.name}</p>
+												<a id="submitOrder" href="#" class="btn btn-default add-to-cart"
+													onclick="confirmAddToCart(event, ${book.bookID})"> <i
+													class="fa fa-shopping-cart"></i> Thêm vào giỏ
+												</a>
+											</div>
+										</div>
+										<div class="choose">
+											<ul class="nav nav-pills nav-justified">
+												<li><a href=""><i class="fa fa-plus-square"></i>Yêu
+														thích</a></li>
+												<li><a href=""><i class="fa fa-plus-square"></i>So
+														sánh</a></li>
+											</ul>
 										</div>
 									</div>
-									<div class="choose">
-										<ul class="nav nav-pills nav-justified">
-											<li><a href=""><i class="fa fa-plus-square"></i>Yêu thích</a></li>
-											<li><a href=""><i class="fa fa-plus-square"></i>So sánh</a></li>
-										</ul>
-									</div>
-								</div>
-							</a>
+								</a>
 							</div>
 						</c:forEach>
-						<ul class="pagination">
+						<!--<ul class="pagination">
 							<li class="active"><a href="">1</a></li>
 							<li><a href="">2</a></li>
 							<li><a href="">3</a></li>
 							<li><a href="">&raquo;</a></li>
+						</ul>-->
+						<!--<c:forEach var="book" items="${books}">
+							<div class="col-sm-4">
+								<a
+									href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
+									<div class="product-image-wrapper">
+										<div class="single-products">
+											<div class="productinfo text-center">
+												<img src="assets/user/images/home/${book.image}" alt="" />
+												<h2>
+													<fmt:formatNumber value="${book.price}" type="number"
+														groupingUsed="true" />
+													đ
+												</h2>
+												<p>${book.name}</p>
+												<a href="#" class="btn btn-default add-to-cart"
+													onclick="confirmAddToCart(event, ${book.bookID})"> <i
+													class="fa fa-shopping-cart"></i> Thêm vào giỏ
+												</a>
+											</div>
+										</div>
+										<div class="choose">
+											<ul class="nav nav-pills nav-justified">
+												<li><a href=""><i class="fa fa-plus-square"></i>
+														Yêu thích</a></li>
+												<li><a href=""><i class="fa fa-plus-square"></i> So
+														sánh</a></li>
+											</ul>
+										</div>
+									</div>
+								</a>
+							</div>
+						</c:forEach>-->
+
+						<ul class="pagination">
+							<li class="${currentPage == 1 ? 'active' : ''}"><a
+								href="${pageContext.request.contextPath}/?page=1">1</a></li>
+							<c:forEach var="i" begin="2" end="${totalPages}">
+								<li class="${currentPage == i ? 'active' : ''}"><a
+									href="${pageContext.request.contextPath}/?page=${i}">${i}</a></li>
+							</c:forEach>
+							<li class="${currentPage == totalPages ? 'active' : ''}"><a
+								href="${pageContext.request.contextPath}/?page=${totalPages}">&raquo;</a>
+							</li>
 						</ul>
 					</div>
 					<!--features_items-->
@@ -946,12 +1021,28 @@
 	function confirmAddToCart(event, bookId) {
 	    event.preventDefault();
 
-	    if (confirm("Bạn có muốn thêm sản phẩm vào giỏ hàng không?")) {
-	        addToCart(bookId); 
-	    } else {
-	        return;
-	    }
+	    const confirmModal = document.getElementById('confirmModal');
+        confirmModal.style.display = "block";
+
+        document.getElementById('confirmYes').onclick = function() {
+        	confirmModal.style.display = "none";
+        	addToCart(bookId);
+        }
+        document.getElementById('confirmNo').onclick = function() {
+            confirmModal.style.display = "none";
+        };
 	}
+	
+	document.getElementById('modalClose').onclick = function() {
+        document.getElementById('confirmModal').style.display = "none";
+    };
+
+    window.onclick = function(event) {
+        const confirmModal = document.getElementById('confirmModal');
+        if (event.target === confirmModal) {
+            confirmModal.style.display = "none";
+        }
+    };
 
 	function addToCart(bookId) {
 	    fetch('/bookstorePTIT/cart/add', {
@@ -965,19 +1056,84 @@
 	        if (!response.ok) {
 	            throw new Error('Network response was not ok');
 	        }
-	        return response.text();
+	        return response.json();
 	    })
 	    .then(data => {
-	        alert(data);
+	    	if (data.status === 0) {
+	            toast({
+	                title: "Chú ý!",
+	                message: "Sách đã có trong giỏ hàng.",
+	                type: "error",
+	                duration: 1000
+	            });
+	        } else if (data.status === 1) {
+	            toast({
+	                title: "Thành công!",
+	                message: "Sản phẩm đã được thêm vào giỏ hàng!",
+	                type: "success",
+	                duration: 1000
+	            });
+	        }
 	    })
 	    .catch(error => {
 	        console.error('Error:', error);
 	    });
 	}
+	
+	function toast({ title = "", message = "", type = "info", duration = 3000 }) {
+		const main = document.getElementById("toast");
+		if (main) {
+			const toast = document.createElement("div");
+			
+    	    const autoRemoveId = setTimeout(function () {
+    	      main.removeChild(toast);
+    	    }, duration + 1000);
 
+    	    toast.onclick = function (e) {
+    	      if (e.target.closest(".toast__close")) {
+    	        main.removeChild(toast);
+    	        clearTimeout(autoRemoveId);
+    	      }
+    	    };
 
+    	    const icons = {
+    	      success: "fas fa-check-circle",
+    	      info: "fas fa-info-circle",
+    	      warning: "fas fa-exclamation-circle",
+    	      error: "fas fa-exclamation-circle"
+    	    };
+    	    const icon = icons[type];
+    	    console.log("icon:",icon);
+    	    const delay = (duration / 1000).toFixed(2);
 
+    	    toast.classList.add("toast", `toast--${type}`);
+    	    toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards`;
 
+    	    toast.innerHTML = `
+    	                    <div class="toast__icon">
+    	                        <i class="${icon}"></i>
+    	                    </div>
+    	                    <div class="toast__body">
+    	                        <h3 class="toast__title">${title}</h3>
+    	                        <p class="toast__msg">${message}</p>
+    	                    </div>
+    	                    <div class="toast__close">
+    	                        <i class="fas fa-times"></i>
+    	                    </div>
+    	                `;
+    	    const toastIcon = toast.querySelector('.toast__icon');
+			if (toastIcon) {
+    			const iconElement = document.createElement('i');
+    			iconElement.className = icon;
+    			toastIcon.appendChild(iconElement);
+			}
+    	    const toastMessage = toast.querySelector('.toast__msg');
+    	    toastMessage.textContent = message; 
+    	    const toastTitle = toast.querySelector('.toast__title');
+    	    toastTitle.textContent = title; 
+    	    main.appendChild(toast);
+		}
+    }
 	</script>
 
 </body>

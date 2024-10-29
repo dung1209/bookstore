@@ -35,9 +35,31 @@
 	href="assets/user/images/ico/apple-touch-icon-57-precomposed.png">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+	crossorigin="anonymous" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
+	<div id="toast"></div>
+	<div id="confirmModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title">Xác nhận đơn hàng</h2>
+				<span class="close" id="modalClose">&times;</span>
+			</div>
+			<div class="modal-body">
+				<p class="title-question">Bạn có muốn xác nhận đơn hàng không?</p>
+			</div>
+			<div class="modal-footer">
+				<button id="confirmYes" class="btn btn-yes">Có</button>
+				<button id="confirmNo" class="btn btn-no">Không</button>
+			</div>
+		</div>
+	</div>
 	<div class="header_top">
 		<!--header_top-->
 		<div class="container">
@@ -105,10 +127,10 @@
 				<div class="col-sm-8">
 					<div class="shop-menu pull-right">
 						<ul class="nav navbar-nav">
-							<li><a href=""><i class="fa fa-user"></i> Tài khoản</a></li>
+							<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
 							<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-							<li><a href="checkout.html" id="checkout-link"><i
-									class="fa fa-crosshairs"></i> Thanh toán</a></li>
+							<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
+										Đơn hàng</a></li>
 							<li><a href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
 									class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 							<li><a href="login.html"><i class="fa fa-lock"></i> Đăng
@@ -157,7 +179,7 @@
 									<li><a href="blog-single.html">Blog đơn</a></li>
 								</ul></li>
 							<li><a href="404.html">404</a></li>
-							<li><a href="contact-us.html">Liên hệ</a></li>
+							<li><a href="http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
 						</ul>
 					</div>
 				</div>
@@ -200,20 +222,20 @@
 					<div class="col-sm-3">
 						<div class="shopper-info">
 							<p>Thông tin người đặt hàng</p>
-							<form>
-								<input type="text" placeholder="Tên"> <input type="text"
-									placeholder="Số điện thoại"> <input type="text"
-									placeholder="Email"> <input type="text"
-									placeholder="Địa chỉ">
+							<form id="checkoutForm">
+								<input type="text" id="name" placeholder="Tên" value="${customerInfo['name']}" /> <input
+									type="text" id="phone" placeholder="Số điện thoại" value="${customerInfo['phone']}" /> <input
+									type="text" id="email" placeholder="Email" value="${customerInfo['email']}" /> <input
+									type="text" id="address" placeholder="Địa chỉ" value="${customerInfo['address']}" />
 							</form>
-							<a id="submitOrder" class="btn btn-primary" href="">Thanh
-								toán</a>
+							<a id="submitOrder" class="btn btn-primary"
+								href="javascript:void(0)">Thanh toán</a>
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="order-message">
 							<p>Ghi chú</p>
-							<textarea name="message"
+							<textarea name="message" id="orderMessage"
 								placeholder="Ghi chú về đơn hàng của bạn..." rows="16"></textarea>
 						</div>
 					</div>
@@ -498,48 +520,6 @@
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
 	<script>
-    /*document.getElementById('submitOrder').addEventListener('click', function(event) {
-        event.preventDefault();
-
-        const name = document.querySelector('input[placeholder="Tên"]').value;
-        const phone = document.querySelector('input[placeholder="Số điện thoại"]').value;
-        const email = document.querySelector('input[placeholder="Email"]').value;
-        const address = document.querySelector('input[placeholder="Địa chỉ"]').value;
-        const note = document.querySelector('textarea[name="message"]').value;
-
-        const total = Array.from(document.querySelectorAll('.cart_total_price'))
-            .reduce((acc, el) => acc + parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim()), 0) * 1000;
-
-        const order = {
-            name: name,
-            phone: phone,
-            email: email,
-            address: address,
-            note: note,
-            total: total
-        };
-
-        fetch('/bookstorePTIT/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(order)
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text(); 
-            }
-            throw new Error('Có lỗi xảy ra!');
-        })
-        .then(data => {
-            alert(data); 
-            window.location.href = "http://localhost:8080/bookstorePTIT/thankyou";
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });*/
     document.getElementById('submitOrder').addEventListener('click', function(event) {
         event.preventDefault();
 
@@ -549,56 +529,195 @@
         const address = document.querySelector('input[placeholder="Địa chỉ"]').value;
         const note = document.querySelector('textarea[name="message"]').value;
 
-        const total = Array.from(document.querySelectorAll('.cart_total_price'))
-            .reduce((acc, el) => acc + parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim()), 0) * 1000;
+        let isValid = true;
 
-        const orderItems = Array.from(document.querySelectorAll('.cart_total_price')).map((el) => {
-            const productRow = el.closest('tr');
-            const productName = productRow.querySelector('.cart_description a').textContent;
-            const productPrice = parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim());
-            const quantity = parseInt(productRow.querySelector('.cart_quantity_input').value);
-            const bookIdText = productRow.querySelector('.cart_description p').textContent;
-            const bookId = bookIdText.split(': ')[1] ? bookIdText.split(': ')[1].trim() : null;
+        if (!name.trim()) {
+            toast({
+                title: "Chú ý!",
+                message: "Vui lòng điền đầy đủ họ tên.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+        if (!phone.trim()) {
+            toast({
+                title: "Chú ý!",
+                message: "Vui lòng điền đầy đủ số điện thoại.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+        if (phone.length < 10 || phone.length > 11) {
+            toast({
+                title: "Chú ý!",
+                message: "Số điện thoại phải có độ dài từ 10 đến 11 chữ số.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+        if (!email.trim()) {
+            toast({
+                title: "Chú ý!",
+                message: "Vui lòng điền đầy đủ email.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+        if (!email.endsWith("@gmail.com")) {
+            toast({
+                title: "Chú ý!",
+                message: "Email phải có đuôi @gmail.com",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
+        if (!address.trim()) {
+            toast({
+                title: "Chú ý!",
+                message: "Vui lòng điền đầy đủ địa chỉ.",
+                type: "error",
+                duration: 1000
+            });
+            isValid = false;
+        }
 
-            return {
-            	bookID: bookId,
-                quantity: quantity,
-                price: productPrice
+        if (isValid) {
+            const confirmModal = document.getElementById('confirmModal');
+            confirmModal.style.display = "block";
+
+            document.getElementById('confirmYes').onclick = function() {
+                confirmModal.style.display = "none";
+
+                const total = Array.from(document.querySelectorAll('.cart_total_price'))
+                    .reduce((acc, el) => acc + parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim()), 0) * 1000;
+
+                const orderItems = Array.from(document.querySelectorAll('.cart_total_price')).map((el) => {
+                    const productRow = el.closest('tr');
+                    const productName = productRow.querySelector('.cart_description a').textContent;
+                    const productPrice = parseFloat(el.textContent.replace(/,/g, '').replace('đ', '').trim());
+                    const quantity = parseInt(productRow.querySelector('.cart_quantity_input').value);
+                    const bookIdText = productRow.querySelector('.cart_description p').textContent;
+                    const bookId = bookIdText.split(': ')[1] ? bookIdText.split(': ')[1].trim() : null;
+
+                    return {
+                        bookID: bookId,
+                        quantity: quantity,
+                        price: productPrice
+                    };
+                }).filter(item => item !== null);
+
+                const order = {
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    address: address,
+                    note: note,
+                    total: total
+                };
+
+                fetch('/bookstorePTIT/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ order: order, orderItems: orderItems })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text(); 
+                    }
+                    throw new Error('Có lỗi xảy ra!');
+                })
+                .then(data => {
+                    toast({
+                        title: "Thành công!",
+                        message: "Đơn hàng của bạn đã được đặt thành công.",
+                        type: "success",
+                        duration: 1000
+                    });
+                    window.location.href = "http://localhost:8080/bookstorePTIT/thankyou";
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             };
-        }).filter(item => item !== null);
 
-        const order = {
-            name: name,
-            phone: phone,
-            email: email,
-            address: address,
-            note: note,
-            total: total
-        };
-
-        fetch('/bookstorePTIT/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ order: order, orderItems: orderItems })
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text(); 
-            }
-            throw new Error('Có lỗi xảy ra!');
-        })
-        .then(data => {
-            alert(data); 
-            window.location.href = "http://localhost:8080/bookstorePTIT/thankyou";
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+            document.getElementById('confirmNo').onclick = function() {
+                confirmModal.style.display = "none";
+            };
+        }
     });
 
+    document.getElementById('modalClose').onclick = function() {
+        document.getElementById('confirmModal').style.display = "none";
+    };
 
+    window.onclick = function(event) {
+        const confirmModal = document.getElementById('confirmModal');
+        if (event.target === confirmModal) {
+            confirmModal.style.display = "none";
+        }
+    };
+    
+    function toast({ title = "", message = "", type = "info", duration = 3000 }) {
+		const main = document.getElementById("toast");
+		if (main) {
+			const toast = document.createElement("div");
+			
+    	    const autoRemoveId = setTimeout(function () {
+    	      main.removeChild(toast);
+    	    }, duration + 1000);
+
+    	    toast.onclick = function (e) {
+    	      if (e.target.closest(".toast__close")) {
+    	        main.removeChild(toast);
+    	        clearTimeout(autoRemoveId);
+    	      }
+    	    };
+
+    	    const icons = {
+    	      success: "fas fa-check-circle",
+    	      info: "fas fa-info-circle",
+    	      warning: "fas fa-exclamation-circle",
+    	      error: "fas fa-exclamation-circle"
+    	    };
+    	    const icon = icons[type];
+    	    console.log("icon:",icon);
+    	    const delay = (duration / 1000).toFixed(2);
+
+    	    toast.classList.add("toast", `toast--${type}`);
+    	    toast.style.animation = `slideInLeft ease .3s, fadeOut linear 1s ${delay}s forwards`;
+
+    	    toast.innerHTML = `
+    	                    <div class="toast__icon">
+    	                        <i class="${icon}"></i>
+    	                    </div>
+    	                    <div class="toast__body">
+    	                        <h3 class="toast__title">${title}</h3>
+    	                        <p class="toast__msg">${message}</p>
+    	                    </div>
+    	                    <div class="toast__close">
+    	                        <i class="fas fa-times"></i>
+    	                    </div>
+    	                `;
+    	    const toastIcon = toast.querySelector('.toast__icon');
+			if (toastIcon) {
+    			const iconElement = document.createElement('i');
+    			iconElement.className = icon;
+    			toastIcon.appendChild(iconElement);
+			}
+    	    const toastMessage = toast.querySelector('.toast__msg');
+    	    toastMessage.textContent = message; 
+    	    const toastTitle = toast.querySelector('.toast__title');
+    	    toastTitle.textContent = title; 
+    	    main.appendChild(toast);
+		}
+    }
 	</script>
 
 </body>

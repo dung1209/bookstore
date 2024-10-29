@@ -5,8 +5,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
-
 import bookstorePTIT.bean.Books;
+import bookstorePTIT.bean.Order_Items;
 import bookstorePTIT.bean.Orders;
 import HibernateUtils.HibernateUtils;
 import java.math.BigDecimal;
@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.List;
 
 @Repository
 public class OrdersDao {
@@ -956,5 +957,81 @@ public class OrdersDao {
 
 	    return yearlyRevenue;
 	}
+    
+    public List<Orders> findOrdersByCustomerId(int customerId) {
+        List<Orders> orders = null;
+        Session session = null;
+        Transaction transaction = null;
+
+        try {
+            session = HibernateUtils.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+
+            String hql = "FROM Orders WHERE customerID = :customerId";
+            Query<Orders> query = session.createQuery(hql, Orders.class);
+            query.setParameter("customerId", customerId);
+            orders = query.list(); 
+
+            transaction.commit(); 
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close(); 
+            }
+        }
+        return orders;
+    }
+    
+//    public Orders findOrderById(int orderId) {
+//        Orders order = null; 
+//        Session session = HibernateUtils.getSessionFactory().openSession();
+//        Transaction transaction = null;
+//
+//        try {
+//            transaction = session.beginTransaction();
+//
+//            String hql = "FROM Orders WHERE id = :orderId"; 
+//            Query<Orders> query = session.createQuery(hql, Orders.class);
+//            query.setParameter("orderId", orderId); 
+//            order = query.uniqueResult();
+//
+//            transaction.commit(); 
+//        } catch (Exception e) {
+//            if (transaction != null) {
+//                transaction.rollback(); 
+//            }
+//            e.printStackTrace();
+//        } finally {
+//            session.close(); 
+//        }
+//        return order; 
+//    }
+    
+    public void updateOrder(Orders order) {
+        Session session = null;
+        Transaction transaction = null;
+
+        try {
+            session = HibernateUtils.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            
+            session.update(order);
+            
+            transaction.commit(); 
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace(); 
+        } finally {
+            if (session != null) {
+                session.close(); 
+            }
+        }
+    }
 
 }

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Giỏ hàng</title>
+<title>Đơn hàng</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -52,7 +52,7 @@
 				<span class="close" id="modalClose">&times;</span>
 			</div>
 			<div class="modal-body">
-				<p class="title-question">Bạn có muốn xoá sản phẩm khỏi giỏ hàng không?</p>
+				<p class="title-question">Bạn có muốn huỷ đơn hàng không?</p>
 			</div>
 			<div class="modal-footer">
 				<button id="confirmYes" class="btn btn-yes">Có</button>
@@ -134,11 +134,11 @@
 							<ul class="nav navbar-nav">
 								<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
-										Đơn hàng</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/order/"
+									id="cart-link"><i class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								<li><a
-									href="http://localhost:8080/bookstorePTIT/shop-cart/"
-									id="cart-link"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
+										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i>
 										Đăng nhập</a></li>
 							</ul>
@@ -153,7 +153,7 @@
 			<!--header-bottom-->
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-9">
+					<div class="col-sm-7">
 						<div class="navbar-header">
 							<button type="button" class="navbar-toggle"
 								data-toggle="collapse" data-target=".navbar-collapse">
@@ -183,11 +183,21 @@
 										<li><a href="blog-single.html">Blog đơn</a></li>
 									</ul></li>
 								<li><a href="404.html">404</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
+								<li><a href=http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-sm-5 search-order">
+						<div class="filter-search">
+							<label class="filter loc" for="orderStatus">Lọc:</label> <select
+								id="orderStatus" name="orderStatus"
+								class="form-control filter-order" onchange="filterOrders()">
+								<option value="all">Tất cả</option>
+								<option value="1">Đang chờ</option>
+								<option value="2">Thành công</option>
+								<option value="0">Đã huỷ</option>
+							</select>
+						</div>
 						<div class="search_box pull-right">
 							<input type="text" id="searchInput" placeholder="Tìm kiếm..." />
 							<button class="search-button" onclick="searchData()">Tìm kiếm</button>
@@ -204,132 +214,87 @@
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
 					<li><a href="http://localhost:8080/bookstorePTIT/">Home</a></li>
-					<li class="active">Giỏ hàng</li>
+					<li class="active">Đơn hàng</li>
 				</ol>
 			</div>
 			<div class="table-responsive cart_info">
 				<table class="table table-condensed">
 					<thead>
-						<tr class="cart_menu">
-							<td class="select">Chọn</td>
-							<td class="image">Ảnh</td>
-							<td class="description">Tên sản phẩm</td>
+						<tr class="order_menu">
+							<td class="order_id">Mã đơn</td>
+							<td class="product">Sản phẩm</td>
 							<td class="price">Giá</td>
-							<td class="quantity">Số lượng</td>
-							<td class="total">Tổng</td>
-							<td></td>
+							<td class="total">Tổng tiền</td>
+							<td class="information">Thông tin người đặt</td>
+							<td class="time_order">Thời gian đặt</td>
+							<td class="status">Trạng thái</td>
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="cart" items="${carts}" varStatus="loop">
-							<tr data-bookid="${booksInCart[loop.index].bookID}">
-								<td class="cart_select"><input type="checkbox"
-									name="selectCartItem" value="${booksInCart[loop.index].bookID}"
-									data-quantity="${cart.quantity}"
-									data-price="${booksInCart[loop.index].price}"
-									data-productID="${booksInCart[loop.index].bookID}"
-									data-index="${loop.index}"
-									onclick="toggleCheckbox()"></td>
-								<td class="cart_product"><a href=""> <img
-										src="${pageContext.request.contextPath}/assets/user/images/home/${booksInCart[loop.index].image}"
-										alt="Logo" style="width: 100px; height: auto;" /></a></td>
-								<td class="cart_description">
-									<h4>
-										<a href="">${booksInCart[loop.index].name}</a>
-									</h4>
-									<p>Web ID: ${booksInCart[loop.index].bookID}</p>
-								</td>
-								<td class="cart_price">
-									<p id="price_${loop.index}">
-										<fmt:formatNumber value="${booksInCart[loop.index].price}"
-											type="number" groupingUsed="true" />
-										đ
-									</p>
-								</td>
-								<td class="cart_quantity">
-									<div class="cart_quantity_button">
-										<a class="cart_quantity_down"
-											onclick="decreaseQuantity(${loop.index});"> - </a> <input
-											id="quantity_${loop.index}" class="cart_quantity_input"
-											type="text" name="quantity" value="${cart.quantity}"
-											autocomplete="off" size="2"> <a
-											class="cart_quantity_up"
-											onclick="increaseQuantity(${loop.index});"> + </a>
+						<c:forEach var="order" items="${orders}">
+							<tr class="order-row" data-order-status-id="${order.status}">
+								<td class="id_order">${order.id}</td>
+								<td class="product_info">
+									<div class="product_list">
+										<c:forEach var="item" items="${order.orderItems}">
+											<div class="product_item">
+												<img
+													src="<%=request.getContextPath()%>/assets/user/images/home/b1.jpg"
+													alt="${item.bookID}" />
+												<div class="product_name" id="bookName-${item.bookID}">Loading...</div>
+												<div class="quantity" style="margin-left: 7px;">(x${item.quantity})</div>
+											</div>
+										</c:forEach>
 									</div>
 								</td>
-								<td class="cart_total">
-									<p class="cart_total_price" id="total_${loop.index}">
-										<fmt:formatNumber
-											value="${booksInCart[loop.index].price * cart.quantity}"
-											type="number" groupingUsed="true" />
-										đ
-									</p>
+								<td class="price_order">
+									<div class="price_list">
+										<c:forEach var="item" items="${order.orderItems}">
+											<div class="price_item"><fmt:formatNumber value="${item.price}" type="number" groupingUsed="true" /> đ</div>
+										</c:forEach>
+									</div>
 								</td>
-								<td class="cart_delete">
-									<a class="cart_quantity_delete" href="javascript:void(0)" onclick="deleteProductFromCart(${booksInCart[loop.index].bookID})"><i class="fa fa-times"></i></a>
+								<td class="total_order"><fmt:formatNumber
+										value="${order.total}" type="number" groupingUsed="true" /> đ
 								</td>
+								<td class="customer_info">
+									<div>Tên: ${order.name}</div>
+									<div>SĐT: ${order.phone}</div>
+									<div>Email: ${order.email}</div>
+									<div>Địa chỉ: ${order.address}</div>
+								</td>
+								<td class="time_order">${order.formattedOrderDate}</td>
+								<td class="status_order"><c:choose>
+										<c:when test="${order.status == 0}">
+											<button
+												style="background-color: #e12e2bf2; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
+												Đã huỷ</button>
+										</c:when>
+										<c:when test="${order.status == 1}">
+											<button
+												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;"
+												onclick="deleteProductFromCart(${order.id})">Đang
+												chờ</button>
+										</c:when>
+										<c:when test="${order.status == 2}">
+											<button
+												style="background-color: #3292e4; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
+												Thành công</button>
+										</c:when>
+										<c:otherwise>
+											<button
+												style="background-color: gray; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+												Trạng thái không xác định</button>
+										</c:otherwise>
+									</c:choose></td>
 							</tr>
 						</c:forEach>
-					</tbody>
 				</table>
 			</div>
 		</div>
 	</section>
 
 	<!--/#cart_items-->
-
-	<section id="do_action">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="chose_area">
-						<ul class="user_option">
-							<li><input type="checkbox"> <label>Phiếu giảm giá</label></li>
-							<li><input type="checkbox"> <label>Phiếu quà tặng</label></li>
-							<li><input type="checkbox"> <label>Vận chuyển & Thuế</label></li>
-						</ul>
-						<ul class="user_info">
-							<li class="single_field"><label>Đất nước:</label> <select>
-									<option>Việt Nam</option>
-									<option>Bangladesh</option>
-									<option>UK</option>
-									<option>India</option>
-									<option>United States</option>
-									<option>Ucrane</option>
-									<option>Canada</option>
-									<option>Dubai</option>
-							</select></li>
-							<li class="single_field"><label>Khu vực:</label> <select>
-									<option>Select</option>
-									<option>Dhaka</option>
-									<option>London</option>
-									<option>Dillih</option>
-									<option>Lahore</option>
-									<option>Alaska</option>
-									<option>Canada</option>
-									<option>Dubai</option>
-							</select></li>
-							<li class="single_field zip-field"><label>Mã Code:</label>
-								<input type="text"></li>
-						</ul>
-						<a class="btn btn-default update" href="">Quay lại</a> <a
-							class="btn btn-default update" href="">Tiếp tục</a>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="total_area">
-						<div
-							style="display: flex; align-items: center; margin-top: 10px; margin-left: 15%;">
-							<strong id="totalSumMoney">Tổng tiền:</strong>
-							<p id="totalSum" class="cart_total_price">0 đ</p>
-						</div>
-						<a class="btn btn-default check_out" href="javascript:void(0);" onclick="redirectToCheckout()">Thanh toán</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!--/#do_action-->
 
 	<footer id="footer">
 		<!--Footer-->
@@ -524,86 +489,45 @@
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
 	<script>
-	function decreaseQuantity(index) {
-	    var quantityInput = document.getElementById('quantity_' + index);
-	    var currentValue = parseInt(quantityInput.value);
-	    if (currentValue > 1) {
-	        quantityInput.value = currentValue - 1; 
-	        updateTotal(index); 
-	    }
-	    updateGrandTotal();
-	}
-
-	function increaseQuantity(index) {
-	    var quantityInput = document.getElementById('quantity_' + index);
-	    var currentValue = parseInt(quantityInput.value);
-	    quantityInput.value = currentValue + 1; 
-	    updateTotal(index);
-	    updateGrandTotal(); 
-	}
-
-	function updateTotal(index) {
-	    var quantityInput = document.getElementById('quantity_' + index);
-	    var price = parseFloat(document.getElementById('price_' + index).innerText.replace(/[^0-9.-]+/g, ''));
-	    var quantity = parseInt(quantityInput.value);
-	    var total = quantity * price * 1000;
-
-	    document.getElementById('total_' + index).innerText = total.toLocaleString() + ' đ';
-	    updateGrandTotal(); 
-	}
-
-	function updateGrandTotal() {
-	    var totalPrice = 0; 
-
-	    var rows = document.querySelectorAll('.cart_select');
-	    rows.forEach(function(checkbox) {
-	        var input = checkbox.querySelector('input[name="selectCartItem"]');
-	        if (input.checked) {
-	            var row = checkbox.closest('tr'); // Lấy hàng tương ứng
-	            var quantityInput = row.querySelector('.cart_quantity_input');
-	            var quantity = parseInt(quantityInput.value); 
-	            var priceCell = row.querySelector('.cart_price p');
-	            var price = parseFloat(priceCell.innerText.replace(/[^0-9.-]+/g, ''));
-	            totalPrice += quantity * price * 1000; 
+	$(document).ready(function() {
+	    $(".product_item").each(function() {
+	        var bookID = $(this).find("img").attr("alt"); 
+	        if (!bookID) {
+	            console.error("bookID is not found for this item");
+	            return; 
 	        }
+	        var bookNameElement = $(this).find(".product_name");
+	        var imageElement = $(this).find("img"); 
+
+	        $.ajax({
+	            url: '<%=request.getContextPath()%>/getBookName',
+	            type: 'GET',
+	            data: {
+	                bookID: bookID
+	            },
+	            success: function(response) {
+	                bookNameElement.text(response.name); 
+	            },
+	            error: function() {
+	                bookNameElement.text("Error loading book name");
+	            }
+	        });
+
+	        $.ajax({
+	            url: '<%=request.getContextPath()%>/getBookImage', 
+	            type: 'GET',
+	            data: {
+	                bookID: bookID
+	            },
+	            success: function(imageResponse) {
+	                imageElement.attr("src", "<%=request.getContextPath()%>/assets/user/images/home/" + imageResponse);
+	            },
+	            error: function() {
+	                imageElement.attr("src", "<%=request.getContextPath()%>/assets/user/images/home/default.jpg");
+	            }
+	        });
 	    });
-	    document.getElementById('totalSum').innerText = totalPrice.toLocaleString() + ' đ';
-	}
-
-	function toggleCheckbox() {
-	    updateGrandTotal(); 
-	}
-	
-	function redirectToCheckout() {
-	    console.log("Checkout function called.");
-
-	    const checkedProducts = document.querySelectorAll('input[name="selectCartItem"]:checked');
-
-	    if (checkedProducts.length === 0) {
-	    	toast({
-                title: "Thông báo!",
-                message: "Vui lòng chọn ít nhất 1 sản phẩm để thanh toán.",
-                type: "error",
-                duration: 1000
-            });
-	    } else{
-	    	let queryParams = Array.from(checkedProducts).map(checkbox => {
-		        const row = checkbox.closest('tr');
-		        const quantityInput = row.querySelector('.cart_quantity_input'); 
-		        const quantity = parseInt(quantityInput.value) || 0; 
-		        const productId = checkbox.dataset.productid;
-		        console.log("Product ID: ", productId, " Quantity: ", quantity);
-
-		        if (!productId || !quantity) {
-		            console.warn("Missing productId or quantity.");
-		        }
-		        return 'productId=' + productId + '&quantity=' + quantity;
-		    });
-		    const queryString = queryParams.join('&');
-		    console.log("Query String: ", queryString);
-		    window.location.href = 'checkout?' + queryString;
-	    }
-	}
+	});
 	
 	document.getElementById('modalClose').onclick = function() {
         document.getElementById('confirmModal').style.display = "none";
@@ -670,9 +594,10 @@
     	    main.appendChild(toast);
 		}
     }
-
-    function deleteProductFromCart(bookID) {
-        const url = '/bookstorePTIT/cart/delete?bookID=' + bookID;
+    
+    function deleteProductFromCart(orderID) {
+        const url = '/bookstorePTIT/order/delete?orderID=' + orderID;
+        console.log("orderID: ", orderID);
         
         const confirmModal = document.getElementById('confirmModal');
         confirmModal.style.display = "block";
@@ -685,18 +610,13 @@
             .then(response => {
                 if (response.ok) {
                 	toast({
-    	                title: "Thành công!",
-    	                message: "Sách đã được xoá khỏi giỏ hàng thành công.",
+    	                title: "Đơn hàng đã được huỷ thành công.",
     	                type: "success",
     	                duration: 1000
     	            });
                 	window.location.href = window.location.href;
-                	const rowToDelete = document.querySelector(`tbody tr[data-bookid='${bookID}']`);
-                    if (rowToDelete) {
-                        rowToDelete.remove();
-                    }
                 } else {
-                    throw new Error('Có lỗi xảy ra khi xóa sản phẩm!');
+                    throw new Error('Có lỗi xảy ra khi xóa đơn hàng!');
                 }
             })
             .catch(error => {
@@ -708,82 +628,42 @@
         };
     }
     
+    function filterOrders() {
+        var selectedStatusId = document.getElementById("orderStatus").value;
+        var orders = document.getElementsByClassName("order-row");
+
+        for (var i = 0; i < orders.length; i++) {
+            var orderStatusId = orders[i].getAttribute("data-order-status-id");
+
+            if (selectedStatusId === 'all' || selectedStatusId === orderStatusId) {
+                orders[i].style.display = "table-row";
+            } else {
+                orders[i].style.display = "none";
+            }
+        }
+    }
+    
     function searchData() {
         var searchInput = document.getElementById("searchInput").value.toLowerCase(); 
-        var rows = document.querySelectorAll("tbody tr"); // Chọn tất cả các hàng trong tbody
+        var rows = document.querySelectorAll("tbody tr.order-row");
 
         rows.forEach(function(row) {
-            var rowText = ""; // Biến để chứa nội dung của hàng
+            var rowText = "";
 
-            var cells = row.querySelectorAll("td"); // Chọn tất cả các ô trong hàng
+            var cells = row.querySelectorAll("td");
             cells.forEach(function(cell) {
-                rowText += cell.innerText.toLowerCase() + " "; // Thêm nội dung của từng ô vào biến rowText
+                rowText += cell.innerText.toLowerCase() + " ";
             });
 
-            // Kiểm tra nếu nội dung hàng có chứa từ khóa tìm kiếm
             if (rowText.includes(searchInput)) {
-                row.style.display = "table-row"; // Hiển thị hàng nếu tìm thấy
+                row.style.display = "table-row";
             } else {
-                row.style.display = "none"; // Ẩn hàng nếu không tìm thấy
+                row.style.display = "none";
             }
         });
     }
 
-
-    
-    /*function reloadCartData() {
-        fetch('/bookstorePTIT/cart/data')  // Giả sử đây là API trả về dữ liệu giỏ hàng
-            .then(response => response.json())  // Chuyển đổi phản hồi thành JSON
-            .then(data => {
-            	console.log("Dữ liệu giỏ hàng mới:", data);
-                updateCartTable(data);  // Hàm để cập nhật bảng giỏ hàng với dữ liệu mới
-            })
-            .catch(error => console.error('Error loading cart data:', error));
-    }
-
-    function updateCartTable(cartItems) {
-        const cartTableBody = document.querySelector('tbody');
-        cartTableBody.innerHTML = '';  // Xóa nội dung cũ của bảng
-
-        cartItems.forEach((item, index) => {
-            const row = `
-                <tr data-bookid="${item.bookID}">
-                    <td class="cart_select">
-                        <input type="checkbox" name="selectCartItem" value="${item.bookID}" 
-                               data-quantity="${item.quantity}" data-price="${item.price}" 
-                               data-productID="${item.bookID}" data-index="${index}" 
-                               onclick="toggleCheckbox()">
-                    </td>
-                    <td class="cart_product">
-                        <a href=""><img src="${pageContext.request.contextPath}/assets/user/images/home/b1.jpg" alt="Logo" style="width: 100px; height: auto;" /></a>
-                    </td>
-                    <td class="cart_description">
-                        <h4><a href="">${item.name}</a></h4>
-                        <p>Web ID: ${item.bookID}</p>
-                    </td>
-                    <td class="cart_price">
-                        <p id="price_${index}">${item.price} đ</p>
-                    </td>
-                    <td class="cart_quantity">
-                        <div class="cart_quantity_button">
-                            <a class="cart_quantity_down" onclick="decreaseQuantity(${index});"> - </a>
-                            <input id="quantity_${index}" class="cart_quantity_input" type="text" name="quantity" value="${item.quantity}" autocomplete="off" size="2">
-                            <a class="cart_quantity_up" onclick="increaseQuantity(${index});"> + </a>
-                        </div>
-                    </td>
-                    <td class="cart_total">
-                        <p class="cart_total_price" id="total_${index}">${item.price * item.quantity} đ</p>
-                    </td>
-                    <td class="cart_delete">
-                        <a class="cart_quantity_delete" href="javascript:void(0)" onclick="deleteProductFromCart(${item.bookID})">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </td>
-                </tr>`;
-            
-            cartTableBody.innerHTML += row;  // Thêm dòng mới vào bảng
-        });
-    }*/
 	</script>
+
 </body>
 </html>
