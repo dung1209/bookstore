@@ -20,7 +20,7 @@ public class CartsDao {
 	@Autowired
     private SessionFactory sessionFactory;
     
-	public List<Carts> findCartsByCustomerId(int customerId) {
+	public List<Carts> findCartsByAccountID(int accountId) {
         List<Carts> carts = null;
         Session session = null;
         Transaction transaction = null;
@@ -29,9 +29,9 @@ public class CartsDao {
             session = HibernateUtils.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
-            String hql = "FROM Carts WHERE customerID = :customerId";
+            String hql = "FROM Carts WHERE accountID = :accountId";
             Query<Carts> query = session.createQuery(hql, Carts.class);
-            query.setParameter("customerId", customerId);
+            query.setParameter("accountId", accountId);
             carts = query.list(); 
 
             transaction.commit(); 
@@ -69,18 +69,17 @@ public class CartsDao {
         }
     }
 	
-	public Optional<Carts> findByCustomerIdAndBookId(int customerId, int bookId) {
+	public Optional<Carts> findByAccountIdAndBookId(int accountId, int bookId) {
         Session session = null;
         Transaction transaction = null;
         Carts cart = null;
-
         try {
             session = HibernateUtils.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
-            String hql = "FROM Carts WHERE customerID = :customerId AND bookID = :bookId";
+            String hql = "FROM Carts WHERE accountID = :accountId AND bookID = :bookId";
             Query<Carts> query = session.createQuery(hql, Carts.class);
-            query.setParameter("customerId", customerId);
+            query.setParameter("accountId", accountId);
             query.setParameter("bookId", bookId);
             cart = query.uniqueResult();
 

@@ -1,6 +1,5 @@
 package SpringMVC.UserController;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import Dao.CategoriesDao;
 import Dao.CustomersDao;
 import Dao.Order_ItemsDao;
@@ -34,19 +30,14 @@ import bookstorePTIT.bean.Books;
 import bookstorePTIT.bean.Carts;
 import bookstorePTIT.bean.Order_Items;
 import java.util.Optional;
-
 import javax.servlet.http.HttpSession;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 
 @Controller
 public class HomeController {
@@ -116,7 +107,7 @@ public class HomeController {
 		CartsDao cartDao = new CartsDao();
 		BooksDao booksDao = new BooksDao();
 
-		List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
+		List<Carts> carts = cartDao.findCartsByAccountID(accountID);
 		List<Books> booksInCart = new ArrayList<>();
 
 		for (Carts cart : carts) {
@@ -138,8 +129,8 @@ public class HomeController {
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 
 		CartsDao cartsDao = new CartsDao();
-		cart.setCustomerID(customerID);
-		Optional<Carts> existingCart = cartsDao.findByCustomerIdAndBookId(cart.getCustomerID(), cart.getBookID());
+		cart.setAccountID(accountID);
+		Optional<Carts> existingCart = cartsDao.findByAccountIdAndBookId(cart.getAccountID(), cart.getBookID());
 		if (existingCart.isPresent()) {
 			return ResponseEntity.ok(Collections.singletonMap("status", 0));
 		} else {
@@ -242,7 +233,7 @@ public class HomeController {
 
 		CartsDao cartsDao = new CartsDao();
 
-		Optional<Carts> cartItem = cartsDao.findByCustomerIdAndBookId(customerID, bookID);
+		Optional<Carts> cartItem = cartsDao.findByAccountIdAndBookId(accountID, bookID);
 		if (cartItem.isPresent()) {
 			cartsDao.delete(cartItem.get());
 			return ResponseEntity.ok("Sản phẩm đã được xóa khỏi giỏ hàng!");
@@ -261,7 +252,7 @@ public class HomeController {
 		CartsDao cartDao = new CartsDao();
 		BooksDao booksDao = new BooksDao();
 
-		List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
+		List<Carts> carts = cartDao.findCartsByAccountID(accountID);
 		List<Map<String, Object>> booksInCart = new ArrayList<>();
 
 		for (Carts cart : carts) {
@@ -277,13 +268,19 @@ public class HomeController {
 				booksInCart.add(bookInfo);
 			}
 		}
-
 		return ResponseEntity.ok(booksInCart);
 	}
 
 	@RequestMapping("/order")
 	public String order(Model model, HttpSession hsession) {
 		Integer accountID = (Integer) hsession.getAttribute("id");
+		
+		if (accountID == null) {
+			model.addAttribute("message", "Vui lòng đăng nhập để xem đơn hàng.");
+			model.addAttribute("orders", new ArrayList<Orders>());
+			return "user/Order";
+		}
+		
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 		
@@ -291,7 +288,6 @@ public class HomeController {
 		Order_ItemsDao orderItemsDao = new Order_ItemsDao();
 
 		List<Orders> orders = ordersDao.findOrdersByCustomerId(customerID);
-
 		Collections.reverse(orders);
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -302,7 +298,6 @@ public class HomeController {
 			List<Order_Items> orderItems = orderItemsDao.findOrderItemsByOrderId(order.getId());
 			order.setOrderItems(orderItems);
 		}
-
 		model.addAttribute("orders", orders);
 		return "user/Order";
 	}
@@ -319,7 +314,6 @@ public class HomeController {
 		} else {
 			response.put("name", "Unknown Book");
 		}
-
 		return ResponseEntity.ok(response);
 	}
 
@@ -356,8 +350,11 @@ public class HomeController {
 
 	@RequestMapping("/account")
 	public String account(Model model, HttpSession hsession) {
+		CustomersDao customerDao = new CustomersDao();
+		AccountsDao accountDao = new AccountsDao();
 		
 		Integer accountID = (Integer) hsession.getAttribute("id");
+		String email = accountDao.getEmailByAccountId(accountID);
 		
 		if (accountID == null) {
 			model.addAttribute("customer", null);
@@ -367,12 +364,14 @@ public class HomeController {
 		
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
-			
-		CustomersDao customerDao = new CustomersDao();
-		AccountsDao accountDao = new AccountsDao();
+		
+		if (customerID == 0) {
+			model.addAttribute("customer", null);
+			model.addAttribute("email", email);
+			return "user/Account";
+		}
 
 		Customers customer = customerDao.getCustomerById(customerID);
-		String email = accountDao.getEmailByAccountId(accountID);
 
 		model.addAttribute("customer", customer);
 		model.addAttribute("email", email);
@@ -408,8 +407,12 @@ public class HomeController {
 
 				response.put("success", true);
 			} else {
-				response.put("success", false);
-				response.put("message", "Customer not found");
+				customer.setAccountID(accountID); 
+	            customersDao.addCustomer(customer); 
+
+	            accountsDao.updateEmailByAccountId(accountID, newEmail);
+				response.put("success", true);
+	            response.put("message", "Customer created successfully");
 			}
 		} catch (Exception e) {
 			response.put("success", false);

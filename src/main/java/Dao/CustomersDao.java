@@ -89,10 +89,10 @@ public class CustomersDao {
 	    }
 	}
 	
-	public int getCustomerIDByAccountID(int accountID) {
+	public int getCustomerIDByAccountID(Integer accountID) {
 	    Session session = null;
 	    Transaction transaction = null;
-	    int customerID = 0;
+	    Integer customerID = 0;
 	    try {
 	        session = HibernateUtils.getSessionFactory().openSession();
 	        transaction = session.beginTransaction();
@@ -100,7 +100,8 @@ public class CustomersDao {
 	        Query<Integer> query = session.createQuery("SELECT c.id FROM Customers c WHERE c.accountID = :accountID", Integer.class);
 	        query.setParameter("accountID", accountID);
 
-	        customerID = query.uniqueResult();
+	        Integer result = query.uniqueResult();
+	        customerID = (result != null) ? result : 0;
 	        transaction.commit();
 	    } catch (Exception e) {
 	        if (transaction != null) {
@@ -113,6 +114,24 @@ public class CustomersDao {
 	        }
 	    }
 	    return customerID;
+	}
+	
+	public void addCustomer(Customers customer) {
+		Session session = null;
+	    Transaction transaction = null;
+	    try {
+	    	session = HibernateUtils.getSessionFactory().openSession();
+	        transaction = session.beginTransaction();
+	        session.save(customer); 
+	        transaction.commit();
+	    } catch (Exception e) {
+	        if (transaction != null) {
+	            transaction.rollback(); 
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        session.close();
+	    }
 	}
 
 }

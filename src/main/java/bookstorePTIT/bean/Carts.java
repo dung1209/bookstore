@@ -16,8 +16,8 @@ public class Carts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "customerID", nullable = false)
-    private int customerID;
+    @Column(name = "accountID", nullable = false)
+    private int accountID;
 
     @Column(name = "bookID", nullable = false)
     private int bookID;
@@ -25,9 +25,9 @@ public class Carts {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    public Carts(int id, int customerID, int bookID, int quantity) {
+    public Carts(int id, int accountID, int bookID, int quantity) {
         this.id = id;
-        this.customerID = customerID;
+        this.accountID = accountID;
         this.bookID = bookID;
         this.quantity = quantity;
     }
@@ -43,12 +43,12 @@ public class Carts {
         this.id = id;
     }
 
-    public int getCustomerID() {
-        return customerID;
+    public int getAccountID() {
+        return accountID;
     }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
+    public void setAccountID(int accountID) {
+        this.accountID = accountID;
     }
 
     public int getBookID() {
@@ -69,6 +69,6 @@ public class Carts {
 
     @Override
     public String toString() {
-        return "Carts{id=" + id + ", customerID=" + customerID + ", bookID=" + bookID + ", quantity=" + quantity + "}";
+        return "Carts{id=" + id + ", accountID=" + accountID + ", bookID=" + bookID + ", quantity=" + quantity + "}";
     }
 }

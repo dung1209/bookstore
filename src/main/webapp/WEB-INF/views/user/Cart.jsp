@@ -563,7 +563,7 @@
 	    var quantityInput = document.getElementById('quantity_' + index);
 	    var price = parseFloat(document.getElementById('price_' + index).innerText.replace(/[^0-9.-]+/g, ''));
 	    var quantity = parseInt(quantityInput.value);
-	    var total = quantity * price;
+	    var total = quantity * price * 1000;
 
 	    document.getElementById('total_' + index).innerText = total.toLocaleString() + ' đ';
 	    updateGrandTotal(); 
@@ -581,7 +581,7 @@
 	            var quantity = parseInt(quantityInput.value); 
 	            var priceCell = row.querySelector('.cart_price p');
 	            var price = parseFloat(priceCell.innerText.replace(/[^0-9.-]+/g, ''));
-	            totalPrice += quantity * price; 
+	            totalPrice += quantity * price * 1000; 
 	        }
 	    });
 	    document.getElementById('totalSum').innerText = totalPrice.toLocaleString() + ' đ';
