@@ -131,16 +131,32 @@
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+							<ul class="nav navbar-nav">		
+								<c:if test="${empty sessionScope.username}">
+									<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="http://localhost:8080/bookstorePTIT/account"><i
+											class="fa fa-user"></i>${sessionScope.username}</a></li>
+								</c:if>
+								
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/order/"
-									id="cart-link"><i class="fa fa-crosshairs"></i> Đơn hàng</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i
+										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								<li><a
 									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
 										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
-								<li><a href="login.html"><i class="fa fa-lock"></i>
-										Đăng nhập</a></li>
+								<c:if test="${empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/login"><i
+											class="fa fa-lock"></i> Đăng nhập</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="#" onclick="confirmLogout()"><i
+											class="fa fa-lock"></i>Đăng xuất</a></li>
+									<c:if test="${not empty errorLogout}">
+										<div style="color: red;">${error}</div>
+									</c:if>
+								</c:if>
 							</ul>
 						</div>
 					</div>
@@ -193,8 +209,10 @@
 								id="orderStatus" name="orderStatus"
 								class="form-control filter-order" onchange="filterOrders()">
 								<option value="all">Tất cả</option>
-								<option value="1">Đang chờ</option>
-								<option value="2">Thành công</option>
+								<option value="1">Chờ xác nhận</option>
+								<option value="2">Đã xác nhận</option>
+								<option value="4">Đang giao</option>
+								<option value="3">Thành công</option>
 								<option value="0">Đã huỷ</option>
 							</select>
 						</div>
@@ -273,13 +291,22 @@
 										<c:when test="${order.status == 1}">
 											<button
 												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;"
-												onclick="deleteProductFromCart(${order.id})">Đang
-												chờ</button>
+												onclick="cancelOrder(${order.id})">C.Xác Nhận</button>
 										</c:when>
 										<c:when test="${order.status == 2}">
 											<button
+												style="background-color: #c5c810; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
+												Đ.Xác Nhận</button>
+										</c:when>
+										<c:when test="${order.status == 3}">
+											<button
 												style="background-color: #3292e4; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
 												Thành công</button>
+										</c:when>
+										<c:when test="${order.status == 4}">
+											<button
+												style="background-color: #f6a105; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
+												Đang giao</button>
 										</c:when>
 										<c:otherwise>
 											<button
@@ -488,6 +515,7 @@
 	<script
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 	$(document).ready(function() {
 	    $(".product_item").each(function() {
@@ -595,7 +623,7 @@
 		}
     }
     
-    function deleteProductFromCart(orderID) {
+    function cancelOrder(orderID) {
         const url = '/bookstorePTIT/order/delete?orderID=' + orderID;
         console.log("orderID: ", orderID);
         
@@ -610,11 +638,14 @@
             .then(response => {
                 if (response.ok) {
                 	toast({
-    	                title: "Đơn hàng đã được huỷ thành công.",
+    	                title: "Thông báo!",
+    	                message: "Đơn hàng đã được huỷ thành công.",
     	                type: "success",
     	                duration: 1000
     	            });
-                	window.location.href = window.location.href;
+                	setTimeout(function() {
+                	    window.location.href = window.location.href;
+                	}, 2000);
                 } else {
                     throw new Error('Có lỗi xảy ra khi xóa đơn hàng!');
                 }
@@ -661,6 +692,23 @@
                 row.style.display = "none";
             }
         });
+    }
+    
+    function confirmLogout() {
+    	Swal.fire({
+            title: 'Thông báo?',
+            text: "Bạn có chắc chắn muốn đăng xuất không?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/bookstorePTIT/logout';
+            }
+        });	        
     }
 
 	</script>

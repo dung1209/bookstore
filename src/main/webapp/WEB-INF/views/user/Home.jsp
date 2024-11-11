@@ -40,8 +40,9 @@
 	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
 	crossorigin="anonymous" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
 	<div id="toast"></div>
@@ -52,7 +53,8 @@
 				<span class="close" id="modalClose">&times;</span>
 			</div>
 			<div class="modal-body">
-				<p class="title-question">Bạn có muốn thêm sản phẩm vào giỏ hàng không?</p>
+				<p class="title-question">Bạn có muốn thêm sản phẩm vào giỏ hàng
+					không?</p>
 			</div>
 			<div class="modal-footer">
 				<button id="confirmYes" class="btn btn-yes">Có</button>
@@ -129,16 +131,32 @@
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+							<ul class="nav navbar-nav">		
+								<c:if test="${empty sessionScope.username}">
+									<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="http://localhost:8080/bookstorePTIT/account"><i
+											class="fa fa-user"></i>${sessionScope.username}</a></li>
+								</c:if>
+								
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
-										Đơn hàng</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i
+										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								<li><a
 									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
 										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
-								<li><a href="login.html"><i class="fa fa-lock"></i>
-										Đăng nhập</a></li>
+								<c:if test="${empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/login"><i
+											class="fa fa-lock"></i> Đăng nhập</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="#" onclick="confirmLogout()"><i
+											class="fa fa-lock"></i>Đăng xuất</a></li>
+									<c:if test="${not empty errorLogout}">
+										<div style="color: red;">${error}</div>
+									</c:if>
+								</c:if>
 							</ul>
 						</div>
 					</div>
@@ -162,10 +180,10 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="http://localhost:8080/bookstorePTIT/"  style="color: #fdb45e">Trang
-										chủ</a></li>
-								<li class="dropdown"><a href="#" class="active" style="color: #696763">Cửa
-										hàng<i class="fa fa-angle-down"></i>
+								<li><a href="http://localhost:8080/bookstorePTIT/"
+									style="color: #fdb45e">Trang chủ</a></li>
+								<li class="dropdown"><a href="#" class="active"
+									style="color: #696763">Cửa hàng<i class="fa fa-angle-down"></i>
 								</a>
 									<ul role="menu" class="sub-menu">
 										<li><a href="shop.html" class="active">Sản phẩm</a></li>
@@ -181,7 +199,8 @@
 										<li><a href="blog-single.html">Blog đơn</a></li>
 									</ul></li>
 								<li><a href="404.html">404</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/contact/">Liên hệ</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/contact/">Liên
+										hệ</a></li>
 							</ul>
 						</div>
 					</div>
@@ -271,466 +290,11 @@
 							class="fa fa-angle-right"></i>
 						</a>
 					</div>
-
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-3">
-					<div class="left-sidebar">
-						<h2>DANH MỤC</h2>
-						<div class="panel-group category-products" id="accordian">
-							<!--category-productsr-->
-							<c:forEach var="category" items="${categories}">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h4 class="panel-title">
-											<a href="#">${category.name}</a>
-										</h4>
-									</div>
-								</div>
-							</c:forEach>
-						</div>
-						<!--/category-productsr-->
-
-						<div class="brands_products">
-							<!--brands_products-->
-							<h2>Tác giả</h2>
-							<div class="brands-name">
-								<ul class="nav nav-pills nav-stacked">
-									<c:forEach var="author" items="${authors}">
-										<li><a href=""> <span class="pull-right">(50)</span>${author.name}</a></li>
-									</c:forEach>
-								</ul>
-							</div>
-						</div>
-						<!--/brands_products-->
-
-						<div class="price-range">
-							<!--price-range-->
-							<h2>MỨC GIÁ</h2>
-							<div class="well">
-								<input type="text" class="span2" value="" data-slider-min="0"
-									data-slider-max="600" data-slider-step="5"
-									data-slider-value="[250,450]" id="sl2"><br /> <b>$
-									0</b> <b class="pull-right">$ 600</b>
-							</div>
-						</div>
-						<!--/price-range-->
-
-						<div class="shipping text-center">
-							<!--shipping-->
-							<img src="assets/user/images/home/shipping.jpg" alt="" />
-						</div>
-						<!--/shipping-->
-					</div>
-				</div>
-
-				<div class="col-sm-9 padding-right">
-					<div class="features_items">
-						<!--features_items-->
-						<h2 class="title text-center">SẢN PHẨM</h2>
-						<c:forEach var="book" items="${books}">
-							<div class="col-sm-4">
-								<a
-									href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/${book.image}" alt="" />
-												<h2>
-													<fmt:formatNumber value="${book.price}" type="number"
-														groupingUsed="true" />
-													đ
-												</h2>
-												<p>${book.name}</p>
-												<a id="submitOrder" href="#" class="btn btn-default add-to-cart"
-													onclick="confirmAddToCart(event, ${book.bookID})"> <i
-													class="fa fa-shopping-cart"></i> Thêm vào giỏ
-												</a>
-											</div>
-										</div>
-										<div class="choose">
-											<ul class="nav nav-pills nav-justified">
-												<li><a href=""><i class="fa fa-plus-square"></i>Yêu
-														thích</a></li>
-												<li><a href=""><i class="fa fa-plus-square"></i>So
-														sánh</a></li>
-											</ul>
-										</div>
-									</div>
-								</a>
-							</div>
-						</c:forEach>
-						<!--<ul class="pagination">
-							<li class="active"><a href="">1</a></li>
-							<li><a href="">2</a></li>
-							<li><a href="">3</a></li>
-							<li><a href="">&raquo;</a></li>
-						</ul>-->
-						<!--<c:forEach var="book" items="${books}">
-							<div class="col-sm-4">
-								<a
-									href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/${book.image}" alt="" />
-												<h2>
-													<fmt:formatNumber value="${book.price}" type="number"
-														groupingUsed="true" />
-													đ
-												</h2>
-												<p>${book.name}</p>
-												<a href="#" class="btn btn-default add-to-cart"
-													onclick="confirmAddToCart(event, ${book.bookID})"> <i
-													class="fa fa-shopping-cart"></i> Thêm vào giỏ
-												</a>
-											</div>
-										</div>
-										<div class="choose">
-											<ul class="nav nav-pills nav-justified">
-												<li><a href=""><i class="fa fa-plus-square"></i>
-														Yêu thích</a></li>
-												<li><a href=""><i class="fa fa-plus-square"></i> So
-														sánh</a></li>
-											</ul>
-										</div>
-									</div>
-								</a>
-							</div>
-						</c:forEach>-->
-
-						<ul class="pagination">
-							<li class="${currentPage == 1 ? 'active' : ''}"><a
-								href="${pageContext.request.contextPath}/?page=1">1</a></li>
-							<c:forEach var="i" begin="2" end="${totalPages}">
-								<li class="${currentPage == i ? 'active' : ''}"><a
-									href="${pageContext.request.contextPath}/?page=${i}">${i}</a></li>
-							</c:forEach>
-							<li class="${currentPage == totalPages ? 'active' : ''}"><a
-								href="${pageContext.request.contextPath}/?page=${totalPages}">&raquo;</a>
-							</li>
-						</ul>
-					</div>
-					<!--features_items-->
-					<div class="category-tab">
-						<!--category-tab-->
-						<div class="col-sm-12">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#tshirt" data-toggle="tab">T-Shirt</a></li>
-								<li><a href="#blazers" data-toggle="tab">Blazers</a></li>
-								<li><a href="#sunglass" data-toggle="tab">Sunglass</a></li>
-								<li><a href="#kids" data-toggle="tab">Kids</a></li>
-								<li><a href="#poloshirt" data-toggle="tab">Polo shirt</a></li>
-							</ul>
-						</div>
-						<div class="tab-content">
-							<div class="tab-pane fade active in" id="tshirt">
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery1.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery2.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery3.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery4.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="tab-pane fade" id="blazers">
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery4.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery3.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery2.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery1.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="tab-pane fade" id="sunglass">
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery3.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery4.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery1.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery2.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="tab-pane fade" id="kids">
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery1.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery2.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery3.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery4.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="tab-pane fade" id="poloshirt">
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery2.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery4.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery3.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-3">
-									<div class="product-image-wrapper">
-										<div class="single-products">
-											<div class="productinfo text-center">
-												<img src="assets/user/images/home/gallery1.jpg" alt="" />
-												<h2>$56</h2>
-												<p>Easy Polo Black Edition</p>
-												<a href="#" class="btn btn-default add-to-cart"><i
-													class="fa fa-shopping-cart"></i>Add to cart</a>
-											</div>
-
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!--/category-tab-->
-
+					
+					<!-- Gợi ý sách -->
 					<div class="recommended_items">
 						<!--recommended_items-->
-						<h2 class="title text-center">recommended items</h2>
+						<h2 class="title text-center recommend-name">SÁCH GỢI Ý</h2>
 
 						<div id="recommended-item-carousel" class="carousel slide"
 							data-ride="carousel">
@@ -833,7 +397,116 @@
 							</a>
 						</div>
 					</div>
-					<!--/recommended_items-->
+					<!--gợi ý sách-->
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="left-sidebar">
+						<h2>DANH MỤC</h2>
+						<div class="panel-group category-products" id="accordian">
+							<!--category-productsr-->
+							<c:forEach var="category" items="${categories}">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a href="#">${category.name}</a>
+										</h4>
+									</div>
+								</div>
+							</c:forEach>
+						</div>
+						<!--/category-productsr-->
+
+						<div class="brands_products">
+							<!--brands_products-->
+							<h2>Tác giả</h2>
+							<div class="brands-name">
+								<ul class="nav nav-pills nav-stacked">
+									<c:forEach var="author" items="${authors}">
+										<li><a href=""> <span class="pull-right">(50)</span>${author.name}</a></li>
+									</c:forEach>
+								</ul>
+							</div>
+						</div>
+						<!--/brands_products-->
+
+						<div class="price-range">
+							<!--price-range-->
+							<h2>MỨC GIÁ</h2>
+							<div class="well">
+								<input type="text" class="span2" value="" data-slider-min="0"
+									data-slider-max="600" data-slider-step="5"
+									data-slider-value="[250,450]" id="sl2"><br /> <b>$
+									0</b> <b class="pull-right">$ 600</b>
+							</div>
+						</div>
+						<!--/price-range-->
+
+						<div class="shipping text-center">
+							<!--shipping-->
+							<img src="assets/user/images/home/shipping.jpg" alt="" />
+						</div>
+						<!--/shipping-->
+					</div>
+				</div>
+
+				<div class="col-sm-9 padding-right">
+					<div class="features_items">
+						<!--features_items-->
+						<h2 class="title text-center">SẢN PHẨM</h2>
+						<c:forEach var="book" items="${books}">
+							<div class="col-sm-4">
+								<a
+									href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
+									<div class="product-image-wrapper">
+										<div class="single-products">
+											<div class="productinfo text-center">
+												<img src="assets/user/images/home/${book.image}" alt="" />
+												<h2>
+													<fmt:formatNumber value="${book.price}" type="number"
+														groupingUsed="true" />
+													đ
+												</h2>
+												<p>${book.name}</p>
+												<a id="submitOrder" href="#"
+													class="btn btn-default add-to-cart"
+													onclick="confirmAddToCart(event, ${book.bookID})"> <i
+													class="fa fa-shopping-cart"></i> Thêm vào giỏ
+												</a>
+											</div>
+										</div>
+										<div class="choose">
+											<ul class="nav nav-pills nav-justified">
+												<li><a href=""><i class="fa fa-plus-square"></i>Yêu
+														thích</a></li>
+												<li><a href=""><i class="fa fa-plus-square"></i>So
+														sánh</a></li>
+											</ul>
+										</div>
+									</div>
+								</a>
+							</div>
+						</c:forEach>
+
+						<ul class="pagination">
+							<li class="${currentPage == 1 ? 'active' : ''}"><a
+								href="${pageContext.request.contextPath}/?page=1">1</a></li>
+							<c:forEach var="i" begin="2" end="${totalPages}">
+								<li class="${currentPage == i ? 'active' : ''}"><a
+									href="${pageContext.request.contextPath}/?page=${i}"
+									onclick="scrollToOffset(event, this)">${i}</a></li>
+							</c:forEach>
+							<li class="${currentPage == totalPages ? 'active' : ''}"><a
+								href="${pageContext.request.contextPath}/?page=${totalPages}">&raquo;</a>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1017,6 +690,7 @@
 	<script src="assets/user/js/bootstrap.min.js"></script>
 	<script src="assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="assets/user/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 	function confirmAddToCart(event, bookId) {
 	    event.preventDefault();
@@ -1134,6 +808,41 @@
     	    main.appendChild(toast);
 		}
     }
+	
+	function scrollToOffset(event, linkElement) {
+	    event.preventDefault();
+	    setTimeout(function() {
+	        window.scrollBy(0, 500);
+
+	        window.location.href = linkElement.href;
+	    }, 100);
+	}
+
+	window.onload = function() {
+	    if (window.location.search.indexOf('page=') !== -1) {
+	        setTimeout(function() {
+	            window.scrollBy(0, 1150);
+	        }, 100);
+	    }
+	}
+	
+	function confirmLogout() {
+    	Swal.fire({
+            title: 'Thông báo?',
+            text: "Bạn có chắc chắn muốn đăng xuất không?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/bookstorePTIT/logout';
+            }
+        });	        
+    }
+
 	</script>
 
 </body>

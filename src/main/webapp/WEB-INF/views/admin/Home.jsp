@@ -87,7 +87,7 @@ DecimalFormat df = new DecimalFormat("#,###");
     		
 		</ul>
 		<div class="logout-btn mt-auto w-100">
-				<p class="text-white fs-6 fw-bold mb-2">Xin chào, Admin!</p>
+				<p class="text-white fs-6 fw-bold mb-2">Xin chào ${sessionScope.username}</p>
         		<a href="/bookstorePTIT/logout" class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
             		<i class="fas fa-sign-out-alt me-2"></i> Đăng Xuất
         		</a>
@@ -172,7 +172,7 @@ DecimalFormat df = new DecimalFormat("#,###");
 							<div class="card mb-3 shadow-sm" style="max-width: 16rem; background-color: #03FFFA;">
 								<!-- Giới hạn chiều rộng -->
 								<img
-									src="${pageContext.request.contextPath}/assets/admin/home/${book.image}"
+									src="${pageContext.request.contextPath}/assets/user/images/home/${book.image}"
 									class="card-img-top img-fluid rounded"
 									style="height: 300px; object-fit: cover;" alt="${book.title}">
 								<div class="card-body">

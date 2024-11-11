@@ -74,7 +74,7 @@ public class AdminHomeController {
 		List<Orders> orders = ordersDao.getOrders();
 		Map<Integer, List<Order_Items>> orderDetailsMap = new HashMap<>();
 		Map<Integer, List<Map<String, Object>>> booksInOrder = new HashMap<>();
-		Set<Integer> status = new HashSet<Integer>(ordersDao.getStatuses());
+		int[] status = {1, 2, 3, 4};
 	    for (Orders order : orders) {
 	    	// Lấy danh sách sách trong đơn hàng
 	        List<Object[]> booksData = order_ItemsDao.getBooksInOrder(order.getId());

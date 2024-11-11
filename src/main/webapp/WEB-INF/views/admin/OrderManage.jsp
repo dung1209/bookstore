@@ -119,12 +119,14 @@ DecimalFormat df = new DecimalFormat("#,###");
     										${item.status == 0 ? '#f5c6cb' : 
       										item.status == 1 ? '#ffeeba' : 
       										item.status == 2 ? '#c3e6cb' : 
-      										item.status == 3 ? '#b8e0f5' : '#ffffff'};">
+      										item.status == 3 ? '#b8e0f5' :
+      										item.status == 4 ? '#8184eb' : '#ffffff'};">
 										<c:choose>
 											<c:when test="${item.status == 0}">Đã hủy</c:when>
 											<c:when test="${item.status == 1}">Chờ xác nhận</c:when>
 											<c:when test="${item.status == 2}">Đã xác nhận</c:when>
 											<c:when test="${item.status == 3}">Đã giao</c:when>
+											<c:when test="${item.status == 4}">Đang giao</c:when>
 											<c:otherwise>Không xác định</c:otherwise>
 										</c:choose>
 									</td>
@@ -137,7 +139,7 @@ DecimalFormat df = new DecimalFormat("#,###");
 										<button type="button" class="btn btn-warning btn-accept"
 											data-bs-toggle="modal" data-bs-target="#confirmAcceptModal"
 											data-bs-whatever="${item.id}"
-											${item.status == 0 || item.status == 2 || item.status == 3 ? 'disabled' : ''}>
+											${item.status == 0 || item.status == 2 || item.status == 3 || item.status == 4 ? 'disabled' : ''}>
 											Nhận</button>
 										<button type="button" class="btn btn-danger btn-cancel"
 											data-bs-toggle="modal" data-bs-target="#confirmCancelModal"
@@ -239,6 +241,7 @@ DecimalFormat df = new DecimalFormat("#,###");
 												<c:when test="${item == 1}">Chờ xác nhận</c:when>
 												<c:when test="${item == 2}">Đã xác nhận</c:when>
 												<c:when test="${item == 3}">Đã giao</c:when>
+												<c:when test="${item == 4}">Đang giao</c:when>
 											</c:choose>
 										</option>
 									</c:forEach>

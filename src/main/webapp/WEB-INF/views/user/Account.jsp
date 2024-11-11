@@ -153,17 +153,32 @@
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="http://localhost:8080/bookstorePTIT/account/"
-									style="color: #fdb45e"><i class="fa fa-user"></i> Tài khoản</a></li>
+							<ul class="nav navbar-nav">		
+								<c:if test="${empty sessionScope.username}">
+									<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="http://localhost:8080/bookstorePTIT/account"><i
+											class="fa fa-user"></i>${sessionScope.username}</a></li>
+								</c:if>
+								
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
 								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i
 										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								<li><a
 									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
 										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
-								<li><a href="login.html"><i class="fa fa-lock"></i>
-										Đăng nhập</a></li>
+								<c:if test="${empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/login"><i
+											class="fa fa-lock"></i> Đăng nhập</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="#" onclick="confirmLogout()"><i
+											class="fa fa-lock"></i>Đăng xuất</a></li>
+									<c:if test="${not empty errorLogout}">
+										<div style="color: red;">${error}</div>
+									</c:if>
+								</c:if>
 							</ul>
 						</div>
 					</div>
@@ -469,6 +484,7 @@
 	<script
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 	document.getElementById('modalClose').onclick = function() {
         document.getElementById('confirmModal').style.display = "none";
@@ -632,7 +648,9 @@
                             type: "success",
                             duration: 1000
                         });
-                        window.location.href = window.location.href;
+                        setTimeout(function() {
+                    	    window.location.href = window.location.href;
+                    	}, 2000);
                     } else {
                     	toast({
                             title: "Thất bại!",
@@ -640,7 +658,9 @@
                             type: "error",
                             duration: 1000
                         });
-                    	window.location.href = window.location.href;
+                    	setTimeout(function() {
+                    	    window.location.href = window.location.href;
+                    	}, 2000);
                     }
                 })
                 .catch(error => console.error('Error:', error));
@@ -651,6 +671,26 @@
             confirmModal.style.display = "none";
         };
     }
+    
+    function confirmLogout() {
+    	Swal.fire({
+            title: 'Thông báo?',
+            text: "Bạn có chắc chắn muốn đăng xuất không?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Nếu người dùng chọn "Có", chuyển hướng về trang đăng nhập
+                window.location.href = '/bookstorePTIT/logout';
+            }
+            // Nếu người dùng chọn "Không", không làm gì cả và tiếp tục quá trình
+        });	        
+    }
+
 	</script>
 
 </body>

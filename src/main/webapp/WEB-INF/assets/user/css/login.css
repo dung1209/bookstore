@@ -1,0 +1,60 @@
+.login-form {
+    display: flex;
+    flex-direction: column; /* Đặt các phần tử theo cột */
+    align-items: center; /* Căn giữa tất cả các phần tử */
+    text-align: center; /* Căn giữa văn bản */
+    background-color: #ffffff; /* Màu nền */
+    padding: 10px 100px 50px 50px; /* Khoảng cách bên trong */
+    border-radius: 8px; /* Bo góc */
+    width:450px;
+}
+
+.login-form h2 {
+	font-weight : bold;
+    margin-bottom: 20px; /* Khoảng cách giữa tiêu đề và ô nhập */
+}
+
+.login-form input {
+    margin-bottom: 15px; /* Khoảng cách giữa các ô nhập */
+    width: 100%; /* Đặt chiều rộng 100% để nhìn gọn gàng */
+}
+
+.login-form button {
+    width: 100%; /* Đặt chiều rộng cho nút */
+    padding: 5px; /* Thêm padding để nút lớn hơn */
+}
+.forgot-password {
+	color: #007bff;
+    display: block; /* Hiển thị như một khối độc lập */
+    text-align: right; /* Căn chữ sang phải */
+    margin-top: 10px; /* Thêm khoảng cách phía trên nếu cần */
+}
+.register-link  {
+    display: block; /* Hiển thị dưới dạng khối */
+    text-align: center; /* Căn giữa liên kết */
+    color: #007bff; /* Màu xanh cho liên kết */
+    text-decoration: none; /* Bỏ gạch chân mặc định của liên kết */
+    font-size: 16px; /* Cỡ chữ */
+    margin-top: 5px; /* Thêm khoảng cách phía trên */
+    
+}
+
+.register-link:hover .forgot-password  {
+	
+    color: #0056b3; /* Đổi màu khi hover */
+    text-decoration: underline; /* Gạch chân khi hover */
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+ 

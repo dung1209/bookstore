@@ -59,7 +59,7 @@ public class HomeController {
         List<Authors> authors = authorsDao.getAuthors();
         //List<Books> books = booksDao.getBooks();
         /**/
-        int booksPerPage = 6;
+        int booksPerPage = 9;
         int totalBooks = booksDao.countTotalBooks();
         int totalPages = (int) Math.ceil((double) totalBooks / booksPerPage);
 

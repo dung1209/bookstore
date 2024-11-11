@@ -131,16 +131,32 @@
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+							<ul class="nav navbar-nav">		
+								<c:if test="${empty sessionScope.username}">
+									<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="http://localhost:8080/bookstorePTIT/account"><i
+											class="fa fa-user"></i>${sessionScope.username}</a></li>
+								</c:if>
+								
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
-										Đơn hàng</a></li>
+								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i
+										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								<li><a
-									href="http://localhost:8080/bookstorePTIT/shop-cart/"
-									id="cart-link"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
-								<li><a href="login.html"><i class="fa fa-lock"></i>
-										Đăng nhập</a></li>
+									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
+										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+								<c:if test="${empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/login"><i
+											class="fa fa-lock"></i> Đăng nhập</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="#" onclick="confirmLogout()"><i
+											class="fa fa-lock"></i>Đăng xuất</a></li>
+									<c:if test="${not empty errorLogout}">
+										<div style="color: red;">${error}</div>
+									</c:if>
+								</c:if>
 							</ul>
 						</div>
 					</div>
@@ -523,6 +539,7 @@
 	<script
 		src="<%=request.getContextPath()%>/assets/user/js/jquery.prettyPhoto.js"></script>
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 	function decreaseQuantity(index) {
 	    var quantityInput = document.getElementById('quantity_' + index);
@@ -546,7 +563,7 @@
 	    var quantityInput = document.getElementById('quantity_' + index);
 	    var price = parseFloat(document.getElementById('price_' + index).innerText.replace(/[^0-9.-]+/g, ''));
 	    var quantity = parseInt(quantityInput.value);
-	    var total = quantity * price * 1000;
+	    var total = quantity * price;
 
 	    document.getElementById('total_' + index).innerText = total.toLocaleString() + ' đ';
 	    updateGrandTotal(); 
@@ -564,7 +581,7 @@
 	            var quantity = parseInt(quantityInput.value); 
 	            var priceCell = row.querySelector('.cart_price p');
 	            var price = parseFloat(priceCell.innerText.replace(/[^0-9.-]+/g, ''));
-	            totalPrice += quantity * price * 1000; 
+	            totalPrice += quantity * price; 
 	        }
 	    });
 	    document.getElementById('totalSum').innerText = totalPrice.toLocaleString() + ' đ';
@@ -690,7 +707,9 @@
     	                type: "success",
     	                duration: 1000
     	            });
-                	window.location.href = window.location.href;
+                	setTimeout(function() {
+                	    window.location.href = window.location.href;
+                	}, 2000);
                 	const rowToDelete = document.querySelector(`tbody tr[data-bookid='${bookID}']`);
                     if (rowToDelete) {
                         rowToDelete.remove();
@@ -728,62 +747,24 @@
             }
         });
     }
-
-
     
-    /*function reloadCartData() {
-        fetch('/bookstorePTIT/cart/data')  // Giả sử đây là API trả về dữ liệu giỏ hàng
-            .then(response => response.json())  // Chuyển đổi phản hồi thành JSON
-            .then(data => {
-            	console.log("Dữ liệu giỏ hàng mới:", data);
-                updateCartTable(data);  // Hàm để cập nhật bảng giỏ hàng với dữ liệu mới
-            })
-            .catch(error => console.error('Error loading cart data:', error));
+    function confirmLogout() {
+    	Swal.fire({
+            title: 'Thông báo?',
+            text: "Bạn có chắc chắn muốn đăng xuất không?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/bookstorePTIT/logout';
+            }
+        });	        
     }
 
-    function updateCartTable(cartItems) {
-        const cartTableBody = document.querySelector('tbody');
-        cartTableBody.innerHTML = '';  // Xóa nội dung cũ của bảng
-
-        cartItems.forEach((item, index) => {
-            const row = `
-                <tr data-bookid="${item.bookID}">
-                    <td class="cart_select">
-                        <input type="checkbox" name="selectCartItem" value="${item.bookID}" 
-                               data-quantity="${item.quantity}" data-price="${item.price}" 
-                               data-productID="${item.bookID}" data-index="${index}" 
-                               onclick="toggleCheckbox()">
-                    </td>
-                    <td class="cart_product">
-                        <a href=""><img src="${pageContext.request.contextPath}/assets/user/images/home/b1.jpg" alt="Logo" style="width: 100px; height: auto;" /></a>
-                    </td>
-                    <td class="cart_description">
-                        <h4><a href="">${item.name}</a></h4>
-                        <p>Web ID: ${item.bookID}</p>
-                    </td>
-                    <td class="cart_price">
-                        <p id="price_${index}">${item.price} đ</p>
-                    </td>
-                    <td class="cart_quantity">
-                        <div class="cart_quantity_button">
-                            <a class="cart_quantity_down" onclick="decreaseQuantity(${index});"> - </a>
-                            <input id="quantity_${index}" class="cart_quantity_input" type="text" name="quantity" value="${item.quantity}" autocomplete="off" size="2">
-                            <a class="cart_quantity_up" onclick="increaseQuantity(${index});"> + </a>
-                        </div>
-                    </td>
-                    <td class="cart_total">
-                        <p class="cart_total_price" id="total_${index}">${item.price * item.quantity} đ</p>
-                    </td>
-                    <td class="cart_delete">
-                        <a class="cart_quantity_delete" href="javascript:void(0)" onclick="deleteProductFromCart(${item.bookID})">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </td>
-                </tr>`;
-            
-            cartTableBody.innerHTML += row;  // Thêm dòng mới vào bảng
-        });
-    }*/
 	</script>
 </body>
 </html>

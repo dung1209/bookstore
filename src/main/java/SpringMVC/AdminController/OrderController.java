@@ -119,6 +119,9 @@ public class OrderController {
 			case "Đã giao":
 				orders = ordersDao.findOrdersByStatus(3);
 				break;
+			case "Đang giao":
+				orders = ordersDao.findOrdersByStatus(4);
+				break;
 			}
 			break;
 		case 3:
