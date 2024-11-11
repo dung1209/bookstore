@@ -26,7 +26,7 @@ import java.util.List;
 public class OrdersDao {
 	private static SessionFactory factory = HibernateUtils.getSessionFactory();
 
-	public int createOrder(String name, String phone, String email, String address, String note, BigDecimal total) {
+	public int createOrder(Integer customerID, String name, String phone, String email, String address, String note, BigDecimal total) {
 		Session session = factory.openSession();
 		Transaction transaction = null;
 		int orderId = 0;
@@ -35,7 +35,7 @@ public class OrdersDao {
 			transaction = session.beginTransaction();
 
 			Orders order = new Orders();
-			order.setCustomerID(2);
+			order.setCustomerID(customerID);
 			order.setName(name);
 			order.setPhone(phone);
 			order.setEmail(email);

@@ -88,5 +88,31 @@ public class CustomersDao {
 	        }
 	    }
 	}
+	
+	public int getCustomerIDByAccountID(int accountID) {
+	    Session session = null;
+	    Transaction transaction = null;
+	    int customerID = 0;
+	    try {
+	        session = HibernateUtils.getSessionFactory().openSession();
+	        transaction = session.beginTransaction();
+	        
+	        Query<Integer> query = session.createQuery("SELECT c.id FROM Customers c WHERE c.accountID = :accountID", Integer.class);
+	        query.setParameter("accountID", accountID);
+
+	        customerID = query.uniqueResult();
+	        transaction.commit();
+	    } catch (Exception e) {
+	        if (transaction != null) {
+	            transaction.rollback();
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        if (session != null && session.isOpen()) {
+	            session.close();
+	        }
+	    }
+	    return customerID;
+	}
 
 }

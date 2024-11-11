@@ -34,6 +34,9 @@ import bookstorePTIT.bean.Books;
 import bookstorePTIT.bean.Carts;
 import bookstorePTIT.bean.Order_Items;
 import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,354 +51,371 @@ import java.util.Collections;
 @Controller
 public class HomeController {
 
-    @RequestMapping("/")
-    //public String index(Model model) {
-    public String index(@RequestParam(defaultValue = "1") int page, Model model) {
-        CategoriesDao categoriesDao = new CategoriesDao();
-        AuthorsDao authorsDao = new AuthorsDao();
-        BooksDao booksDao = new BooksDao();
-        
-        List<Categories> categories = categoriesDao.getCategories();
-        List<Authors> authors = authorsDao.getAuthors();
-        //List<Books> books = booksDao.getBooks();
-        /**/
-        int booksPerPage = 9;
-        int totalBooks = booksDao.countTotalBooks();
-        int totalPages = (int) Math.ceil((double) totalBooks / booksPerPage);
+	@RequestMapping("/")
+	public String index(@RequestParam(defaultValue = "1") int page, Model model) {
+		CategoriesDao categoriesDao = new CategoriesDao();
+		AuthorsDao authorsDao = new AuthorsDao();
+		BooksDao booksDao = new BooksDao();
 
-        List<Books> paginatedBooks = booksDao.getBooks(page, booksPerPage);
-        /**/
-        
-        model.addAttribute("categories", categories);
-        model.addAttribute("authors", authors);
-        //model.addAttribute("books", books);
-        /**/
-        model.addAttribute("books", paginatedBooks);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        /**/
-        return "user/Home";
-    }
-    
-    @RequestMapping("/book-detail/{bookId}")
+		List<Categories> categories = categoriesDao.getCategories();
+		List<Authors> authors = authorsDao.getAuthors();
+
+		int booksPerPage = 9;
+		int totalBooks = booksDao.countTotalBooks();
+		int totalPages = (int) Math.ceil((double) totalBooks / booksPerPage);
+		List<Books> paginatedBooks = booksDao.getBooks(page, booksPerPage);
+
+		model.addAttribute("categories", categories);
+		model.addAttribute("authors", authors);
+		model.addAttribute("books", paginatedBooks);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		return "user/Home";
+	}
+
+	@RequestMapping("/book-detail/{bookId}")
 	public String shopCart(@PathVariable("bookId") int bookId, Model model) {
-    	CategoriesDao categoriesDao = new CategoriesDao();
-        AuthorsDao authorsDao = new AuthorsDao();
-        
-        BooksDao booksDao = new BooksDao();
-        Books book = booksDao.findBookById((int) bookId);
-        
-        List<Categories> categories = categoriesDao.getCategories();
-        List<Authors> authors = authorsDao.getAuthors();
-        String authorName = "Không rõ";
-        String categoryName = "Không rõ";
+		CategoriesDao categoriesDao = new CategoriesDao();
+		AuthorsDao authorsDao = new AuthorsDao();
 
-        if (book != null) {
-            Authors author = authorsDao.findAuthorById(book.getAuthor().getId());
-            authorName = (author != null) ? author.getName() : "Không rõ";
-            //Categories category = booksDao.findCategoryById(book.getCategoryID());
-            //categoryName = (category != null) ? category.getName() : "Không rõ";
-        }
-        
-        model.addAttribute("categories", categories);
-        model.addAttribute("authors", authors);
-        model.addAttribute("book", book);
-        model.addAttribute("authorName", authorName);
-        model.addAttribute("categoryName", categoryName); 
+		BooksDao booksDao = new BooksDao();
+		Books book = booksDao.findBookById((int) bookId);
+
+		List<Categories> categories = categoriesDao.getCategories();
+		List<Authors> authors = authorsDao.getAuthors();
+		String authorName = "Không rõ";
+		String categoryName = "Không rõ";
+
+		if (book != null) {
+			Authors author = authorsDao.findAuthorById(book.getAuthor().getId());
+			authorName = (author != null) ? author.getName() : "Không rõ";
+		}
+
+		model.addAttribute("categories", categories);
+		model.addAttribute("authors", authors);
+		model.addAttribute("book", book);
+		model.addAttribute("authorName", authorName);
+		model.addAttribute("categoryName", categoryName);
 		return "user/BookDetail";
 	}
-    
-    @RequestMapping("/shop-cart")
-	public String shopCart(Model model) {
-    	int customerID = 2; 
-    	CartsDao cartDao = new CartsDao();
-    	BooksDao booksDao = new BooksDao();
 
-        List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
-        List<Books> booksInCart = new ArrayList<>();
+	@RequestMapping("/shop-cart")
+	public String shopCart(Model model, HttpSession hsession) {
+		Integer accountID = (Integer) hsession.getAttribute("id");
 
-        for (Carts cart : carts) {
-            int bookID = cart.getBookID();
-            Books book = booksDao.findBookById(bookID);
-            if (book != null) {
-                booksInCart.add(book);
-            }
-        }
-        model.addAttribute("booksInCart", booksInCart);
-        model.addAttribute("carts", carts); 
+		if (accountID == null) {
+			model.addAttribute("message", "Vui lòng đăng nhập để xem giỏ hàng.");
+			model.addAttribute("booksInCart", new ArrayList<Books>());
+			model.addAttribute("carts", new ArrayList<Carts>());
+			return "user/Cart";
+		}
+
+		CustomersDao customersDao = new CustomersDao();
+		int customerID = customersDao.getCustomerIDByAccountID(accountID);
+
+		CartsDao cartDao = new CartsDao();
+		BooksDao booksDao = new BooksDao();
+
+		List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
+		List<Books> booksInCart = new ArrayList<>();
+
+		for (Carts cart : carts) {
+			int bookID = cart.getBookID();
+			Books book = booksDao.findBookById(bookID);
+			if (book != null) {
+				booksInCart.add(book);
+			}
+		}
+		model.addAttribute("booksInCart", booksInCart);
+		model.addAttribute("carts", carts);
 		return "user/Cart";
 	}
-    
-    @PostMapping("/cart/add")
-    public ResponseEntity<Map<String, Integer>> addToCart(@RequestBody Carts cart) {
-        CartsDao cartsDao = new CartsDao();
-        cart.setCustomerID(2); 
-        Optional<Carts> existingCart = cartsDao.findByCustomerIdAndBookId(cart.getCustomerID(), cart.getBookID());
-        if (existingCart.isPresent()) {
-            return ResponseEntity.ok(Collections.singletonMap("status", 0));
-        } else {
-            saveCart(cart);
-            return ResponseEntity.ok(Collections.singletonMap("status", 1));
-        }
-    }
 
-    private void saveCart(Carts cart) {
-        CartsDao cartsDao = new CartsDao();
-        if (cart.getQuantity() <= 0) {
-            cart.setQuantity(1);
-        }
-        cartsDao.save(cart);
-    }
+	@PostMapping("/cart/add")
+	public ResponseEntity<Map<String, Integer>> addToCart(@RequestBody Carts cart, Model model, HttpSession hsession) {
+		Integer accountID = (Integer) hsession.getAttribute("id");
+		CustomersDao customersDao = new CustomersDao();
+		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 
-    @GetMapping("/shop-cart/checkout")
-    public String checkout(@RequestParam("productId") List<String> productIds,
-                           @RequestParam("quantity") List<String> quantities, 
-                           Model model) {
-        List<Map<String, String>> selectedBooks = new ArrayList<>();
-        BooksDao booksDao = new BooksDao();
-        CustomersDao customersDao = new CustomersDao();
-        AccountsDao accountsDao = new AccountsDao();
-        
-        int customerId = 2;
-        Customers customer = customersDao.getCustomerById(customerId);
-        String email = accountsDao.getEmailByAccountId(customer.getAccountID());
-        
-        Map<String, String> customerInfo = new HashMap<>();
-        customerInfo.put("name", customer.getName());
-        customerInfo.put("phone", customer.getPhone());
-        customerInfo.put("address", customer.getAddress());
-        customerInfo.put("email", email);
+		CartsDao cartsDao = new CartsDao();
+		cart.setCustomerID(customerID);
+		Optional<Carts> existingCart = cartsDao.findByCustomerIdAndBookId(cart.getCustomerID(), cart.getBookID());
+		if (existingCart.isPresent()) {
+			return ResponseEntity.ok(Collections.singletonMap("status", 0));
+		} else {
+			saveCart(cart);
+			return ResponseEntity.ok(Collections.singletonMap("status", 1));
+		}
+	}
 
-        for (int i = 0; i < productIds.size(); i++) {
-            String productId = productIds.get(i);
-            String quantity = quantities.get(i);
-            
-            int bookId = Integer.parseInt(productId);
-            Books book = booksDao.findBookById(bookId);
+	private void saveCart(Carts cart) {
+		CartsDao cartsDao = new CartsDao();
+		if (cart.getQuantity() <= 0) {
+			cart.setQuantity(1);
+		}
+		cartsDao.save(cart);
+	}
 
-            if (book != null) {
-                Map<String, String> bookDetails = new HashMap<>();
-                bookDetails.put("productId", productId);
-                bookDetails.put("quantity", quantity);
-                bookDetails.put("title", book.getTitle());
-                bookDetails.put("name", book.getName());
-                bookDetails.put("image", book.getImage());
-                bookDetails.put("price", String.valueOf(book.getPrice()));
-                
-                selectedBooks.add(bookDetails);
-            }
-        }
-        model.addAttribute("selectedBooks", selectedBooks);
-        model.addAttribute("customerInfo", customerInfo);
-        
-        return "user/Checkout";
-    }
-    
-    @RequestMapping("/thankyou")
+	@GetMapping("/shop-cart/checkout")
+	public String checkout(@RequestParam("productId") List<String> productIds,
+			@RequestParam("quantity") List<String> quantities, Model model, HttpSession hsession) {
+		
+		Integer accountID = (Integer) hsession.getAttribute("id");
+		CustomersDao customersDao = new CustomersDao();
+		int customerID = customersDao.getCustomerIDByAccountID(accountID);
+		
+		List<Map<String, String>> selectedBooks = new ArrayList<>();
+		BooksDao booksDao = new BooksDao();
+		AccountsDao accountsDao = new AccountsDao();
+
+		Customers customer = customersDao.getCustomerById(customerID);
+		String email = accountsDao.getEmailByAccountId(customer.getAccountID());
+
+		Map<String, String> customerInfo = new HashMap<>();
+		customerInfo.put("name", customer.getName());
+		customerInfo.put("phone", customer.getPhone());
+		customerInfo.put("address", customer.getAddress());
+		customerInfo.put("email", email);
+
+		for (int i = 0; i < productIds.size(); i++) {
+			String productId = productIds.get(i);
+			String quantity = quantities.get(i);
+
+			int bookId = Integer.parseInt(productId);
+			Books book = booksDao.findBookById(bookId);
+
+			if (book != null) {
+				Map<String, String> bookDetails = new HashMap<>();
+				bookDetails.put("productId", productId);
+				bookDetails.put("quantity", quantity);
+				bookDetails.put("title", book.getTitle());
+				bookDetails.put("name", book.getName());
+				bookDetails.put("image", book.getImage());
+				bookDetails.put("price", String.valueOf(book.getPrice()));
+
+				selectedBooks.add(bookDetails);
+			}
+		}
+		model.addAttribute("selectedBooks", selectedBooks);
+		model.addAttribute("customerInfo", customerInfo);
+
+		return "user/Checkout";
+	}
+
+	@RequestMapping("/thankyou")
 	public String checkout() {
 		return "user/Thankyou";
 	}
-    
-    @PostMapping("/create")
-    public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
-        OrdersDao ordersDao = new OrdersDao();
-        CartsDao cartsDao = new CartsDao();
-        Order_ItemsDao orderItemsDao = new Order_ItemsDao();
-        Orders order = orderRequest.getOrder();
-        order.setCustomerID(2);
-        order.setStatus(1);
-        order.setOrderDate(LocalDateTime.now());
-        int orderId = ordersDao.createOrder(
-            order.getName(),
-            order.getPhone(),
-            order.getEmail(),
-            order.getAddress(),
-            order.getNote(),
-            order.getTotal()
-        );
 
-        for (Order_Items item : orderRequest.getOrderItems()) {
-            item.setOrderID(order.getId());
-            item.setOrderID(orderId);
-            item.setPrice(item.getPrice() * 1000);
-            orderItemsDao.createOrderItems(item);
-            cartsDao.deleteFromCart(2, item.getBookID());
-        }
-        return ResponseEntity.ok("Đơn hàng đã được tạo thành công!");
-    }
-    
-    @PostMapping("/cart/delete")
-    public ResponseEntity<String> deleteFromCart(@RequestParam("bookID") int bookID) {
-        int customerID = 2;
-        CartsDao cartsDao = new CartsDao();
+	@PostMapping("/create")
+	public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest, Model model, HttpSession hsession) {
+			
+		Integer accountID = (Integer) hsession.getAttribute("id");
+		CustomersDao customersDao = new CustomersDao();
+		int customerID = customersDao.getCustomerIDByAccountID(accountID);
+			
+		OrdersDao ordersDao = new OrdersDao();
+		CartsDao cartsDao = new CartsDao();
+		Order_ItemsDao orderItemsDao = new Order_ItemsDao();
+		Orders order = orderRequest.getOrder();
+		order.setCustomerID(customerID);
+		order.setStatus(1);
+		order.setOrderDate(LocalDateTime.now());
+		int orderId = ordersDao.createOrder(customerID, order.getName(), order.getPhone(), order.getEmail(), order.getAddress(),
+				order.getNote(), order.getTotal());
 
-        Optional<Carts> cartItem = cartsDao.findByCustomerIdAndBookId(customerID, bookID);
-        if (cartItem.isPresent()) {
-            cartsDao.delete(cartItem.get());
-            return ResponseEntity.ok("Sản phẩm đã được xóa khỏi giỏ hàng!");
-            /*
-            CartsDao cartDao = new CartsDao();
-            List<Carts> updatedCart = cartDao.findCartsByCustomerId(customerID);  // Giả sử phương thức này trả về danh sách giỏ hàng mới
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                String updatedCartJson = objectMapper.writeValueAsString(updatedCart);
-                return ResponseEntity.ok(updatedCartJson);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi chuyển đổi dữ liệu thành JSON");
-            }
-            */
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sản phẩm không tồn tại trong giỏ hàng!");
-        }
-    }
-    
-    @GetMapping("/cart/data")
-    @ResponseBody
-    public ResponseEntity<List<Map<String, Object>>> getCartData() {
-        int customerID = 2;
-        CartsDao cartDao = new CartsDao();
-        BooksDao booksDao = new BooksDao();
+		for (Order_Items item : orderRequest.getOrderItems()) {
+			item.setOrderID(order.getId());
+			item.setOrderID(orderId);
+			item.setPrice(item.getPrice() * 1000);
+			orderItemsDao.createOrderItems(item);
+			cartsDao.deleteFromCart(customerID, item.getBookID());
+		}
+		return ResponseEntity.ok("Đơn hàng đã được tạo thành công!");
+	}
 
-        List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
-        List<Map<String, Object>> booksInCart = new ArrayList<>();
+	@PostMapping("/cart/delete")
+	public ResponseEntity<String> deleteFromCart(@RequestParam("bookID") int bookID, Model model, HttpSession hsession) {
+		Integer accountID = (Integer) hsession.getAttribute("id");
+		CustomersDao customersDao = new CustomersDao();
+		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 
-        for (Carts cart : carts) {
-            int bookID = cart.getBookID();
-            Books book = booksDao.findBookById(bookID);
-            if (book != null) {
-                Map<String, Object> bookInfo = new HashMap<>();
-                bookInfo.put("bookID", book.getbookID());
-                bookInfo.put("name", book.getName());
-                bookInfo.put("price", book.getPrice());
-                bookInfo.put("quantity", cart.getQuantity());
-                bookInfo.put("image", book.getImage());
-                booksInCart.add(bookInfo);
-            }
-        }
+		CartsDao cartsDao = new CartsDao();
 
-        return ResponseEntity.ok(booksInCart); 
-    }
+		Optional<Carts> cartItem = cartsDao.findByCustomerIdAndBookId(customerID, bookID);
+		if (cartItem.isPresent()) {
+			cartsDao.delete(cartItem.get());
+			return ResponseEntity.ok("Sản phẩm đã được xóa khỏi giỏ hàng!");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sản phẩm không tồn tại trong giỏ hàng!");
+		}
+	}
 
-    @RequestMapping("/order")
-    public String order(Model model) {
-        int customerID = 2; 
-        OrdersDao ordersDao = new OrdersDao();
-        Order_ItemsDao orderItemsDao = new Order_ItemsDao();
+	@GetMapping("/cart/data")
+	@ResponseBody
+	public ResponseEntity<List<Map<String, Object>>> getCartData(Model model, HttpSession hsession) {
+		Integer accountID = (Integer) hsession.getAttribute("id");
+		CustomersDao customersDao = new CustomersDao();
+		int customerID = customersDao.getCustomerIDByAccountID(accountID);
+			
+		CartsDao cartDao = new CartsDao();
+		BooksDao booksDao = new BooksDao();
 
-        List<Orders> orders = ordersDao.findOrdersByCustomerId(customerID);
-        
-        Collections.reverse(orders); 
+		List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
+		List<Map<String, Object>> booksInCart = new ArrayList<>();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        for (Orders order : orders) {
-            String formattedDate = order.getOrderDate().format(formatter);
-            order.setFormattedOrderDate(formattedDate); 
-            
-            List<Order_Items> orderItems = orderItemsDao.findOrderItemsByOrderId(order.getId());
-            order.setOrderItems(orderItems);
-        }
+		for (Carts cart : carts) {
+			int bookID = cart.getBookID();
+			Books book = booksDao.findBookById(bookID);
+			if (book != null) {
+				Map<String, Object> bookInfo = new HashMap<>();
+				bookInfo.put("bookID", book.getbookID());
+				bookInfo.put("name", book.getName());
+				bookInfo.put("price", book.getPrice());
+				bookInfo.put("quantity", cart.getQuantity());
+				bookInfo.put("image", book.getImage());
+				booksInCart.add(bookInfo);
+			}
+		}
 
-        model.addAttribute("orders", orders); 
-        return "user/Order";
-    }
+		return ResponseEntity.ok(booksInCart);
+	}
 
-    @RequestMapping(value = "/getBookName", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> getBookName(@RequestParam("bookID") int bookID) {
-        BooksDao booksDao = new BooksDao();
-        Books book = booksDao.findBookById(bookID);
-        
-        Map<String, String> response = new HashMap<>();
-        if (book != null) {
-            response.put("name", book.getName());
-        } else {
-            response.put("name", "Unknown Book");
-        }
-        
-        return ResponseEntity.ok(response);
-    }
+	@RequestMapping("/order")
+	public String order(Model model, HttpSession hsession) {
+		Integer accountID = (Integer) hsession.getAttribute("id");
+		CustomersDao customersDao = new CustomersDao();
+		int customerID = customersDao.getCustomerIDByAccountID(accountID);
+		
+		OrdersDao ordersDao = new OrdersDao();
+		Order_ItemsDao orderItemsDao = new Order_ItemsDao();
 
-    @RequestMapping(value = "/getBookImage", method = RequestMethod.GET)
-    @ResponseBody
-    public String getBookImage(@RequestParam("bookID") int bookID) {
-        BooksDao booksDao = new BooksDao();
-        Books book = booksDao.findBookById(bookID);
-        
-        if (book != null) {
-            return book.getImage();
-        }
-        return "Unknown Image"; 
-    }
-    
-    @PostMapping("/order/delete")
-    @ResponseBody
-    public String deleteOrder(@RequestParam("orderID") int orderID) {
-    	OrdersDao ordersDao = new OrdersDao();
-        Orders order = ordersDao.findOrderById(orderID);
-        
-        if (order != null) {
-            order.setStatus(0);
-            ordersDao.updateOrder(order);       
-            return "Success"; 
-        }
-        return "Order not found";
-    }
-    
-    @RequestMapping("/contact")
+		List<Orders> orders = ordersDao.findOrdersByCustomerId(customerID);
+
+		Collections.reverse(orders);
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		for (Orders order : orders) {
+			String formattedDate = order.getOrderDate().format(formatter);
+			order.setFormattedOrderDate(formattedDate);
+
+			List<Order_Items> orderItems = orderItemsDao.findOrderItemsByOrderId(order.getId());
+			order.setOrderItems(orderItems);
+		}
+
+		model.addAttribute("orders", orders);
+		return "user/Order";
+	}
+
+	@RequestMapping(value = "/getBookName", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Map<String, String>> getBookName(@RequestParam("bookID") int bookID) {
+		BooksDao booksDao = new BooksDao();
+		Books book = booksDao.findBookById(bookID);
+
+		Map<String, String> response = new HashMap<>();
+		if (book != null) {
+			response.put("name", book.getName());
+		} else {
+			response.put("name", "Unknown Book");
+		}
+
+		return ResponseEntity.ok(response);
+	}
+
+	@RequestMapping(value = "/getBookImage", method = RequestMethod.GET)
+	@ResponseBody
+	public String getBookImage(@RequestParam("bookID") int bookID) {
+		BooksDao booksDao = new BooksDao();
+		Books book = booksDao.findBookById(bookID);
+
+		if (book != null) {
+			return book.getImage();
+		}
+		return "Unknown Image";
+	}
+
+	@PostMapping("/order/delete")
+	@ResponseBody
+	public String deleteOrder(@RequestParam("orderID") int orderID) {
+		OrdersDao ordersDao = new OrdersDao();
+		Orders order = ordersDao.findOrderById(orderID);
+
+		if (order != null) {
+			order.setStatus(0);
+			ordersDao.updateOrder(order);
+			return "Success";
+		}
+		return "Order not found";
+	}
+
+	@RequestMapping("/contact")
 	public String register() {
 		return "user/Contact";
 	}
-    
-    @RequestMapping("/account")
-	public String account(Model model) {
-    	CustomersDao customerDao = new CustomersDao();
-    	AccountsDao accountDao = new AccountsDao();
-    	int id=2;
-    	Customers customer = customerDao.getCustomerById(id);
-    	int accountID = customerDao.getAccountIDByCustomerID(id);
-    	String email = accountDao.getEmailByAccountId(accountID);
-        
-        model.addAttribute("customer", customer);
-        model.addAttribute("email", email);
+
+	@RequestMapping("/account")
+	public String account(Model model, HttpSession hsession) {
+		
+		Integer accountID = (Integer) hsession.getAttribute("id");
+		
+		if (accountID == null) {
+			model.addAttribute("customer", null);
+			model.addAttribute("email", null);
+			return "user/Account";
+		}
+		
+		CustomersDao customersDao = new CustomersDao();
+		int customerID = customersDao.getCustomerIDByAccountID(accountID);
+			
+		CustomersDao customerDao = new CustomersDao();
+		AccountsDao accountDao = new AccountsDao();
+
+		Customers customer = customerDao.getCustomerById(customerID);
+		String email = accountDao.getEmailByAccountId(accountID);
+
+		model.addAttribute("customer", customer);
+		model.addAttribute("email", email);
 		return "user/Account";
 	}
-    
-    @PostMapping("/updateCustomer")
-    @ResponseBody
-    public Map<String, Object> updateCustomer(@RequestBody Map<String, Object> requestData) {
-        Map<String, Object> response = new HashMap<>();
-        String newEmail = (String) requestData.get("newEmail");
-        Customers customer = new ObjectMapper().convertValue(requestData.get("customer"), Customers.class); 
 
-        int customerIdToUpdate = 2;
+	@PostMapping("/updateCustomer")
+	@ResponseBody
+	public Map<String, Object> updateCustomer(@RequestBody Map<String, Object> requestData, Model model, HttpSession hsession) {
+		
+		Integer accountID = (Integer) hsession.getAttribute("id");
+		CustomersDao customersDao = new CustomersDao();
+		int customerID = customersDao.getCustomerIDByAccountID(accountID);
+		
+		Map<String, Object> response = new HashMap<>();
+		String newEmail = (String) requestData.get("newEmail");
+		Customers customer = new ObjectMapper().convertValue(requestData.get("customer"), Customers.class);
 
-        try {
-            CustomersDao customersDao = new CustomersDao();
-            AccountsDao accountsDao = new AccountsDao();
-            
-            Customers existingCustomer = customersDao.getCustomerById(customerIdToUpdate);
-            
-            if (existingCustomer != null) {
-                existingCustomer.setName(customer.getName());
-                existingCustomer.setPhone(customer.getPhone());
-                existingCustomer.setAddress(customer.getAddress());
+		try {
+			AccountsDao accountsDao = new AccountsDao();
 
-                customersDao.updateCustomer(existingCustomer); 
-                
-                int accountId = existingCustomer.getAccountID(); 
-                accountsDao.updateEmailByAccountId(accountId, newEmail);
-                
-                response.put("success", true);
-            } else {
-                response.put("success", false);
-                response.put("message", "Customer not found");
-            }
-        } catch (Exception e) {
-            response.put("success", false);
-            e.printStackTrace();
-        }
-        return response;
-    }
+			Customers existingCustomer = customersDao.getCustomerById(customerID);
+
+			if (existingCustomer != null) {
+				existingCustomer.setName(customer.getName());
+				existingCustomer.setPhone(customer.getPhone());
+				existingCustomer.setAddress(customer.getAddress());
+
+				customersDao.updateCustomer(existingCustomer);
+
+				int accountId = existingCustomer.getAccountID();
+				accountsDao.updateEmailByAccountId(accountId, newEmail);
+
+				response.put("success", true);
+			} else {
+				response.put("success", false);
+				response.put("message", "Customer not found");
+			}
+		} catch (Exception e) {
+			response.put("success", false);
+			e.printStackTrace();
+		}
+		return response;
+	}
 
 }

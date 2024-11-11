@@ -78,7 +78,7 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="logo pull-left">
-							<a href="http://localhost:8080/bookstorePTIT/"><img
+							<a href="/bookstorePTIT/"><img
 								src="${pageContext.request.contextPath}/assets/user/images/home/logo.png"
 								alt="Logo" /></a>
 						</div>
@@ -111,12 +111,12 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+								<li><a href="/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
+								<li><a href="/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
 										Đơn hàng</a></li>
 								<li><a
-									href="http://localhost:8080/bookstorePTIT/shop-cart/"
+									href="/bookstorePTIT/shop-cart/"
 									><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 								<li><a href="login.html"><i class="fa fa-lock"></i>
 										Đăng nhập</a></li>
@@ -143,8 +143,8 @@
 							<div class="register-req">
 								<p id="thank-you-message1">Cảm ơn bạn đã ủng hộ sản phẩm bên chúng tôi, nếu có bất kì thắc mắc xin hãy liên hệ  với chúng tôi để được hỗ trợ sớm nhất.</p>
 							</div>
-							<a class="btn btn-primary" href="http://localhost:8080/bookstorePTIT/" id="back-home">Về trang chủ</a>
-							<a class="btn btn-primary" href="" id="history-order">Đơn hàng</a>
+							<a class="btn btn-primary" href="/bookstorePTIT/" id="back-home">Về trang chủ</a>
+							<a class="btn btn-primary" href="/bookstorePTIT/order/" id="history-order">Đơn hàng</a>
 						</div>	
 					</div>	
 					<div class="col-sm-3">

@@ -83,7 +83,7 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="logo pull-left">
-							<a href="http://localhost:8080/bookstorePTIT/"><img
+							<a href="/bookstorePTIT/"><img
 								src="${pageContext.request.contextPath}/assets/user/images/home/logo.png"
 								alt="Logo" /></a>
 						</div>
@@ -117,18 +117,18 @@
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">		
 								<c:if test="${empty sessionScope.username}">
-									<li><a href="http://localhost:8080/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+									<li><a href="/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
 								</c:if>
 								<c:if test="${not empty sessionScope.username}">
-									<li><a href="http://localhost:8080/bookstorePTIT/account"><i
+									<li><a href="/bookstorePTIT/account"><i
 											class="fa fa-user"></i>${sessionScope.username}</a></li>
 								</c:if>
 								
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="http://localhost:8080/bookstorePTIT/order/"><i
+								<li><a href="/bookstorePTIT/order/"><i
 										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								<li><a
-									href="http://localhost:8080/bookstorePTIT/shop-cart/"><i
+									href="/bookstorePTIT/shop-cart/"><i
 										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 								<c:if test="${empty sessionScope.username}">
 									<li><a href="/bookstorePTIT/login"><i
@@ -164,7 +164,7 @@
 					</div>
 					<div class="mainmenu pull-left">
 						<ul class="nav navbar-nav collapse navbar-collapse">
-							<li><a href="http://localhost:8080/bookstorePTIT/">Trang
+							<li><a href="/bookstorePTIT/">Trang
 									chủ</a></li>
 							<li><a href="#" class="active" style="color: #696763">Cửa hàng<i
 									class="fa fa-angle-down"></i>
@@ -174,7 +174,7 @@
 									<li><a href="product-details.html">Mô tả sản phẩm</a></li>
 									<li><a href="checkout.html">Thanh toán</a></li>
 									<li><a
-										href="http://localhost:8080/bookstorePTIT/shop-cart/">Giỏ
+										href="/bookstorePTIT/shop-cart/">Giỏ
 											hàng</a></li>
 									<li><a href="login.html">Đăng nhập</a></li>
 								</ul></li>
@@ -185,7 +185,7 @@
 									<li><a href="blog-single.html">Blog đơn</a></li>
 								</ul></li>
 							<li><a href="404.html">404</a></li>
-							<li class="dropdown"><a href="http://localhost:8080/bookstorePTIT/contact/" style="color: #fdb45e">Liên hệ</a></li>
+							<li class="dropdown"><a href="/bookstorePTIT/contact/" style="color: #fdb45e">Liên hệ</a></li>
 						</ul>
 					</div>
 				</div>
