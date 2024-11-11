@@ -33,12 +33,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import Dao.AccDao;
 import Dao.authDao;
+import Dao.CustomersDao;
 import bookstorePTIT.bean.Accounts;
+import bookstorePTIT.bean.Customers;
 import HibernateUtils.HibernateUtils;
 
 @Controller
 public class LoginUserController {
 	AccDao accountsDao = new AccDao();
+	CustomersDao customersDao = new CustomersDao();
 
 	@RequestMapping("/login")
 	public String login() {
@@ -119,12 +122,17 @@ public class LoginUserController {
 		}
 
 		Accounts account = new Accounts();
+		Customers customer = new Customers();
 		account.setUsername(username);
 		account.setPassword(password);
 		account.setEmail(email);
 		account.setRole("user");
 		account.setStatus(true);
 		AccDao.save(account);
+		
+		customer.setAccountID(account.getId());
+		customersDao.addCustomer(customer);
+		
 		model.addAttribute("message", "Đăng ký thành công!");
 		return "/login/signUp";
 	}

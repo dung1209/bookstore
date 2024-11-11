@@ -107,7 +107,7 @@ public class HomeController {
 		CartsDao cartDao = new CartsDao();
 		BooksDao booksDao = new BooksDao();
 
-		List<Carts> carts = cartDao.findCartsByAccountID(accountID);
+		List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
 		List<Books> booksInCart = new ArrayList<>();
 
 		for (Carts cart : carts) {
@@ -129,8 +129,8 @@ public class HomeController {
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 
 		CartsDao cartsDao = new CartsDao();
-		cart.setAccountID(accountID);
-		Optional<Carts> existingCart = cartsDao.findByAccountIdAndBookId(cart.getAccountID(), cart.getBookID());
+		cart.setCustomerID(customerID);
+		Optional<Carts> existingCart = cartsDao.findByCustomerIdAndBookId(cart.getCustomerID(), cart.getBookID());
 		if (existingCart.isPresent()) {
 			return ResponseEntity.ok(Collections.singletonMap("status", 0));
 		} else {
@@ -233,7 +233,7 @@ public class HomeController {
 
 		CartsDao cartsDao = new CartsDao();
 
-		Optional<Carts> cartItem = cartsDao.findByAccountIdAndBookId(accountID, bookID);
+		Optional<Carts> cartItem = cartsDao.findByCustomerIdAndBookId(customerID, bookID);
 		if (cartItem.isPresent()) {
 			cartsDao.delete(cartItem.get());
 			return ResponseEntity.ok("Sản phẩm đã được xóa khỏi giỏ hàng!");
@@ -252,7 +252,7 @@ public class HomeController {
 		CartsDao cartDao = new CartsDao();
 		BooksDao booksDao = new BooksDao();
 
-		List<Carts> carts = cartDao.findCartsByAccountID(accountID);
+		List<Carts> carts = cartDao.findCartsByCustomerId(customerID);
 		List<Map<String, Object>> booksInCart = new ArrayList<>();
 
 		for (Carts cart : carts) {
@@ -364,13 +364,6 @@ public class HomeController {
 		
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
-		
-		if (customerID == 0) {
-			model.addAttribute("customer", null);
-			model.addAttribute("email", email);
-			return "user/Account";
-		}
-
 		Customers customer = customerDao.getCustomerById(customerID);
 
 		model.addAttribute("customer", customer);
@@ -407,12 +400,8 @@ public class HomeController {
 
 				response.put("success", true);
 			} else {
-				customer.setAccountID(accountID); 
-	            customersDao.addCustomer(customer); 
-
-	            accountsDao.updateEmailByAccountId(accountID, newEmail);
-				response.put("success", true);
-	            response.put("message", "Customer created successfully");
+				response.put("success", false);
+				response.put("message", "Customer not found");
 			}
 		} catch (Exception e) {
 			response.put("success", false);
