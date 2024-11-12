@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "Order_Items")
@@ -29,15 +30,40 @@ public class Order_Items {
 
     @Column(name = "price", nullable = false)
     private int price;
+    
+    @Column(name = "rating", nullable = true)
+    private Integer rating;
+    
+    @Transient
+    private String name;
+    
+    @Transient
+    private String image;
 
-    public Order_Items(int id, int orderID, int bookID, int quantity, int price) {
+    public Order_Items(int id, int orderID, int bookID, int quantity, int price, Integer rating) {
         this.id = id;
         this.orderID = orderID;
         this.bookID = bookID;
         this.quantity = quantity;
         this.price = price;
+        this.rating = rating;
     }
     
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public Order_Items() {
     }
@@ -82,10 +108,18 @@ public class Order_Items {
     public void setPrice(int price) {
         this.price = price;
     }
+    
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
 
     @Override
     public String toString() {
-        return "OrderItems{id=" + id + ", orderID=" + orderID + ", bookID=" + bookID + ", quantity=" + quantity + ", price=" + price + "}";
+        return "OrderItems{id=" + id + ", orderID=" + orderID + ", bookID=" + bookID + ", quantity=" + quantity + ", price=" + price +  ", rating=" + rating + ", image=" + image + ", name=" + name + "}";
     }
 
 }

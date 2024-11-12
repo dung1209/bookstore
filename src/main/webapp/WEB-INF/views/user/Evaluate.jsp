@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Đơn hàng</title>
+<title>Đánh giá</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
@@ -53,7 +53,7 @@
 				<span class="close" id="modalClose">&times;</span>
 			</div>
 			<div class="modal-body">
-				<p class="title-question">Bạn có muốn huỷ đơn hàng không?</p>
+				<p class="title-question">Bạn có muốn xác nhận đánh giá không?</p>
 			</div>
 			<div class="modal-footer">
 				<button id="confirmYes" class="btn btn-yes">Có</button>
@@ -143,7 +143,7 @@
 								</c:if>
 
 								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="/bookstorePTIT/order/" style="color: #fdb45e;"><i
+								<li><a href="/bookstorePTIT/order/"><i
 										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								<li><a href="/bookstorePTIT/shop-cart/"><i
 										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
@@ -170,7 +170,7 @@
 			<!--header-bottom-->
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-7">
+					<div class="col-sm-9">
 						<div class="navbar-header">
 							<button type="button" class="navbar-toggle"
 								data-toggle="collapse" data-target=".navbar-collapse">
@@ -203,19 +203,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-5 search-order">
-						<div class="filter-search">
-							<label class="filter loc" for="orderStatus">Lọc:</label> <select
-								id="orderStatus" name="orderStatus"
-								class="form-control filter-order" onchange="filterOrders()">
-								<option value="all">Tất cả</option>
-								<option value="1">Chờ xác nhận</option>
-								<option value="2">Đã xác nhận</option>
-								<option value="4">Đang giao</option>
-								<option value="3">Thành công</option>
-								<option value="0">Đã huỷ</option>
-							</select>
-						</div>
+					<div class="col-sm-3 search-order">
 						<div class="search_box pull-right">
 							<input type="text" id="searchInput" placeholder="Tìm kiếm..." />
 							<button class="search-button" onclick="searchData()">Tìm
@@ -240,96 +228,66 @@
 				<table class="table table-condensed">
 					<thead>
 						<tr class="order_menu">
-							<td class="order_id">Mã đơn</td>
-							<td class="product">Sản phẩm</td>
-							<td class="price">Giá</td>
-							<td class="total">Tổng tiền</td>
-							<td class="information">Thông tin người đặt</td>
-							<td class="time_order">Thời gian đặt</td>
-							<td class="status">Trạng thái</td>
+							<td class="product_id" style="width: 10%">Mã sản phẩm</td>
+							<td class="image" style="width: 7%">Ảnh</td>
+							<td class="name" style="width: 20%">Tên sản phẩm</td>
+							<td class="quantity" style="width: 10%">Số lượng</td>
+							<td class="price" style="width: 13%">Giá</td>
+							<td class="evaluate" style="width: 23%">Đánh giá</td>
+							<td class="confirm" style="width: 17%">Xác nhận</td>
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="order" items="${orders}">
-							<tr class="order-row" data-order-status-id="${order.status}">
-								<td class="id_order">${order.id}</td>
-								<td class="product_info">
-									<div class="product_list">
-										<c:forEach var="item" items="${order.orderItems}">
-											<div class="product_item">
-												<img
-													src="<%=request.getContextPath()%>/assets/user/images/home/b1.jpg"
-													alt="${item.bookID}" />
-												<div class="product_name" id="bookName-${item.bookID}">Loading...</div>
-												<div class="quantity" style="margin-left: 7px;">(x${item.quantity})</div>
-											</div>
-										</c:forEach>
+						<c:forEach var="item" items="${orderItems}">
+							<tr class="order-row" data-order-status-id="${item.id}">
+								<td class="id_order">${item.bookID}</td>
+								<td class="id_order"><a href=""> <img
+										src="${pageContext.request.contextPath}/assets/user/images/home/${item.image}"
+										alt="Logo" style="width: 100px; height: auto;" /></a></td>
+								<td class="id_order">${item.name}</td>
+								<td class="id_order">${item.quantity}</td>
+								<td class="id_order"><fmt:formatNumber
+										value="${item.price}" type="number" groupingUsed="true" /> đ
+								</td>
+								<td class="id_order">
+									<div class="star-rating">
+										<input type="radio" id="star5-${item.bookID}"
+											name="rating-${item.bookID}" value="5" onclick="setRating('${item.bookID}', 5)" ${item.rating == 5 ? 'checked' : ''} ${item.rating >= 1 ? 'disabled' : ''}>
+											<label
+											for="star5-${item.bookID}">&#9733;</label> 
+										<input type="radio" id="star4-${item.bookID}"
+											name="rating-${item.bookID}" value="4"onclick="setRating('${item.bookID}', 4)" ${item.rating == 4 ? 'checked' : ''} ${item.rating >= 1 ? 'disabled' : ''}> 
+											<label
+											for="star4-${item.bookID}">&#9733;</label> 
+										<input
+											type="radio" id="star3-${item.bookID}"
+											name="rating-${item.bookID}" value="3"onclick="setRating('${item.bookID}', 3)" ${item.rating == 3 ? 'checked' : ''} ${item.rating >= 1 ? 'disabled' : ''}> 
+											<label
+											for="star3-${item.bookID}">&#9733;</label> 
+										<input
+											type="radio" id="star2-${item.bookID}"
+											name="rating-${item.bookID}" value="2"onclick="setRating('${item.bookID}', 2)" ${item.rating == 2 ? 'checked' : ''} ${item.rating >= 1 ? 'disabled' : ''}> 
+											<label
+											for="star2-${item.bookID}">&#9733;</label> 
+										<input
+											type="radio" id="star1-${item.bookID}"
+											name="rating-${item.bookID}" value="1"onclick="setRating('${item.bookID}', 1)" ${item.rating == 1 ? 'checked' : ''} ${item.rating >= 1 ? 'disabled' : ''}> 
+											<label
+											for="star1-${item.bookID}">&#9733;</label>
 									</div>
 								</td>
-								<td class="price_order">
-									<div class="price_list">
-										<c:forEach var="item" items="${order.orderItems}">
-											<div class="price_item">
-												<fmt:formatNumber value="${item.price}" type="number"
-													groupingUsed="true" />
-												đ
-											</div>
-										</c:forEach>
-									</div>
+								<td class="id_order">
+									<button onclick="confirmRating('${item.id}', '${item.bookID}')"
+										style="background-color: white; color: rgb(50, 146, 228); border: 2px solid rgb(50, 146, 228); padding: 5px 10px; cursor: pointer; margin-top: 1px; min-height: 35px; display: inline-flex; align-items: center; justify-content: center; height: auto;" 
+										${item.rating >= 1 ? 'disabled' : ''}>
+										${item.rating >= 1 ? 'Đã đánh giá' : 'Xác nhận'}</button>
 								</td>
-								<td class="total_order"><fmt:formatNumber
-										value="${order.total}" type="number" groupingUsed="true" /> đ
-								</td>
-								<td class="customer_info">
-									<div>Tên: ${order.name}</div>
-									<div>SĐT: ${order.phone}</div>
-									<div>Email: ${order.email}</div>
-									<div>Địa chỉ: ${order.address}</div>
-								</td>
-								<td class="time_order">${order.formattedOrderDate}</td>
-								<td class="status_order"><c:choose>
-										<c:when test="${order.status == 0}">
-											<button
-												style="background-color: #e12e2bf2; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
-												Đã huỷ</button>
-										</c:when>
-										<c:when test="${order.status == 1}">
-											<button
-												style="background-color: green; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;"
-												onclick="cancelOrder(${order.id})">C.Xác Nhận</button>
-										</c:when>
-										<c:when test="${order.status == 2}">
-											<button
-												style="background-color: #c5c810; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
-												Đ.Xác Nhận</button>
-										</c:when>
-										<c:when test="${order.status == 3}">
-											<button
-												style="background-color: #3292e4; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
-												Thành công</button>
-											<button
-												style="background-color: white; color: rgb(50, 146, 228); border: 2px solid rgb(50, 146, 228); padding: 5px 10px; cursor: pointer; margin-top: 1px; min-height: 35px; display: inline-flex; align-items: center; justify-content: center; height: auto;"
-												onclick="window.location.href='/bookstorePTIT/evaluate?orderId=${order.id}'">
-												Đánh giá</button>
-										</c:when>
-										<c:when test="${order.status == 4}">
-											<button
-												style="background-color: #f6a105; color: white; border: none; width: 65px; height: 55px; padding: 5px 10px; cursor: pointer;">
-												Đang giao</button>
-										</c:when>
-										<c:otherwise>
-											<button
-												style="background-color: gray; color: white; border: none; padding: 5px 10px; cursor: pointer;">
-												Trạng thái không xác định</button>
-										</c:otherwise>
-									</c:choose></td>
 							</tr>
 						</c:forEach>
 				</table>
 			</div>
 		</div>
 	</section>
-
 	<!--/#cart_items-->
 
 	<footer id="footer">
@@ -632,57 +590,6 @@
 		}
     }
     
-    function cancelOrder(orderID) {
-        const url = '/bookstorePTIT/order/delete?orderID=' + orderID;
-        console.log("orderID: ", orderID);
-        
-        const confirmModal = document.getElementById('confirmModal');
-        confirmModal.style.display = "block";
-
-        document.getElementById('confirmYes').onclick = function() {
-        	confirmModal.style.display = "none";
-        	fetch(url, {
-                method: 'POST',
-            })
-            .then(response => {
-                if (response.ok) {
-                	toast({
-    	                title: "Thông báo!",
-    	                message: "Đơn hàng đã được huỷ thành công.",
-    	                type: "success",
-    	                duration: 1000
-    	            });
-                	setTimeout(function() {
-                	    window.location.href = window.location.href;
-                	}, 2000);
-                } else {
-                    throw new Error('Có lỗi xảy ra khi xóa đơn hàng!');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-        document.getElementById('confirmNo').onclick = function() {
-            confirmModal.style.display = "none";
-        };
-    }
-    
-    function filterOrders() {
-        var selectedStatusId = document.getElementById("orderStatus").value;
-        var orders = document.getElementsByClassName("order-row");
-
-        for (var i = 0; i < orders.length; i++) {
-            var orderStatusId = orders[i].getAttribute("data-order-status-id");
-
-            if (selectedStatusId === 'all' || selectedStatusId === orderStatusId) {
-                orders[i].style.display = "table-row";
-            } else {
-                orders[i].style.display = "none";
-            }
-        }
-    }
-    
     function searchData() {
         var searchInput = document.getElementById("searchInput").value.toLowerCase(); 
         var rows = document.querySelectorAll("tbody tr.order-row");
@@ -719,6 +626,64 @@
             }
         });	        
     }
+    
+    let ratings = {}; 
+
+ 	function setRating(bookID, rating) {
+     	ratings[bookID] = rating;
+ 	}
+
+ 	function confirmRating(id, bookID) {
+     	const rating = ratings[bookID]; 
+     	const url = '/bookstorePTIT/submitRating';
+
+     	if (rating) {
+     		const confirmModal = document.getElementById('confirmModal');
+            confirmModal.style.display = "block";
+
+            document.getElementById('confirmYes').onclick = function() {
+            	confirmModal.style.display = "none";
+            	fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'id': id,      
+                        'rating': rating 
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                    	toast({
+        	                title: "Thông báo!",
+        	                message: "Đánh giá sản phẩm thành công.",
+        	                type: "success",
+        	                duration: 1000
+        	            });
+                    	setTimeout(function() {
+                    	    window.location.href = window.location.href;
+                    	}, 2000);
+                    } else {
+                        throw new Error('Có lỗi xảy ra khi đánh giá sản phẩm!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+            document.getElementById('confirmNo').onclick = function() {
+                confirmModal.style.display = "none";
+            };
+     	} else {
+     		toast({
+                title: "Thông báo!",
+                message: "Vui lòng đánh số sao để đánh giá.",
+                type: "error",
+                duration: 1000
+            });
+     	}
+ 	}
 
 	</script>
 

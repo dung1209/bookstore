@@ -115,4 +115,44 @@ public class Order_ItemsDao {
         }
         return orderItems;
     }
+    
+    public Order_Items getOrderItemById(int id) {
+        Order_Items orderItem = null;
+        Session session = null;
+        try {
+            session = factory.openSession();
+            String hql = "FROM Order_Items WHERE id = :id";
+            Query<Order_Items> query = session.createQuery(hql, Order_Items.class);
+            query.setParameter("id", id);
+            orderItem = query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return orderItem;
+    }
+
+    public void updateOrderItem(Order_Items orderItem) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = factory.openSession();
+            transaction = session.beginTransaction();
+            session.update(orderItem);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+    
 }

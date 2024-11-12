@@ -76,8 +76,6 @@ public class Books {
         this.createdAt = createdAt;
     }
 
-    
-
 	public Books() {
     }
 

@@ -409,5 +409,40 @@ public class HomeController {
 		}
 		return response;
 	}
+	
+	@RequestMapping("/evaluate")
+	public String evaluate(@RequestParam("orderId") int orderId, Model model, HttpSession hsession) {
+		
+	    Order_ItemsDao orderItemsDao = new Order_ItemsDao();
+	    BooksDao bookDao = new BooksDao();
+	    
+	    List<Order_Items> orderItems = orderItemsDao.getOrderDetail(orderId);
+	    
+	    for (Order_Items item : orderItems) {
+	    	Books book = bookDao.findBookById(item.getBookID());
+	        
+	        item.setName(book.getName());
+	        item.setImage(book.getImage());
+	    }
+	    
+	    model.addAttribute("orderItems", orderItems);
+	    return "user/Evaluate";
+	}
+	
+	@RequestMapping(value = "/submitRating", method = RequestMethod.POST)
+	public String submitRating(@RequestParam("id") int id,
+	                            @RequestParam("rating") Integer rating) {
+	    Order_ItemsDao orderItemsDao = new Order_ItemsDao();
+	    Order_Items orderItem = orderItemsDao.getOrderItemById(id);
+	    System.out.print("orderItem: " + orderItem);
+	    System.out.print("rating: " + rating);
+
+	    if (orderItem != null) {
+	        orderItem.setRating(rating);
+
+	        orderItemsDao.updateOrderItem(orderItem);
+	    }
+	    return "user/Evaluate";
+	}
 
 }
