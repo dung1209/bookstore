@@ -103,7 +103,7 @@
 							<a href="/bookstorePTIT/"><img
 								src="assets/user/images/home/logo.png" alt="" /></a>
 						</div>
-						<div class="btn-group pull-right">
+						<!-- <div class="btn-group pull-right">
 							<div class="btn-group">
 								<button type="button"
 									class="btn btn-default dropdown-toggle usa"
@@ -127,25 +127,28 @@
 									<li><a href="">Dollar</a></li>
 								</ul>
 							</div>
-						</div>
+						</div> -->
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">		
-								<c:if test="${empty sessionScope.username}">
+								<!--<c:if test="${empty sessionScope.username}">
 									<li><a href="/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
-								</c:if>
+								</c:if>-->
 								<c:if test="${not empty sessionScope.username}">
-									<li><a href="/bookstorePTIT/account"><i
+									<li><a href="/bookstorePTIT/account/"><i
 											class="fa fa-user"></i>${sessionScope.username}</a></li>
 								</c:if>
-								
-								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="/bookstorePTIT/order/"><i
+								<!-- <li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li> -->
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/order/"><i
 										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
-								<li><a
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a
 									href="/bookstorePTIT/shop-cart/"><i
 										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+								</c:if>
 								<c:if test="${empty sessionScope.username}">
 									<li><a href="/bookstorePTIT/login"><i
 											class="fa fa-lock"></i> Đăng nhập</a></li>
@@ -182,23 +185,6 @@
 							<ul class="nav navbar-nav collapse navbar-collapse">
 								<li><a href="/bookstorePTIT/"
 									style="color: #fdb45e">Trang chủ</a></li>
-								<li class="dropdown"><a href="#" class="active"
-									style="color: #696763">Cửa hàng<i class="fa fa-angle-down"></i>
-								</a>
-									<ul role="menu" class="sub-menu">
-										<li><a href="shop.html" class="active">Sản phẩm</a></li>
-										<li><a href="product-details.html">Mô tả sản phẩm</a></li>
-										<li><a href="checkout.html">Thanh toán</a></li>
-										<li><a href="cart.html">Giỏ hàng</a></li>
-										<li><a href="login.html">Đăng nhập</a></li>
-									</ul></li>
-								<li class="dropdown"><a href="#">Blog<i
-										class="fa fa-angle-down"></i></a>
-									<ul role="menu" class="sub-menu">
-										<li><a href="blog.html">Danh sách Blog</a></li>
-										<li><a href="blog-single.html">Blog đơn</a></li>
-									</ul></li>
-								<li><a href="404.html">404</a></li>
 								<li><a href="/bookstorePTIT/contact/">Liên
 										hệ</a></li>
 							</ul>
@@ -440,7 +426,8 @@
 							<div class="brands-name">
 								<ul class="nav nav-pills nav-stacked">
 									<c:forEach var="author" items="${authors}">
-										<li><a href=""> <span class="pull-right">(50)</span>${author.name}</a></li>
+										<!-- <li><a href=""> <span class="pull-right">(50)</span>${author.name}</a></li> -->
+										<li><a href="">${author.name}</a></li>
 									</c:forEach>
 								</ul>
 							</div>
@@ -472,7 +459,7 @@
 									href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
 									<div class="product-image-wrapper">
 										<div class="single-products">
-											<div class="productinfo text-center">
+											<div class="productinfo text-center" onclick="recordInteraction(${sessionScope.userID}, ${book.bookID}, 1)">
 												<img src="assets/user/images/home/${book.image}" alt="" />
 												<h2>
 													<fmt:formatNumber value="${book.price}" type="number"
@@ -519,90 +506,6 @@
 	</section>
 
 	<footer id="footer">
-		<!--Footer-->
-		<div class="footer-top">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-2">
-						<div class="companyinfo">
-							<h2>
-								<span>e</span>-shopper
-							</h2>
-							<p>Khám phá thế giới tri thức với hàng ngàn đầu sách đa dạng
-								từ nhiều lĩnh vực khác nhau, phù hợp với mọi lứa tuổi và sở
-								thích.</p>
-						</div>
-					</div>
-					<div class="col-sm-7">
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img src="assets/user/images/home/iframe1.png" alt="" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img src="assets/user/images/home/iframe2.png" alt="" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img src="assets/user/images/home/iframe3.png" alt="" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img src="assets/user/images/home/iframe4.png" alt="" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div class="address">
-							<img src="assets/user/images/home/map.png" alt="" />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
@@ -858,6 +761,32 @@
             }
         });	        
     }
+	
+	function recordInteraction(userID, bookID, interactionType) {
+	    const interactionData = {
+	        userID: userID,
+	        bookID: bookID,
+	        interactionType: interactionType
+	    };
+		console.log(interactionData)
+	    fetch('/bookstorePTIT/saveInteraction', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify(interactionData)
+	    })
+	    .then(response => {
+	        if (response.ok) {
+	            console.log('Tương tác đã được ghi nhận.');
+	        } else {
+	            console.error('Lỗi khi ghi nhận tương tác.');
+	        }
+	    })
+	    .catch(error => {
+	        console.error('Lỗi khi gửi yêu cầu:', error);
+	    });
+	}
 
 	</script>
 

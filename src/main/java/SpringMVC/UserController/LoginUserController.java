@@ -63,7 +63,7 @@ public class LoginUserController {
 		if ((Boolean) checkexist.get("check")) {
 			Accounts accountfull = dao.getUserByUserName(account.getUsername());
 			
-			hsession.setAttribute("id", accountfull.getId());
+			hsession.setAttribute("userID", accountfull.getId());
 			hsession.setAttribute("account", accountfull);
 			hsession.setAttribute("username", account.getUsername());
 			hsession.setAttribute("getRole", dao.CheckUser(account.getUsername()));

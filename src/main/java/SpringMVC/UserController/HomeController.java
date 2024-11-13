@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Dao.CategoriesDao;
 import Dao.CustomersDao;
+import Dao.InteractionDao;
 import Dao.Order_ItemsDao;
 import Dao.OrdersDao;
 import Dao.PublishersDao;
@@ -25,6 +26,7 @@ import Dao.BooksDao;
 import Dao.CartsDao;
 import bookstorePTIT.bean.Categories;
 import bookstorePTIT.bean.Customers;
+import bookstorePTIT.bean.Interactions;
 import bookstorePTIT.bean.OrderRequest;
 import bookstorePTIT.bean.Orders;
 import bookstorePTIT.bean.Authors;
@@ -76,37 +78,45 @@ public class HomeController {
 	
 	@RequestMapping("/book-detail/{bookId}")
 	public String shopCart(@PathVariable("bookId") int bookId, Model model) {
+		PublishersDao publishersDao = new PublishersDao();
 		CategoriesDao categoriesDao = new CategoriesDao();
 		AuthorsDao authorsDao = new AuthorsDao();
 
 		BooksDao booksDao = new BooksDao();
 		Books book = booksDao.findBookById((int) bookId);
-
+		
+		List<Publishers> publishers = publishersDao.getPublishers();
 		List<Categories> categories = categoriesDao.getCategories();
 		List<Authors> authors = authorsDao.getAuthors();
 		String authorName = "Không rõ";
 		String categoryName = "Không rõ";
+		String publisherName = "Không rõ";
 
 		if (book != null) {
 			Authors author = authorsDao.findAuthorById(book.getAuthor().getId());
 			authorName = (author != null) ? author.getName() : "Không rõ";
+			Categories category = categoriesDao.findCategoryById(book.getCategory().getId());
+			categoryName = (category != null) ? category.getName() : "Không rõ";
+			Publishers publisher = publishersDao.findPublisherById(book.getPublisher().getPublisherID());
+			publisherName = (publisher != null) ? publisher.getName() : "Không rõ";
 			
             List<Books> recommendedBooks = recommendationServiceCBF.getRecommendations(book);
     		model.addAttribute("recommendedBooks", recommendedBooks);
 		}
-
+		
+		model.addAttribute("publishers", publishers);
 		model.addAttribute("categories", categories);
 		model.addAttribute("authors", authors);
 		model.addAttribute("book", book);
 		model.addAttribute("authorName", authorName);
 		model.addAttribute("categoryName", categoryName);
-
+		model.addAttribute("publisherName", publisherName);
 		return "user/BookDetail";
 	}
 
 	@RequestMapping("/shop-cart")
 	public String shopCart(Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 
 		if (accountID == null) {
 			model.addAttribute("message", "Vui lòng đăng nhập để xem giỏ hàng.");
@@ -138,7 +148,7 @@ public class HomeController {
 
 	@PostMapping("/cart/add")
 	public ResponseEntity<Map<String, Integer>> addToCart(@RequestBody Carts cart, Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 
@@ -165,7 +175,7 @@ public class HomeController {
 	public String checkout(@RequestParam("productId") List<String> productIds,
 			@RequestParam("quantity") List<String> quantities, Model model, HttpSession hsession) {
 		
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 		
@@ -215,7 +225,7 @@ public class HomeController {
 	@PostMapping("/create")
 	public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest, Model model, HttpSession hsession) {
 			
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 			
@@ -241,7 +251,7 @@ public class HomeController {
 
 	@PostMapping("/cart/delete")
 	public ResponseEntity<String> deleteFromCart(@RequestParam("bookID") int bookID, Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 
@@ -259,7 +269,7 @@ public class HomeController {
 	@GetMapping("/cart/data")
 	@ResponseBody
 	public ResponseEntity<List<Map<String, Object>>> getCartData(Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 			
@@ -287,7 +297,7 @@ public class HomeController {
 
 	@RequestMapping("/order")
 	public String order(Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		
 		if (accountID == null) {
 			model.addAttribute("message", "Vui lòng đăng nhập để xem đơn hàng.");
@@ -367,7 +377,7 @@ public class HomeController {
 		CustomersDao customerDao = new CustomersDao();
 		AccountsDao accountDao = new AccountsDao();
 		
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		String email = accountDao.getEmailByAccountId(accountID);
 		
 		if (accountID == null) {
@@ -389,7 +399,7 @@ public class HomeController {
 	@ResponseBody
 	public Map<String, Object> updateCustomer(@RequestBody Map<String, Object> requestData, Model model, HttpSession hsession) {
 		
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 		
@@ -458,5 +468,16 @@ public class HomeController {
 	    }
 	    return "user/Evaluate";
 	}
+	
+	@PostMapping("/saveInteraction")
+    public ResponseEntity<String> saveInteraction(@RequestBody Interactions interaction) {
+    	InteractionDao interactionDao = new InteractionDao();
+    	Interactions newInter = new Interactions();
+    	newInter.setUserID(interaction.getUserID());
+    	newInter.setBookID(interaction.getBookID());
+    	newInter.setInteractionType(interaction.getInteractionType());
+    	interactionDao.save(newInter);
+        return ResponseEntity.ok("Tương tác đã được ghi nhận.");
+    }
 
 }

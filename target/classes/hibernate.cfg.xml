@@ -41,6 +41,7 @@
 		<mapping class="bookstorePTIT.bean.Imports" />
 		<mapping class="bookstorePTIT.bean.Accounts" />
 		<mapping class="bookstorePTIT.bean.Employees" />
+		<mapping class="bookstorePTIT.bean.Interactions" />
 	</session-factory>
 
 </hibernate-configuration>
