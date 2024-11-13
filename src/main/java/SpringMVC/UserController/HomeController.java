@@ -17,6 +17,7 @@ import Dao.CategoriesDao;
 import Dao.CustomersDao;
 import Dao.Order_ItemsDao;
 import Dao.OrdersDao;
+import Dao.PublishersDao;
 import Dao.AccountsDao;
 import Dao.AuthorsDao;
 import Dao.BooksDao;
@@ -28,6 +29,7 @@ import bookstorePTIT.bean.Orders;
 import bookstorePTIT.bean.Authors;
 import bookstorePTIT.bean.Books;
 import bookstorePTIT.bean.Carts;
+import bookstorePTIT.bean.Publishers;
 import bookstorePTIT.bean.Order_Items;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
@@ -44,10 +46,12 @@ public class HomeController {
 
 	@RequestMapping("/")
 	public String index(@RequestParam(defaultValue = "1") int page, Model model) {
+		PublishersDao publishersDao = new PublishersDao();
 		CategoriesDao categoriesDao = new CategoriesDao();
 		AuthorsDao authorsDao = new AuthorsDao();
 		BooksDao booksDao = new BooksDao();
-
+		
+		List<Publishers> publishers = publishersDao.getPublishers();
 		List<Categories> categories = categoriesDao.getCategories();
 		List<Authors> authors = authorsDao.getAuthors();
 
@@ -55,7 +59,8 @@ public class HomeController {
 		int totalBooks = booksDao.countTotalBooks();
 		int totalPages = (int) Math.ceil((double) totalBooks / booksPerPage);
 		List<Books> paginatedBooks = booksDao.getBooks(page, booksPerPage);
-
+		
+		model.addAttribute("publishers", publishers);
 		model.addAttribute("categories", categories);
 		model.addAttribute("authors", authors);
 		model.addAttribute("books", paginatedBooks);

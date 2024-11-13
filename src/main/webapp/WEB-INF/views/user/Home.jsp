@@ -408,9 +408,21 @@
 			<div class="row">
 				<div class="col-sm-3">
 					<div class="left-sidebar">
+						<h2>NHÀ XUẤT BẢN</h2>
+						<div class="panel-group category-products" id="accordian">
+							<c:forEach var="publisher" items="${publishers}">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a href="#">${publisher.name}</a>
+										</h4>
+									</div>
+								</div>
+							</c:forEach>
+						</div>
+
 						<h2>DANH MỤC</h2>
 						<div class="panel-group category-products" id="accordian">
-							<!--category-productsr-->
 							<c:forEach var="category" items="${categories}">
 								<div class="panel panel-default">
 									<div class="panel-heading">
@@ -424,7 +436,6 @@
 						<!--/category-productsr-->
 
 						<div class="brands_products">
-							<!--brands_products-->
 							<h2>Tác giả</h2>
 							<div class="brands-name">
 								<ul class="nav nav-pills nav-stacked">
@@ -434,10 +445,8 @@
 								</ul>
 							</div>
 						</div>
-						<!--/brands_products-->
 
-						<div class="price-range">
-							<!--price-range-->
+						<!-- <div class="price-range">
 							<h2>MỨC GIÁ</h2>
 							<div class="well">
 								<input type="text" class="span2" value="" data-slider-min="0"
@@ -445,14 +454,11 @@
 									data-slider-value="[250,450]" id="sl2"><br /> <b>$
 									0</b> <b class="pull-right">$ 600</b>
 							</div>
-						</div>
-						<!--/price-range-->
+						</div> 
 
 						<div class="shipping text-center">
-							<!--shipping-->
 							<img src="assets/user/images/home/shipping.jpg" alt="" />
-						</div>
-						<!--/shipping-->
+						</div>-->
 					</div>
 				</div>
 
@@ -476,19 +482,19 @@
 												<p>${book.name}</p>
 												<a id="submitOrder" href="#"
 													class="btn btn-default add-to-cart"
-													onclick="confirmAddToCart(event, ${book.bookID})"> <i
+													onclick="confirmAddToCart(event, ${book.bookID}, '${sessionScope.username}')"> <i
 													class="fa fa-shopping-cart"></i> Thêm vào giỏ
 												</a>
 											</div>
 										</div>
-										<div class="choose">
+										<!-- <div class="choose">
 											<ul class="nav nav-pills nav-justified">
 												<li><a href=""><i class="fa fa-plus-square"></i>Yêu
 														thích</a></li>
 												<li><a href=""><i class="fa fa-plus-square"></i>So
 														sánh</a></li>
 											</ul>
-										</div>
+										</div> -->
 									</div>
 								</a>
 							</div>
@@ -692,19 +698,29 @@
 	<script src="assets/user/js/main.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
-	function confirmAddToCart(event, bookId) {
+	function confirmAddToCart(event, bookId, checklogin) {
 	    event.preventDefault();
+	    
+	    console.log("checklogin: ", checklogin);
+	    if (checklogin === "") {
+	    	toast({
+                title: "Chú ý!",
+                message: "Đăng nhập để thêm sách vào giỏ hàng.",
+                type: "error",
+                duration: 1000
+            });
+        }else {
+        	const confirmModal = document.getElementById('confirmModal');
+            confirmModal.style.display = "block";
 
-	    const confirmModal = document.getElementById('confirmModal');
-        confirmModal.style.display = "block";
-
-        document.getElementById('confirmYes').onclick = function() {
-        	confirmModal.style.display = "none";
-        	addToCart(bookId);
-        }
-        document.getElementById('confirmNo').onclick = function() {
-            confirmModal.style.display = "none";
-        };
+            document.getElementById('confirmYes').onclick = function() {
+            	confirmModal.style.display = "none";
+            	addToCart(bookId);
+            }
+            document.getElementById('confirmNo').onclick = function() {
+                confirmModal.style.display = "none";
+            };
+        } 
 	}
 	
 	document.getElementById('modalClose').onclick = function() {

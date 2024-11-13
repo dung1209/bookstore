@@ -276,12 +276,12 @@
 								<img
 									src="${pageContext.request.contextPath}/assets/user/images/home/${book.image}"
 									alt="Logo" />
-								<h3>ZOOM</h3>
 							</div>
+							
+							<!-- 
 							<div id="similar-product" class="carousel slide"
 								data-ride="carousel">
 
-								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
 									<div class="item active">
 										<a href=""><img
@@ -313,14 +313,12 @@
 
 								</div>
 
-								<!-- Controls -->
 								<a class="left item-control" href="#similar-product"
 									data-slide="prev"> <i class="fa fa-angle-left"></i>
 								</a> <a class="right item-control" href="#similar-product"
 									data-slide="next"> <i class="fa fa-angle-right"></i>
 								</a>
-							</div>
-
+							</div> -->
 						</div>
 						<div class="col-sm-7">
 							<div class="product-information">
@@ -388,7 +386,7 @@
 										<li><a href=""><i class="fa fa-clock-o"></i>12:41 PM</a></li>
 										<li><a href=""><i class="fa fa-calendar-o"></i>31/12/2014</a></li>
 									</ul>
-									<p>${book.title}</p>
+									<p style="text-align: justify;">${book.title}</p>
 									<form action="#">
 										<textarea name=""></textarea>
 									</form>
