@@ -1,5 +1,6 @@
 package SpringMVC.UserController;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ import bookstorePTIT.bean.Authors;
 import bookstorePTIT.bean.Books;
 import bookstorePTIT.bean.Carts;
 import bookstorePTIT.bean.Publishers;
+import service.RecommendationServiceCBF;
 import bookstorePTIT.bean.Order_Items;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
@@ -69,6 +71,9 @@ public class HomeController {
 		return "user/Home";
 	}
 
+	 
+	RecommendationServiceCBF recommendationServiceCBF = new RecommendationServiceCBF();
+	
 	@RequestMapping("/book-detail/{bookId}")
 	public String shopCart(@PathVariable("bookId") int bookId, Model model) {
 		CategoriesDao categoriesDao = new CategoriesDao();
@@ -85,6 +90,9 @@ public class HomeController {
 		if (book != null) {
 			Authors author = authorsDao.findAuthorById(book.getAuthor().getId());
 			authorName = (author != null) ? author.getName() : "Không rõ";
+			
+            List<Books> recommendedBooks = recommendationServiceCBF.getRecommendations(book);
+    		model.addAttribute("recommendedBooks", recommendedBooks);
 		}
 
 		model.addAttribute("categories", categories);
@@ -92,6 +100,7 @@ public class HomeController {
 		model.addAttribute("book", book);
 		model.addAttribute("authorName", authorName);
 		model.addAttribute("categoryName", categoryName);
+
 		return "user/BookDetail";
 	}
 

@@ -139,19 +139,31 @@ public class LoginUserController {
 
 	@RequestMapping(value = "/forgot-password", method = RequestMethod.POST)
 	public String sendOTP(@RequestParam("email") String email, HttpSession session, Model model) {
-		Accounts account = AccDao.findByEmail(email);
-		if (account != null) {
-			String otp = generateOTP();
-			sendEmailWithOTP(email, otp);
-			session.setAttribute("otp", otp);
-			session.setAttribute("email", email);
-			model.addAttribute("message1", "Mã OTP đã được gửi đến email của bạn.");
-			return "/login/verify-otp";
-		} else {
-			model.addAttribute("error", "Email không tồn tại trong hệ thống.");
-			return "/login/forgot-password";
-		}
+	    Accounts account = AccDao.findByEmail(email);
+	    if (account != null) {
+	        String otp = generateOTP();
+	        try {
+	            boolean emailSent = sendEmailWithOTP(email, otp);
+	            if (emailSent) {
+	                session.setAttribute("otp", otp);
+	                session.setAttribute("email", email);
+	                model.addAttribute("message1", "Mã OTP đã được gửi đến email của bạn.");
+	                return "/login/verify-otp";
+	            } else {
+	                model.addAttribute("error", "Đã có lỗi xảy ra khi gửi email qua proxy. Vui lòng thử lại sau.");
+	                return "/login/forgot-password";
+	            }
+	        } catch (Exception e) {
+	            model.addAttribute("error", "Đã có lỗi xảy ra khi gửi email. Vui lòng thử lại sau.");
+	            return "/login/forgot-password";
+	        }
+	    } else {
+	        model.addAttribute("error", "Email không tồn tại trong hệ thống.");
+	        return "/login/forgot-password";
+	    }
 	}
+
+
 
 	@RequestMapping(value = "/verify-otp", method = RequestMethod.POST)
 	public String verifyOTP(@RequestParam("otp") String otp, HttpSession session, Model model) {
@@ -184,15 +196,18 @@ public class LoginUserController {
 		return String.format("%06d", random.nextInt(1000000));
 	}
 
-	private void sendEmailWithOTP(String email, String otp) {
+	public boolean sendEmailWithOTP(String email, String otp) {
 		String subject = "Book store PTIT_Mã xác nhận quên mật khẩu";
 		String body = "Mã OTP của bạn là: " + otp;
 		try {
 			sendEmail(email, subject, body);
-		} catch (Exception e) {
+	        return true;
+	    } catch (Exception e) {
 			System.out.println("Gửi email thất bại: " + e.getMessage());
-		}
+	        return false;
+	    }
 	}
+
 
 	@Autowired
 	private JavaMailSender mailSender;

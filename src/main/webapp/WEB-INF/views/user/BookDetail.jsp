@@ -398,110 +398,52 @@
 					<!--/category-tab-->
 
 					<div class="recommended_items">
-						<!--recommended_items-->
-						<h2 class="title text-center">GỢI Ý SẢN PHẨM</h2>
 
-						<div id="recommended-item-carousel" class="carousel slide"
-							data-ride="carousel">
-							<div class="carousel-inner">
-								<div class="item active">
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="item">
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<button type="button" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<a class="left recommended-item-control"
-								href="#recommended-item-carousel" data-slide="prev"> <i
-								class="fa fa-angle-left"></i>
-							</a> <a class="right recommended-item-control"
-								href="#recommended-item-carousel" data-slide="next"> <i
-								class="fa fa-angle-right"></i>
-							</a>
-						</div>
-					</div>
+    <!--recommended_items-->
+ <h2 class="title text-center">GỢI Ý SẢN PHẨM</h2>
+
+<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        <c:forEach var="i" begin="0" end="${recommendedBooks.size() - 1}" step="3" varStatus="status">
+            <div class="item ${status.index == 0 ? 'active' : ''}">
+                <c:forEach var="j" begin="0" end="2">
+                    <!-- Tính chỉ số sản phẩm hiện tại bằng cách sử dụng phép modulo -->
+                    <c:set var="bookIndex" value="${(i + j) % recommendedBooks.size()}" />
+                    <c:set var="book" value="${recommendedBooks[bookIndex]}" />
+                    <div class="col-sm-4">
+                        <a href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <img src="${pageContext.request.contextPath}/assets/user/images/home/${book.image}" alt="${book.name}" />
+                                        <h2>
+                                            <fmt:formatNumber value="${book.price}" type="number" groupingUsed="true" />đ
+                                        </h2>
+                                        <p>${book.name}</p>
+                                        <a id="submitOrder" href="#"
+                                           class="btn btn-default add-to-cart"
+                                           onclick="confirmAddToCart(event, ${book.bookID}, '${sessionScope.username}')">
+                                            <i class="fa fa-shopping-cart"></i> Thêm vào giỏ
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:forEach>
+    </div>
+    <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+        <i class="fa fa-angle-right"></i>
+    </a>
+</div>
+
+
+
 					<!--/recommended_items-->
 
 				</div>
