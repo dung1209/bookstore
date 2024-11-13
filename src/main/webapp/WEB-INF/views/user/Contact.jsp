@@ -87,31 +87,6 @@
 								src="${pageContext.request.contextPath}/assets/user/images/home/logo.png"
 								alt="Logo" /></a>
 						</div>
-						<div class="btn-group pull-right">
-							<div class="btn-group">
-								<button type="button"
-									class="btn btn-default dropdown-toggle usa"
-									data-toggle="dropdown">
-									Việt Nam <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="">Tiếng Việt</a></li>
-									<li><a href="">Tiếng Anh</a></li>
-								</ul>
-							</div>
-
-							<div class="btn-group">
-								<button type="button"
-									class="btn btn-default dropdown-toggle usa"
-									data-toggle="dropdown">
-									VNĐ <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="">VNĐ</a></li>
-									<li><a href="">Dollar</a></li>
-								</ul>
-							</div>
-						</div>
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">

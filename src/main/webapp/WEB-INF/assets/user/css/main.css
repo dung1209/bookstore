@@ -1280,6 +1280,7 @@ h2.title {
     margin-top: 22px;
     margin-bottom: 18px;
     margin-left: -5px;
+    color: #696763;
 }
 
 .product-information span label {
@@ -1375,7 +1376,7 @@ h2.title {
   background: #F0F0E9;
   border: medium none;
   color: #A6A6A1;
-  height: 195px;
+  height: 150px;
   margin-bottom: 25px;
   margin-top: 15px;
   outline: medium none;
@@ -3123,6 +3124,24 @@ h2.title.text-center.recommend-name {
     transform: scale(1.1);
 }
 
+textarea {
+    pointer-events: none;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.info-item b {
+    width: 150px;
+}
+
+.info-item span {
+    flex-grow: 1;
+    margin-top: 0px;
+}
 
 
 

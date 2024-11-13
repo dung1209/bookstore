@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Dao.CategoriesDao;
 import Dao.CustomersDao;
+import Dao.InteractionDao;
 import Dao.Order_ItemsDao;
 import Dao.OrdersDao;
 import Dao.PublishersDao;
@@ -24,6 +25,7 @@ import Dao.BooksDao;
 import Dao.CartsDao;
 import bookstorePTIT.bean.Categories;
 import bookstorePTIT.bean.Customers;
+import bookstorePTIT.bean.Interactions;
 import bookstorePTIT.bean.OrderRequest;
 import bookstorePTIT.bean.Orders;
 import bookstorePTIT.bean.Authors;
@@ -71,27 +73,36 @@ public class HomeController {
 
 	@RequestMapping("/book-detail/{bookId}")
 	public String shopCart(@PathVariable("bookId") int bookId, Model model) {
+		PublishersDao publishersDao = new PublishersDao();
 		CategoriesDao categoriesDao = new CategoriesDao();
 		AuthorsDao authorsDao = new AuthorsDao();
 
 		BooksDao booksDao = new BooksDao();
 		Books book = booksDao.findBookById((int) bookId);
-
+		
+		List<Publishers> publishers = publishersDao.getPublishers();
 		List<Categories> categories = categoriesDao.getCategories();
 		List<Authors> authors = authorsDao.getAuthors();
 		String authorName = "Không rõ";
 		String categoryName = "Không rõ";
+		String publisherName = "Không rõ";
 
 		if (book != null) {
 			Authors author = authorsDao.findAuthorById(book.getAuthor().getId());
 			authorName = (author != null) ? author.getName() : "Không rõ";
+			Categories category = categoriesDao.findCategoryById(book.getCategory().getId());
+			categoryName = (category != null) ? category.getName() : "Không rõ";
+			Publishers publisher = publishersDao.findPublisherById(book.getPublisher().getPublisherID());
+			publisherName = (publisher != null) ? publisher.getName() : "Không rõ";
 		}
-
+		
+		model.addAttribute("publishers", publishers);
 		model.addAttribute("categories", categories);
 		model.addAttribute("authors", authors);
 		model.addAttribute("book", book);
 		model.addAttribute("authorName", authorName);
 		model.addAttribute("categoryName", categoryName);
+		model.addAttribute("publisherName", publisherName);
 		return "user/BookDetail";
 	}
 
@@ -449,5 +460,16 @@ public class HomeController {
 	    }
 	    return "user/Evaluate";
 	}
+	
+	@PostMapping("/saveInteraction")
+    public ResponseEntity<String> saveInteraction(@RequestBody Interactions interaction) {
+    	InteractionDao interactionDao = new InteractionDao();
+    	Interactions newInter = new Interactions();
+    	newInter.setUserID(interaction.getUserID());
+    	newInter.setBookID(interaction.getBookID());
+    	newInter.setInteractionType(interaction.getInteractionType());
+    	interactionDao.save(newInter);
+        return ResponseEntity.ok("Tương tác đã được ghi nhận.");
+    }
 
 }

@@ -40,7 +40,8 @@
 	integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
 	crossorigin="anonymous" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
@@ -102,35 +103,10 @@
 								src="${pageContext.request.contextPath}/assets/user/images/home/logo.png"
 								alt="Logo"></a>
 						</div>
-						<div class="btn-group pull-right">
-							<div class="btn-group">
-								<button type="button"
-									class="btn btn-default dropdown-toggle usa"
-									data-toggle="dropdown">
-									Việt Nam <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="">Tiếng Việt</a></li>
-									<li><a href="">Tiếng Anh</a></li>
-								</ul>
-							</div>
-
-							<div class="btn-group">
-								<button type="button"
-									class="btn btn-default dropdown-toggle usa"
-									data-toggle="dropdown">
-									VNĐ <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="">VNĐ</a></li>
-									<li><a href="">Dollar</a></li>
-								</ul>
-							</div>
-						</div>
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
-							<ul class="nav navbar-nav">		
+							<ul class="nav navbar-nav">
 								<!--<c:if test="${empty sessionScope.username}">
 									<li><a href="/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
 								</c:if>-->
@@ -141,12 +117,11 @@
 								<!-- <li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li> -->
 								<c:if test="${not empty sessionScope.username}">
 									<li><a href="/bookstorePTIT/order/"><i
-										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
+											class="fa fa-crosshairs"></i> Đơn hàng</a></li>
 								</c:if>
 								<c:if test="${not empty sessionScope.username}">
-									<li><a
-									href="/bookstorePTIT/shop-cart/"><i
-										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+									<li><a href="/bookstorePTIT/shop-cart/"><i
+											class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
 								</c:if>
 								<c:if test="${empty sessionScope.username}">
 									<li><a href="/bookstorePTIT/login"><i
@@ -182,8 +157,7 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="/bookstorePTIT/">Trang
-										chủ</a></li>
+								<li><a href="/bookstorePTIT/">Trang chủ</a></li>
 								<li><a href="/bookstorePTIT/contact/">Liên hệ</a></li>
 							</ul>
 						</div>
@@ -204,6 +178,19 @@
 			<div class="row">
 				<div class="col-sm-3">
 					<div class="left-sidebar">
+						<h2>NHÀ XUẤT BẢN</h2>
+						<div class="panel-group category-products" id="accordian">
+							<c:forEach var="publisher" items="${publishers}">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h4 class="panel-title">
+											<a href="#">${publisher.name}</a>
+										</h4>
+									</div>
+								</div>
+							</c:forEach>
+						</div>
+
 						<h2>DANH MỤC</h2>
 						<div class="panel-group category-products" id="accordian">
 							<!--category-productsr-->
@@ -225,32 +212,11 @@
 							<div class="brands-name">
 								<ul class="nav nav-pills nav-stacked">
 									<c:forEach var="author" items="${authors}">
-										<li><a href=""> <span class="pull-right">(50)</span>${author.name}</a></li>
+										<li><a href="">${author.name}</a></li>
 									</c:forEach>
 								</ul>
 							</div>
 						</div>
-						<!--/brands_products-->
-
-						<div class="price-range">
-							<!--price-range-->
-							<h2>MỨC GIÁ</h2>
-							<div class="well">
-								<input type="text" class="span2" value="" data-slider-min="0"
-									data-slider-max="600" data-slider-step="5"
-									data-slider-value="[250,450]" id="sl2"><br /> <b>$
-									0</b> <b class="pull-right">$ 600</b>
-							</div>
-						</div>
-						<!--/price-range-->
-
-						<div class="shipping text-center">
-							<!--shipping-->
-							<img
-								src="${pageContext.request.contextPath}/assets/user/images/home/shipping.jpg"
-								alt="Logo" />
-						</div>
-						<!--/shipping-->
 					</div>
 				</div>
 
@@ -263,7 +229,7 @@
 									src="${pageContext.request.contextPath}/assets/user/images/home/${book.image}"
 									alt="Logo" />
 							</div>
-							
+
 							<!-- 
 							<div id="similar-product" class="carousel slide"
 								data-ride="carousel">
@@ -325,37 +291,27 @@
 											onclick="increaseQuantity()">+</button>
 									</div>
 									<button type="button" class="btn btn-fefault cart"
-										onclick="addToCart(2)">
+										onclick="addToCart('${sessionScope.username}')">
 										<i class="fa fa-shopping-cart"></i> Thêm vào giỏ
 									</button>
 								</span>
-								<p>
-									<b>Thể loại:</b> ${categoryName}
+								<p class="info-item">
+									<b>Nhà xuất bản:</b> <span>${publisherName}</span>
 								</p>
-								<p>
-									<b>Tác giả:</b> ${authorName}
+								<p class="info-item">
+									<b>Thể loại:</b> <span>${categoryName}</span>
 								</p>
-								<p>
-									<b>Tình trạng:</b>
-									<c:choose>
-										<c:when test="${book.stock - book.sold > 0}">
-            								Còn hàng
-        								</c:when>
-										<c:otherwise>
-            								Hết hàng
-        								</c:otherwise>
-									</c:choose>
+								<p class="info-item">
+									<b>Tác giả:</b> <span>${authorName}</span>
 								</p>
-								<p>
-									<b>Brand:</b> E-SHOPPER
+								<p class="info-item">
+									<b>Kho hàng:</b> <span id="stock" data-stock="${book.stock - book.sold}">${book.stock - book.sold}</span>
 								</p>
 								<a href=""><img src="images/product-details/share.png"
 									class="share img-responsive" alt="" /></a>
 							</div>
-							<!--/product-information-->
 						</div>
 					</div>
-					<!--/product-details-->
 
 					<div class="category-tab shop-details-tab">
 						<!--category-tab-->
@@ -368,9 +324,8 @@
 							<div class="tab-pane fade active in" id="reviews">
 								<div class="col-sm-12">
 									<ul>
-										<li><a href=""><i class="fa fa-user"></i>TÁC GIẢ</a></li>
-										<li><a href=""><i class="fa fa-clock-o"></i>12:41 PM</a></li>
-										<li><a href=""><i class="fa fa-calendar-o"></i>31/12/2014</a></li>
+										<li><a href=""><i class="fa fa-user"></i>Tác giả: ${authorName}</a></li>
+										<li><a href=""><i class="fa fa-calendar-o"></i>Năm phát hành: ${book.publicationDate}</a></li>
 									</ul>
 									<p style="text-align: justify;">${book.title}</p>
 									<form action="#">
@@ -381,10 +336,8 @@
 
 						</div>
 					</div>
-					<!--/category-tab-->
 
 					<div class="recommended_items">
-						<!--recommended_items-->
 						<h2 class="title text-center">GỢI Ý SẢN PHẨM</h2>
 
 						<div id="recommended-item-carousel" class="carousel slide"
@@ -488,8 +441,6 @@
 							</a>
 						</div>
 					</div>
-					<!--/recommended_items-->
-
 				</div>
 			</div>
 		</div>
@@ -579,9 +530,7 @@
 				</div>
 			</div>
 		</div>
-
 	</footer>
-	<!--/Footer-->
 
 	<script src="<%=request.getContextPath()%>/assets/user/js/jquery.js"></script>
 	<script
@@ -609,69 +558,89 @@
 			quantityInput.value = currentValue + 1;
 		}
 		
-		function addToCart(customerId) {
-			const confirmModal = document.getElementById('confirmModal');
-	        confirmModal.style.display = "block";
+		function addToCart(checklogin) {
+			const stock = parseInt(document.getElementById("stock").getAttribute("data-stock"));
+		    const quantity = parseInt(document.getElementById("quantity").value);
 
-	        document.getElementById('confirmYes').onclick = function() {
-	        	confirmModal.style.display = "none";
+			if (checklogin === "") {
+		    	toast({
+	                title: "Chú ý!",
+	                message: "Đăng nhập để thêm sách vào giỏ hàng.",
+	                type: "error",
+	                duration: 1000
+	            });
+	        }else {
+	        	if (quantity > stock) {
+	                toast({
+	                    title: "Thông báo!",
+	                    message: "Số lượng đang chọn vượt quá kho, vui lòng giảm!",
+	                    type: "error",
+	                    duration: 1000
+	                });
+	            } else {
+	            	const confirmModal = document.getElementById('confirmModal');
+			        confirmModal.style.display = "block";
 
-			    const pathSegments = window.location.pathname.split('/');
-			    const bookId = pathSegments[pathSegments.length - 1];
+			        document.getElementById('confirmYes').onclick = function() {
+			        	confirmModal.style.display = "none";
 
-			    const quantityInput = document.getElementById('quantity');
-			    const quantity = parseInt(quantityInput.value);
+					    const pathSegments = window.location.pathname.split('/');
+					    const bookId = pathSegments[pathSegments.length - 1];
 
-			    if (isNaN(bookId) || bookId === "") {
-			        alert("ID sách không hợp lệ!");
-			        return;
-			    }
-			    if (isNaN(quantity) || quantity <= 0) {
-			        alert("Số lượng không hợp lệ!");
-			        return;
-			    }
+					    const quantityInput = document.getElementById('quantity');
+					    const quantity = parseInt(quantityInput.value);
 
-			    const cartData = {
-			        customerID: customerId,
-			        bookID: bookId, 
-			        quantity: quantity 
-			    };
+					    if (isNaN(bookId) || bookId === "") {
+					        alert("ID sách không hợp lệ!");
+					        return;
+					    }
+					    if (isNaN(quantity) || quantity <= 0) {
+					        alert("Số lượng không hợp lệ!");
+					        return;
+					    }
 
-			    fetch('/bookstorePTIT/cart/add', {
-			        method: 'POST',
-			        headers: {
-			            'Content-Type': 'application/json'
-			        },
-			        body: JSON.stringify(cartData)
-			    })
-			    .then(response => response.json())
-			    .then(data => {
-			    	if (data.status === 0) {
-			            toast({
-			                title: "Chú ý!",
-			                message: "Sách đã có trong giỏ hàng.",
-			                type: "error",
-			                duration: 1000
-			            });
-			        } else if (data.status === 1) {
-			            toast({
-			                title: "Thành công!",
-			                message: "Sản phẩm đã được thêm vào giỏ hàng!",
-			                type: "success",
-			                duration: 1000
-			            });
+					    const cartData = {
+					        bookID: bookId, 
+					        quantity: quantity 
+					    };
+
+					    fetch('/bookstorePTIT/cart/add', {
+					        method: 'POST',
+					        headers: {
+					            'Content-Type': 'application/json'
+					        },
+					        body: JSON.stringify(cartData)
+					    })
+					    .then(response => response.json())
+					    .then(data => {
+					    	if (data.status === 0) {
+					            toast({
+					                title: "Chú ý!",
+					                message: "Sách đã có trong giỏ hàng.",
+					                type: "error",
+					                duration: 1000
+					            });
+					        } else if (data.status === 1) {
+					            toast({
+					                title: "Thành công!",
+					                message: "Sản phẩm đã được thêm vào giỏ hàng!",
+					                type: "success",
+					                duration: 1000
+					            });
+					        }
+					    })
+					    .catch(error => {
+					        console.error('Error:', error);
+					        alert('Có lỗi xảy ra!');
+					    });
 			        }
-			    })
-			    .catch(error => {
-			        console.error('Error:', error);
-			        alert('Có lỗi xảy ra!');
-			    });
-	        }
-	        document.getElementById('confirmNo').onclick = function() {
-	            confirmModal.style.display = "none";
-	        };
-		    
+			        document.getElementById('confirmNo').onclick = function() {
+			            confirmModal.style.display = "none";
+			        };
+	            }
+	        } 
 		}
+		
 		document.getElementById('modalClose').onclick = function() {
 	        document.getElementById('confirmModal').style.display = "none";
 	    };

@@ -103,7 +103,7 @@
 							<a href="/bookstorePTIT/"><img
 								src="assets/user/images/home/logo.png" alt="" /></a>
 						</div>
-						<div class="btn-group pull-right">
+						<!-- <div class="btn-group pull-right">
 							<div class="btn-group">
 								<button type="button"
 									class="btn btn-default dropdown-toggle usa"
@@ -127,7 +127,7 @@
 									<li><a href="">Dollar</a></li>
 								</ul>
 							</div>
-						</div>
+						</div> -->
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
@@ -426,7 +426,8 @@
 							<div class="brands-name">
 								<ul class="nav nav-pills nav-stacked">
 									<c:forEach var="author" items="${authors}">
-										<li><a href=""> <span class="pull-right">(50)</span>${author.name}</a></li>
+										<!-- <li><a href=""> <span class="pull-right">(50)</span>${author.name}</a></li> -->
+										<li><a href="">${author.name}</a></li>
 									</c:forEach>
 								</ul>
 							</div>
@@ -458,7 +459,7 @@
 									href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
 									<div class="product-image-wrapper">
 										<div class="single-products">
-											<div class="productinfo text-center">
+											<div class="productinfo text-center" onclick="recordInteraction(${sessionScope.userID}, ${book.bookID}, 1)">
 												<img src="assets/user/images/home/${book.image}" alt="" />
 												<h2>
 													<fmt:formatNumber value="${book.price}" type="number"
@@ -760,6 +761,32 @@
             }
         });	        
     }
+	
+	function recordInteraction(userID, bookID, interactionType) {
+	    const interactionData = {
+	        userID: userID,
+	        bookID: bookID,
+	        interactionType: interactionType
+	    };
+		console.log(interactionData)
+	    fetch('/bookstorePTIT/saveInteraction', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify(interactionData)
+	    })
+	    .then(response => {
+	        if (response.ok) {
+	            console.log('Tương tác đã được ghi nhận.');
+	        } else {
+	            console.error('Lỗi khi ghi nhận tương tác.');
+	        }
+	    })
+	    .catch(error => {
+	        console.error('Lỗi khi gửi yêu cầu:', error);
+	    });
+	}
 
 	</script>
 

@@ -121,7 +121,7 @@
 											data-bs-whatever="${item.bookID};${item.name};${item.author.name};${item.category.name};${item.publisher.name};${item.publicationDate};${item.title};${item.price};${item.stock};${item.sold};${item.image}">Xem</button>
 										<button type="button" class="btn btn-warning btn-update"
 											data-bs-toggle="modal" data-bs-target="#updateBook"
-											data-bs-whatever="${item.bookID};${item.name};${item.author};${item.category};${item.publisher};${item.publicationDate};${item.title};${item.price};${item.stock};${item.sold};${item.image}">Sửa</button>
+											data-bs-whatever="${item.bookID};${item.name};${item.author.id};${item.author.name};${item.category.id};${item.category.name};${item.publisher.publisherID};${item.publisher.name};${item.publicationDate};${item.title};${item.price};${item.stock};${item.sold};${item.image}">Sửa</button>
 
 										<button type="button" class="btn btn-danger btn-delete"
 											data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
@@ -455,60 +455,35 @@
 	    }
 	};
 	
+	
     document.querySelectorAll('.btn-update').forEach(button => {
         button.addEventListener('click', function () {
             
             var modelData = this.getAttribute('data-bs-whatever');
+            console.log("Raw modelData: ", modelData);
         	
-            var values = modelData.split(";");
+         // Loại bỏ dấu cách thừa
+            var values = modelData.split(";").map(value => value.replace(/~double-quote~/g, "\""));
+
+            console.log(values)
             var id = values[0]
-            console.log(id)
             var name = values[1]
-            
-            //lấy thông tin tác giả
-            var author = values[2]
-            let authorString = author;
-         	let parts = authorString.split(',');
-         	let authorID = parts[0].match(/id=(\d+)/)[1];
-         	let authorName = parts[1].match(/name='([^']+)'/)[1];
-         	console.log("ID author:", authorID);
-         	console.log("Name author:", authorName, "\n----------------------------------");
 
-         	//lấy thông tin thể loại
-            var category = values[3]
-            let categoryString = category;
-         	let parts1 = categoryString.split(',');
-         	let categoryID = parts1[0].match(/id=(\d+)/)[1];
-         	let categoryName = parts1[1].match(/name='([^']+)'/)[1];
-         	console.log("ID category:", categoryID);
-         	console.log("Name category:", categoryName, "\n----------------------------------");
-         	
-         	//lấy thông tin nhà xuất bản
-            var publisher = values[4]
-            const regex = /publisherID=(\d+), name=([^,]+)/;
-            const matches = publisher.match(regex);
-            let publisherID = null
-            let publisherName = null
-            if (matches) {
-                publisherID = matches[1]; // ID là nhóm thứ nhất
-                publisherName = matches[2].replace(/'/g, '').trim(); // Tên là nhóm thứ hai, loại bỏ dấu nháy đơn
-
-                console.log("Publisher ID:", publisherID);
-                console.log("Publisher Name:", publisherName, "\n----------------------------------");
-            } else {
-                console.error("Không tìm thấy thông tin nhà xuất bản.");
-            }
-
-            var publicationDate = values[5]
-            var title = values[6]
-            var price = values[7]
-            var stock = values[8]
-            var sold = values[9]
-            var image = values[10]
-            //console.log(JSON.stringify(values, null, 2));
-            
-            
-            
+           var authorID = values[2]
+           var authorName = values[3]
+           
+           var categoryID = values[4]
+           var categoryName = values[5]
+           
+           var publisherID = values[6]
+           var publisherName = values[7]
+           
+            var publicationDate = values[8]
+            var title = values[9]
+            var price = values[10]
+            var stock = values[11]
+            var sold = values[12]
+            var image = values[13]
             
             document.getElementById('name1').value = name;
             document.getElementById('publicationDate1').value = publicationDate; // Năm xuất bản
@@ -518,38 +493,10 @@
             document.getElementById('sold1').value = sold; // Đã bán
             document.getElementById('image1').value = image; // Hình ảnh
             
-            //set Author
-            const authorSelect = document.getElementById('author'); // Lấy select theo id
-            if (authorSelect) {
-            	//authorSelect.value = '';
-                authorSelect.value = authorID; // Đặt giá trị của select thành authorID
-                console.log("Set authorID to select:", authorID); // Kiểm tra giá trị đã được set
-            } else {
-                console.error("Không tìm thấy phần tử select cho tác giả.");
-            }
-            document.getElementById('author1').value = authorName;
-            
-            //set Category
-            const categorySelect = document.getElementById('category'); 
-            if (categorySelect) {
-            	//categorySelect.value = '';
-            	categorySelect.value = categoryID; 
-                console.log("Set categoryID to select:", categoryID); 
-            } else {
-                console.error("Không tìm thấy phần tử select cho thể loại.");
-            }
-            document.getElementById('category1').value = categoryName;
-            
-         	//set Publisher
-            const publisherSelect = document.getElementById('publisher'); 
-            if (publisherSelect) {
-            	//publisherSelect.value = '';
-            	publisherSelect.value = publisherID; 
-                console.log("Set publisherID to select:", publisherID); 
-            } else {
-                console.error("Không tìm thấy phần tử select cho NXB.");
-            }
-            document.getElementById('publisher1').value = publisherName;
+         // Thiết lập các giá trị ban đầu cho các dropdown
+            document.getElementById('author').value = authorID;
+            document.getElementById('category').value = categoryID;
+            document.getElementById('publisher').value = publisherID;
             
             
             document.getElementById('updateForm').action = "/bookstorePTIT/admin/book-manage/update/" + id;
@@ -585,7 +532,6 @@
             var stock = values[8]
             var sold = values[9]
             var image = values[10]
-            console.log(values)
             
             document.getElementById('inforName').value = name;
             document.getElementById('inforAuthor').value = author;
