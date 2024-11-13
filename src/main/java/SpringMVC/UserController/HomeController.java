@@ -97,7 +97,7 @@ public class HomeController {
 
 	@RequestMapping("/shop-cart")
 	public String shopCart(Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 
 		if (accountID == null) {
 			model.addAttribute("message", "Vui lòng đăng nhập để xem giỏ hàng.");
@@ -129,7 +129,7 @@ public class HomeController {
 
 	@PostMapping("/cart/add")
 	public ResponseEntity<Map<String, Integer>> addToCart(@RequestBody Carts cart, Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 
@@ -156,7 +156,7 @@ public class HomeController {
 	public String checkout(@RequestParam("productId") List<String> productIds,
 			@RequestParam("quantity") List<String> quantities, Model model, HttpSession hsession) {
 		
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 		
@@ -206,7 +206,7 @@ public class HomeController {
 	@PostMapping("/create")
 	public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest, Model model, HttpSession hsession) {
 			
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 			
@@ -232,7 +232,7 @@ public class HomeController {
 
 	@PostMapping("/cart/delete")
 	public ResponseEntity<String> deleteFromCart(@RequestParam("bookID") int bookID, Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 
@@ -250,7 +250,7 @@ public class HomeController {
 	@GetMapping("/cart/data")
 	@ResponseBody
 	public ResponseEntity<List<Map<String, Object>>> getCartData(Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 			
@@ -278,7 +278,7 @@ public class HomeController {
 
 	@RequestMapping("/order")
 	public String order(Model model, HttpSession hsession) {
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		
 		if (accountID == null) {
 			model.addAttribute("message", "Vui lòng đăng nhập để xem đơn hàng.");
@@ -358,7 +358,7 @@ public class HomeController {
 		CustomersDao customerDao = new CustomersDao();
 		AccountsDao accountDao = new AccountsDao();
 		
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		String email = accountDao.getEmailByAccountId(accountID);
 		
 		if (accountID == null) {
@@ -380,7 +380,7 @@ public class HomeController {
 	@ResponseBody
 	public Map<String, Object> updateCustomer(@RequestBody Map<String, Object> requestData, Model model, HttpSession hsession) {
 		
-		Integer accountID = (Integer) hsession.getAttribute("id");
+		Integer accountID = (Integer) hsession.getAttribute("userID");
 		CustomersDao customersDao = new CustomersDao();
 		int customerID = customersDao.getCustomerIDByAccountID(accountID);
 		

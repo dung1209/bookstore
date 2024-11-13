@@ -154,20 +154,23 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">		
-								<c:if test="${empty sessionScope.username}">
-									<li><a href="/bookstorePTIT/account/" style="color: #fdb45e;"><i class="fa fa-user"></i> Tài khoản</a></li>
-								</c:if>
+								<!--<c:if test="${empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+								</c:if>-->
 								<c:if test="${not empty sessionScope.username}">
-									<li><a href="/bookstorePTIT/account" style="color: #fdb45e;"><i
+									<li><a href="/bookstorePTIT/account/" style="color: #FE980F;"><i
 											class="fa fa-user"></i>${sessionScope.username}</a></li>
 								</c:if>
-								
-								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="/bookstorePTIT/order/"><i
+								<!-- <li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li> -->
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/order/"><i
 										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
-								<li><a
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a
 									href="/bookstorePTIT/shop-cart/"><i
 										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+								</c:if>
 								<c:if test="${empty sessionScope.username}">
 									<li><a href="/bookstorePTIT/login"><i
 											class="fa fa-lock"></i> Đăng nhập</a></li>
@@ -204,25 +207,6 @@
 							<ul class="nav navbar-nav collapse navbar-collapse">
 								<li><a href="/bookstorePTIT/">Trang
 										chủ</a></li>
-								<li><a href="#" class="active" style="color: #696763">Cửa
-										hàng<i class="fa fa-angle-down"></i>
-								</a>
-									<ul role="menu" class="sub-menu">
-										<li><a href="shop.html" class="active">Sản phẩm</a></li>
-										<li><a href="product-details.html">Mô tả sản phẩm</a></li>
-										<li><a href="checkout.html">Thanh toán</a></li>
-										<li><a
-											href="/bookstorePTIT/shop-cart/">Giỏ
-												hàng</a></li>
-										<li><a href="login.html">Đăng nhập</a></li>
-									</ul></li>
-								<li class="dropdown"><a href="#">Blog<i
-										class="fa fa-angle-down"></i></a>
-									<ul role="menu" class="sub-menu">
-										<li><a href="blog.html">Danh sách Blog</a></li>
-										<li><a href="blog-single.html">Blog đơn</a></li>
-									</ul></li>
-								<li><a href="404.html">404</a></li>
 								<li class="dropdown"><a
 									href="/bookstorePTIT/contact/">Liên hệ</a></li>
 							</ul>
@@ -293,100 +277,6 @@
 	<!--/#contact-page-->
 
 	<footer id="footer">
-		<!--Footer-->
-		<div class="footer-top">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-2">
-						<div class="companyinfo">
-							<h2>
-								<span>e</span>-shopper
-							</h2>
-							<p>Khám phá thế giới tri thức với hàng ngàn đầu sách đa dạng
-								từ nhiều lĩnh vực khác nhau, phù hợp với mọi lứa tuổi và sở
-								thích.</p>
-						</div>
-					</div>
-					<div class="col-sm-7">
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe1.png"
-											alt="Logo" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe2.png"
-											alt="Logo" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe3.png"
-											alt="Logo" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe4.png"
-											alt="Logo" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div class="address">
-							<img
-								src="<%=request.getContextPath()%>/assets/user/images/home/map.png"
-								alt="Logo" />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">

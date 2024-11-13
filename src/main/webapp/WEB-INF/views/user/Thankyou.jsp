@@ -110,16 +110,35 @@
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
-								<li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li>
-								<li><a href="/bookstorePTIT/order/"><i class="fa fa-crosshairs"></i>
-										Đơn hàng</a></li>
-								<li><a
-									href="/bookstorePTIT/shop-cart/"
-									><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
-								<li><a href="login.html"><i class="fa fa-lock"></i>
-										Đăng nhập</a></li>
+							<ul class="nav navbar-nav">		
+								<!--<c:if test="${empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/account/"><i class="fa fa-user"></i> Tài khoản</a></li>
+								</c:if>-->
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/account"><i
+											class="fa fa-user"></i>${sessionScope.username}</a></li>
+								</c:if>
+								<!-- <li><a href=""><i class="fa fa-star"></i> Yêu thích</a></li> -->
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/order/"><i
+										class="fa fa-crosshairs"></i> Đơn hàng</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a
+									href="/bookstorePTIT/shop-cart/"><i
+										class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+								</c:if>
+								<c:if test="${empty sessionScope.username}">
+									<li><a href="/bookstorePTIT/login"><i
+											class="fa fa-lock"></i> Đăng nhập</a></li>
+								</c:if>
+								<c:if test="${not empty sessionScope.username}">
+									<li><a href="#" onclick="confirmLogout()"><i
+											class="fa fa-lock"></i>Đăng xuất</a></li>
+									<c:if test="${not empty errorLogout}">
+										<div style="color: red;">${error}</div>
+									</c:if>
+								</c:if>
 							</ul>
 						</div>
 					</div>
@@ -168,100 +187,6 @@
 	</section>
 	
 	<footer id="footer">
-		<!--Footer-->
-		<div class="footer-top">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-2">
-						<div class="companyinfo">
-							<h2>
-								<span>e</span>-shopper
-							</h2>
-							<p>Khám phá thế giới tri thức với hàng ngàn đầu sách đa dạng
-								từ nhiều lĩnh vực khác nhau, phù hợp với mọi lứa tuổi và sở
-								thích.</p>
-						</div>
-					</div>
-					<div class="col-sm-7">
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe1.png"
-											alt="Logo" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe2.png"
-											alt="Logo" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe3.png"
-											alt="Logo" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="video-gallery text-center">
-								<a href="#">
-									<div class="iframe-img">
-										<img
-											src="<%=request.getContextPath()%>/assets/user/images/home/iframe4.png"
-											alt="Logo" />
-									</div>
-									<div class="overlay-icon">
-										<i class="fa fa-play-circle-o"></i>
-									</div>
-								</a>
-								<p>Hỗ trợ khách hàng</p>
-								<h2>24 DEC 2024</h2>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div class="address">
-							<img
-								src="<%=request.getContextPath()%>/assets/user/images/home/map.png"
-								alt="Logo" />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
