@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import Dao.AccDao;
 import Dao.authDao;
@@ -50,35 +51,38 @@ public class LoginUserController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(@ModelAttribute("account") Accounts account, ModelMap model, HttpSession hsession) {
-		if (account == null || account.getUsername() == null || account.getPassword() == null) {
-			model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không được để trống.");
-			return "/login/login-home";
-		}
-
-		authDao dao = new authDao();
-		Map<String, Object> checkexist = dao.CheckAccount(account);
-
-		System.out.print("checkexist:" + checkexist);
-
-		if ((Boolean) checkexist.get("check")) {
-			Accounts accountfull = dao.getUserByUserName(account.getUsername());
-			
-			hsession.setAttribute("userID", accountfull.getId());
-			hsession.setAttribute("account", accountfull);
-			hsession.setAttribute("username", account.getUsername());
-			hsession.setAttribute("getRole", dao.CheckUser(account.getUsername()));
-			hsession.setAttribute("isAdmin", (String) checkexist.get("isAdmin"));
-
-			if ("admin".equals(checkexist.get("isAdmin"))) {
-				return "redirect:/admin/home";
-			} else {
-				return "redirect:/";
-			}
-
-		} else {
-			model.addAttribute("error", "Thông tin đăng nhập không chính xác!");
-			return "/login/login-home";
-		}
+	    if (account == null || account.getUsername() == null || account.getPassword() == null) {
+	        model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không được để trống.");
+	        return "/login/login-home";
+	    }
+	    authDao dao = new authDao();
+	    Map<String, Object> checkexist = dao.CheckAccount(account);
+	    System.out.print("checkexist:" + checkexist);
+	    
+	    if ((Boolean) checkexist.get("check")) {
+	        Accounts accountfull = dao.getUserByUserName(account.getUsername());
+	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	        if (passwordEncoder.matches(account.getPassword(), accountfull.getPassword())) {
+	            // Lưu thông tin người dùng vào session
+	            hsession.setAttribute("userID", accountfull.getId());
+	            hsession.setAttribute("account", accountfull);
+	            hsession.setAttribute("username", account.getUsername());
+	            hsession.setAttribute("getRole", dao.CheckUser(account.getUsername()));
+	            hsession.setAttribute("isAdmin", (String) checkexist.get("isAdmin"));
+	            // Chuyển hướng theo vai trò của người dùng
+	            if ("admin".equals(checkexist.get("isAdmin"))) {
+	                return "redirect:/admin/home";
+	            } else {
+	                return "redirect:/";
+	            }
+	        } else {
+	            model.addAttribute("error", "Thông tin đăng nhập không chính xác!");
+	            return "/login/login-home";
+	        }
+	    } else {
+	        model.addAttribute("error", checkexist.get("message"));
+	        return "/login/login-home";
+	    }
 	}
 
 	@GetMapping("/logout")
@@ -106,35 +110,50 @@ public class LoginUserController {
 	@Transactional
 	@RequestMapping(value = "/signUp", method = RequestMethod.POST)
 	public String register(@RequestParam("username") String username, @RequestParam("password") String password,
-			@RequestParam("confirm_password") String confirmPassword, @RequestParam("email") String email,
-			Model model) {
-		if (AccDao.isUsernameExists(username)) {
-			model.addAttribute("error", "Tên đăng nhập đã tồn tại!");
-			return "/login/signUp";
-		}
-		if (AccDao.isEmailExists(email)) {
-			model.addAttribute("error", "Email đã được sử dụng!");
-			return "/login/signUp";
-		}
-		if (!password.equals(confirmPassword)) {
-			model.addAttribute("error", "Mật khẩu không khớp!");
-			return "/login/signUp";
-		}
+	        @RequestParam("confirm_password") String confirmPassword, @RequestParam("email") String email,
+	        Model model) {
+	    
+	    // Kiểm tra tên đăng nhập đã tồn tại
+	    if (AccDao.isUsernameExists(username)) {
+	        model.addAttribute("error", "Tên đăng nhập đã tồn tại!");
+	        return "/login/signUp";
+	    }
+	    
+	    // Kiểm tra email đã tồn tại
+	    if (AccDao.isEmailExists(email)) {
+	        model.addAttribute("error", "Email đã được sử dụng!");
+	        return "/login/signUp";
+	    }
 
-		Accounts account = new Accounts();
-		Customers customer = new Customers();
-		account.setUsername(username);
-		account.setPassword(password);
-		account.setEmail(email);
-		account.setRole("user");
-		account.setStatus(true);
-		AccDao.save(account);
-		
-		customer.setAccountID(account.getId());
-		customersDao.addCustomer(customer);
-		
-		model.addAttribute("message", "Đăng ký thành công!");
-		return "/login/signUp";
+	    // Kiểm tra mật khẩu có khớp không
+	    if (!password.equals(confirmPassword)) {
+	        model.addAttribute("error", "Mật khẩu không khớp!");
+	        return "/login/signUp";
+	    }
+
+	    // Mã hóa mật khẩu
+	    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	    String encodedPassword = passwordEncoder.encode(password);
+
+	    // Tạo tài khoản mới
+	    Accounts account = new Accounts();
+	    Customers customer = new Customers();
+	    account.setUsername(username);
+	    account.setPassword(encodedPassword);  // Lưu mật khẩu đã mã hóa
+	    account.setEmail(email);
+	    account.setRole("user"); // Mặc định là user, có thể thay đổi sau
+	    account.setStatus(true);
+
+	    // Lưu tài khoản vào cơ sở dữ liệu
+	    AccDao.save(account);
+	    
+	    // Tạo khách hàng mới
+	    customer.setAccountID(account.getId());
+	    customersDao.addCustomer(customer);
+
+	    // Thông báo đăng ký thành công
+	    model.addAttribute("message", "Đăng ký thành công!");
+	    return "/login/signUp";
 	}
 
 	@RequestMapping(value = "/forgot-password", method = RequestMethod.POST)

@@ -77,7 +77,6 @@ public class BookController {
 		newBook.setSold(0);
 		newBook.setStock(0);
 		newBook.setCreatedAt(new Date());
-		//newBook.setImage("test.png");
 		
 		System.out.println(newBook);
 		
