@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,8 @@ import service.RecommendationServiceCBF;
 import bookstorePTIT.bean.Order_Items;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
+
+import java.awt.print.Book;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,6 +114,7 @@ public class HomeController {
 		model.addAttribute("authorName", authorName);
 		model.addAttribute("categoryName", categoryName);
 		model.addAttribute("publisherName", publisherName);
+		model.addAttribute("bookID", bookId);
 		return "user/BookDetail";
 	}
 
@@ -476,8 +480,24 @@ public class HomeController {
     	newInter.setUserID(interaction.getUserID());
     	newInter.setBookID(interaction.getBookID());
     	newInter.setInteractionType(interaction.getInteractionType());
+    	System.out.println(">>> check interaction: " + interaction);
+    	System.out.println(">>> check new interaction: " + newInter);
     	interactionDao.save(newInter);
         return ResponseEntity.ok("Tương tác đã được ghi nhận.");
     }
+	
+	@CrossOrigin(origins = "http://localhost:5064")
+	@GetMapping("/booksRecommend/{bookID}")
+	public ResponseEntity<Map<String, Object>> booksRecommend(@PathVariable("bookID") int bookID, Model model) {
+		BooksDao booksDao = new BooksDao();
+		Books book = booksDao.findBookById(bookID);
+		Map<String, Object> bookInfo = new HashMap<>();
+	    bookInfo.put("bookID", book.getbookID());
+	    bookInfo.put("name", book.getName());
+	    bookInfo.put("price", book.getPrice());
+	    bookInfo.put("image", book.getImage());
+	    
+		return ResponseEntity.ok(bookInfo);
+	}
 
 }

@@ -50,10 +50,10 @@ public class BookController {
 		System.out.println("check img: " + imageFile.toString());
 		
 	        try {
-	        	 String saveDirectory=request.getSession().getServletContext().getRealPath("/")+"WEB-INF"+File.separator+"assets"+File.separator+"admin"+File.separator+"home\\";//to save to images folder
-	        	   String fileName = imageFile.getOriginalFilename();//getting file name
-	        	   System.out.println("directory with file name: " + saveDirectory+fileName);
-	        	   imageFile.transferTo(new File(saveDirectory + fileName));
+	        	String saveDirectory = "C:/Users/AnTran/Máy tính/bookstore/src/main/webapp/WEB-INF/assets/user/images/home/";
+	        	String fileName = imageFile.getOriginalFilename();
+	        	File destFile = new File(saveDirectory + fileName);
+	        	imageFile.transferTo(destFile);
 	            
 	            newBook.setImage(imageFile.getOriginalFilename());
 	        } catch (Exception e) {

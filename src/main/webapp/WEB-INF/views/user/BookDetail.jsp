@@ -328,9 +328,6 @@
 										<li><a href=""><i class="fa fa-calendar-o"></i>Năm phát hành: ${book.publicationDate}</a></li>
 									</ul>
 									<p style="text-align: justify;">${book.title}</p>
-									<form action="#">
-										<textarea name=""></textarea>
-									</form>
 								</div>
 							</div>
 
@@ -342,37 +339,7 @@
 						 <h2 class="title text-center">GỢI Ý SẢN PHẨM</h2>
 
 						<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
-						    <div class="carousel-inner">
-						        <c:forEach var="i" begin="0" end="${recommendedBooks.size() - 1}" step="3" varStatus="status">
-						            <div class="item ${status.index == 0 ? 'active' : ''}">
-						                <c:forEach var="j" begin="0" end="2">
-						                    <!-- Tính chỉ số sản phẩm hiện tại bằng cách sử dụng phép modulo -->
-						                    <c:set var="bookIndex" value="${(i + j) % recommendedBooks.size()}" />
-						                    <c:set var="book" value="${recommendedBooks[bookIndex]}" />
-						                    <div class="col-sm-4">
-						                        <a href="${pageContext.request.contextPath}/book-detail/${book.bookID}">
-						                            <div class="product-image-wrapper">
-						                                <div class="single-products">
-						                                    <div class="productinfo text-center">
-						                                        <img src="${pageContext.request.contextPath}/assets/user/images/home/${book.image}" alt="${book.name}" />
-						                                        <h2>
-						                                            <fmt:formatNumber value="${book.price}" type="number" groupingUsed="true" />đ
-						                                        </h2>
-						                                        <p>${book.name}</p>
-						                                        <a id="submitOrder" href="#"
-						                                           class="btn btn-default add-to-cart"
-						                                           onclick="confirmAddToCart(event, ${book.bookID}, '${sessionScope.username}')">
-						                                            <i class="fa fa-shopping-cart"></i> Thêm vào giỏ
-						                                        </a>
-						                                    </div>
-						                                </div>
-						                            </div>
-						                        </a>
-						                    </div>
-						                </c:forEach>
-						            </div>
-						        </c:forEach>
-						    </div>
+						    <div class="carousel-inner"></div>
 						    <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
 						        <i class="fa fa-angle-left"></i>
 						    </a>
@@ -484,6 +451,30 @@
 	<script src="<%=request.getContextPath()%>/assets/user/js/main.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
+	function confirmAddToCart(event, bookId, checklogin) {
+	    event.preventDefault();
+	    
+	    console.log("checklogin: ", checklogin);
+	    if (checklogin === "") {
+	    	toast({
+                title: "Chú ý!",
+                message: "Đăng nhập để thêm sách vào giỏ hàng.",
+                type: "error",
+                duration: 1000
+            });
+        }else {
+        	const confirmModal = document.getElementById('confirmModal');
+            confirmModal.style.display = "block";
+
+            document.getElementById('confirmYes').onclick = function() {
+            	confirmModal.style.display = "none";
+            	addToCart(checklogin, bookId);
+            }
+            document.getElementById('confirmNo').onclick = function() {
+                confirmModal.style.display = "none";
+            };
+        } 
+	}
 		function decreaseQuantity() {
 			var quantityInput = document.getElementById('quantity');
 			var currentValue = parseInt(quantityInput.value);
@@ -498,7 +489,7 @@
 			quantityInput.value = currentValue + 1;
 		}
 		
-		function addToCart(checklogin) {
+		function addToCart(checklogin, bookID = null) {
 			const stock = parseInt(document.getElementById("stock").getAttribute("data-stock"));
 		    const quantity = parseInt(document.getElementById("quantity").value);
 
@@ -525,7 +516,7 @@
 			        	confirmModal.style.display = "none";
 
 					    const pathSegments = window.location.pathname.split('/');
-					    const bookId = pathSegments[pathSegments.length - 1];
+					    const bookId = bookID || pathSegments[pathSegments.length - 1];
 
 					    const quantityInput = document.getElementById('quantity');
 					    const quantity = parseInt(quantityInput.value);
@@ -663,6 +654,105 @@
 	            }
 	        });	        
 	    }
+	    
+	    document.addEventListener("DOMContentLoaded", function() {
+	    	var userId = null;
+	    	var username = "";
+	    	if ('${sessionScope.userID}') {
+	    		userId = '${sessionScope.userID}'
+	    		username = '${sessionScope.userID}'
+	    		
+	    	} else {
+	    		userId = -1;
+	    	}
+	    	console.log("userId: ", userId)
+	    	console.log("username: ", username)
+	    	fetch('http://localhost:8000/recommendations_by_title/' + '${bookID}')
+	    		.then(response => {
+	            	if (!response.ok) {
+	                	throw new Error("Lỗi khi lấy gợi ý sách");
+	            	}	
+	            	return response.json();
+	        	})
+	        	.then(datas => {
+	        		if (datas.error) {
+		                console.error(datas.error);
+		            } else {
+		            	const carouselInner = document.querySelector("#recommended-item-carousel .carousel-inner");
+		            	// Khởi tạo div item đầu tiên
+		                let itemDiv = document.createElement("div");
+		                itemDiv.classList.add("item", "active"); // Đặt div đầu tiên là active
+		                let count = 0;
+		                
+		            	console.log("sách gợi ý theo nội dung: ", datas)
+		            	datas.forEach((bookData, index) => {
+		            		const bookDiv = document.createElement("div");
+		                    bookDiv.classList.add("col-sm-4");
+		                    bookDiv.innerHTML = 
+		                    	'<a href="${pageContext.request.contextPath}/book-detail/' + bookData.bookID + '">' +
+                                '<div class="product-image-wrapper">' +
+                                    '<div class="single-products">' +
+                                        '<div class="productinfo text-center"' +
+                                        	(userId !== -1 ? ' onclick="recordInteraction(' + userId + ', ' + bookData.bookID + ', 1)"' : '') + '>' +
+                                            '<img src="<%=request.getContextPath()%>/assets/user/images/home/' + bookData.image + '" alt="' + bookData.name + '" />' +
+                                            '<h2>' + bookData.price + ' VND</h2>' +
+                                            '<p>' + bookData.name + '</p>' +
+                                            '<a id="submitOrder" href="#"' +
+                                            	'class="btn btn-default add-to-cart"' +
+                                            	'onclick="confirmAddToCart(event,' + bookData.bookID + ', \'' + username + '\')">' +
+                                            	'<i class="fa fa-shopping-cart"></i> Thêm vào giỏ' +
+                                        	'</a>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                                '</a>';
+
+		                    // Thêm sách vào khung item hiện tại
+		                    itemDiv.appendChild(bookDiv);
+		                    count++;
+
+		                    // Kiểm tra nếu đã đủ 3 sách trong 1 item
+		                    if (count === 3) {
+		                    	// Thêm khung item vào carousel
+		                    	carouselInner.appendChild(itemDiv);
+
+		                    	// Tạo item mới nếu vẫn còn sách
+		                    	if (index < datas.length - 1) {
+		                    		itemDiv = document.createElement("div");
+		                    		itemDiv.classList.add("item");
+		                    	}
+		                    	count = 0; // Reset đếm sách cho khung mới
+		                    }
+		            	})
+		            }
+	        	})
+	    })
+	    
+	    function recordInteraction(userID, bookID, interactionType) {
+	    const interactionData = {
+	        userID: userID,
+	        bookID: bookID,
+	        interactionType: interactionType
+	    };
+		console.log(interactionData)
+	    fetch('/bookstorePTIT/saveInteraction', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify(interactionData)
+	    })
+	    .then(response => {
+	        if (response.ok) {
+	            console.log('Tương tác đã được ghi nhận.');
+	        } else {
+	            console.error('Lỗi khi ghi nhận tương tác.');
+	        }
+	    })
+	    .catch(error => {
+	        console.error('Lỗi khi gửi yêu cầu:', error);
+	    });
+	}
 	</script>
 </body>
 </html>

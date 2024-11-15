@@ -284,100 +284,12 @@
 
 						<div id="recommended-item-carousel" class="carousel slide"
 							data-ride="carousel">
-							<div class="carousel-inner">
-								<div class="item active">
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="assets/user/images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="assets/user/images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="assets/user/images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="item">
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="assets/user/images/home/recommend1.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="assets/user/images/home/recommend2.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="product-image-wrapper">
-											<div class="single-products">
-												<div class="productinfo text-center">
-													<img src="assets/user/images/home/recommend3.jpg" alt="" />
-													<h2>$56</h2>
-													<p>Easy Polo Black Edition</p>
-													<a href="#" class="btn btn-default add-to-cart"><i
-														class="fa fa-shopping-cart"></i>Add to cart</a>
-												</div>
-
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
+							<div class="carousel-inner"></div>
 							<a class="left recommended-item-control"
 								href="#recommended-item-carousel" data-slide="prev"> <i
 								class="fa fa-angle-left"></i>
-							</a> <a class="right recommended-item-control"
+							</a> 
+							<a class="right recommended-item-control"
 								href="#recommended-item-carousel" data-slide="next"> <i
 								class="fa fa-angle-right"></i>
 							</a>
@@ -474,14 +386,6 @@
 												</a>
 											</div>
 										</div>
-										<!-- <div class="choose">
-											<ul class="nav nav-pills nav-justified">
-												<li><a href=""><i class="fa fa-plus-square"></i>Yêu
-														thích</a></li>
-												<li><a href=""><i class="fa fa-plus-square"></i>So
-														sánh</a></li>
-											</ul>
-										</div> -->
 									</div>
 								</a>
 							</div>
@@ -787,6 +691,102 @@
 	        console.error('Lỗi khi gửi yêu cầu:', error);
 	    });
 	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+		var userId = null;
+		var username = "";
+		if ('${sessionScope.userID}') {
+			userId = '${sessionScope.userID}'
+			username = '${sessionScope.username}'
+			console.log('${sessionScope.userID}')
+		} else {
+			userId = -1
+		}
+	    
+
+	    fetch('http://localhost:8000/recommendations/' + userId)
+	        .then(response => {
+	            if (!response.ok) {
+	                throw new Error("Lỗi khi lấy gợi ý sách");
+	            }
+	            return response.json();
+	        })
+	        .then(data => {
+	            if (data.error) {
+	                console.error(data.error);
+	            } else {
+	                const recommendations = data["recommendationsByBehavior"] || data["recommendationsByPopulation"];
+	                const carouselInner = document.querySelector("#recommended-item-carousel .carousel-inner");
+
+	                // Khởi tạo div item đầu tiên
+	                let itemDiv = document.createElement("div");
+	                itemDiv.classList.add("item", "active"); // Đặt div đầu tiên là active
+	                let count = 0;
+
+	                recommendations.forEach((bookID, index) => {
+	                    fetch('/bookstorePTIT/booksRecommend/' + bookID)
+	                        .then(res => {
+	                            if (!res.ok) {
+	                                throw new Error("Lỗi khi lấy thông tin sách");
+	                            }
+	                            return res.json();
+	                        })
+	                        .then(bookData => {
+	                            if(bookData.error) {
+	                                console.error(bookData.error);
+	                            } else {
+	                            	console.log(bookData)
+	                                // Tạo phần tử HTML cho mỗi sách
+	                                const bookDiv = document.createElement("div");
+	                                bookDiv.classList.add("col-sm-4");
+	                                bookDiv.innerHTML = 
+	                                    '<a href="${pageContext.request.contextPath}/book-detail/' + bookData.bookID + '">' +
+	                                    '<div class="product-image-wrapper">' +
+	                                        '<div class="single-products">' +
+	                                            '<div class="productinfo text-center"' + 
+	                                            	(userId !== -1 ? ' onclick="recordInteraction(' + userId + ', ' + bookData.bookID + ', 1)"' : '') + '>' +
+	                                                '<img src="assets/user/images/home/' + bookData.image + '" alt="' + bookData.name + '" />' +
+	                                                '<h2>' + bookData.price + ' VND</h2>' +
+	                                                '<p>' + bookData.name + '</p>' +
+	                                                '<a id="submitOrder" href="#"' +
+	                                                    'class="btn btn-default add-to-cart"' +
+	                                                    'onclick="confirmAddToCart(event,' + bookData.bookID + ', \'' + username + '\')">' +
+	                                                    '<i class="fa fa-shopping-cart"></i> Thêm vào giỏ' +
+	                                                '</a>' +
+	                                            '</div>' +
+	                                        '</div>' +
+	                                    '</div>' +
+	                                    '</a>';
+
+
+	                                // Thêm sách vào khung item hiện tại
+	                                itemDiv.appendChild(bookDiv);
+	                                count++;
+
+	                                // Kiểm tra nếu đã đủ 3 sách trong 1 item
+	                                if (count === 3) {
+	                                    // Thêm khung item vào carousel
+	                                    carouselInner.appendChild(itemDiv);
+
+	                                    // Tạo item mới nếu vẫn còn sách
+	                                    if (index < recommendations.length - 1) {
+	                                        itemDiv = document.createElement("div");
+	                                        itemDiv.classList.add("item");
+	                                    }
+	                                    count = 0; // Reset đếm sách cho khung mới
+	                                }
+	                            }
+	                        })
+	                        .catch(error => {
+	                            console.error("Lỗi khi lấy thông tin sách:", error);
+	                        });
+	                });
+	            }
+	        })
+	        .catch(error => {
+	            console.error("Lỗi:", error);
+	        });
+	});
 
 	</script>
 

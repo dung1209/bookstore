@@ -542,7 +542,7 @@
             document.getElementById('inforPrice').value = price;
             document.getElementById('inforStock').value = stock;
             document.getElementById('inforSold').value = sold;
-            document.getElementById('inforImage').src = "${pageContext.request.contextPath}/assets/admin/home/"+image;
+            document.getElementById('inforImage').src = "${pageContext.request.contextPath}/assets/user/images/home/" +image;
         });
     });
 
