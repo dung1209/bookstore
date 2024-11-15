@@ -62,9 +62,6 @@ public class LoginUserController {
 	    if ((Boolean) checkexist.get("check")) {
 	        Accounts accountfull = dao.getUserByUserName(account.getUsername());
 	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		    System.out.println("đã vào tài khảon");
-
-	        // So sánh mật khẩu nhập vào với mật khẩu đã mã hóa trong cơ sở dữ liệu
 	        if (passwordEncoder.matches(account.getPassword(), accountfull.getPassword())) {
 	            // Lưu thông tin người dùng vào session
 	            hsession.setAttribute("userID", accountfull.getId());
@@ -72,7 +69,6 @@ public class LoginUserController {
 	            hsession.setAttribute("username", account.getUsername());
 	            hsession.setAttribute("getRole", dao.CheckUser(account.getUsername()));
 	            hsession.setAttribute("isAdmin", (String) checkexist.get("isAdmin"));
-
 	            // Chuyển hướng theo vai trò của người dùng
 	            if ("admin".equals(checkexist.get("isAdmin"))) {
 	                return "redirect:/admin/home";
@@ -84,7 +80,7 @@ public class LoginUserController {
 	            return "/login/login-home";
 	        }
 	    } else {
-	        model.addAttribute("error", "Thông tin đăng nhập không chính xác!");
+	        model.addAttribute("error", checkexist.get("message"));
 	        return "/login/login-home";
 	    }
 	}

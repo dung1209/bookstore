@@ -35,16 +35,22 @@ public class authDao {
 	public Map<String, Object> CheckAccount(Accounts acc) {
 	    Map<String, Object> rs = new HashMap<String, Object>();
 	    String password = acc.getPassword();
-	    Accounts acc1 = getUserByUserName(acc.getUsername());
+	    Accounts acc1 = getUserByUserName(acc.getUsername()); // Lấy tài khoản từ cơ sở dữ liệu theo username
 	    if (acc1 != null) {
-	        rs.put("isAdmin", acc1.getRole());
-	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-	        if (passwordEncoder.matches(password, acc1.getPassword())) {
-	            rs.put("check", true);
-	            rs.put("message", "");
-	        } else {
+	        if (acc1.isStatus() == false) { 
 	            rs.put("check", false);
-	            rs.put("message", "Tài khoản hoặc mật khẩu không chính xác!");
+	            rs.put("message", "Tài khoản của bạn bị khóa. Vui lòng liên hệ quản lí để kích hoạt!");
+	            return rs;
+	        } else {
+	            rs.put("isAdmin", acc1.getRole());
+	            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	            if (passwordEncoder.matches(password, acc1.getPassword())) {
+	                rs.put("check", true);
+	                rs.put("message", "");
+	            } else {
+	                rs.put("check", false);
+	                rs.put("message", "Tài khoản hoặc mật khẩu không chính xác!");
+	            }
 	        }
 	    } else {
 	        rs.put("check", false);
