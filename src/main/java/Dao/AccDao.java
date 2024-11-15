@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import HibernateUtils.HibernateUtils;
@@ -120,7 +121,8 @@ public class AccDao {
             // Tìm tài khoản theo email
             Accounts account = findByEmail(email);
             if (account != null) {
-                account.setPassword(newPassword); // Cập nhật mật khẩu
+            	String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+                account.setPassword(hashedPassword); // Cập nhật mật khẩu đã mã hóa
                 session.update(account); // Lưu thay đổi
             }
             tx.commit();
