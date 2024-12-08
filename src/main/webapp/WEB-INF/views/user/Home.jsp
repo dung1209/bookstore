@@ -381,7 +381,7 @@
 												<p>${book.name}</p>
 												<a id="submitOrder" href="#"
 													class="btn btn-default add-to-cart"
-													onclick="confirmAddToCart(event, ${book.bookID}, '${sessionScope.username}')"> <i
+													onclick="confirmAddToCart(event, ${sessionScope.userID}, ${book.bookID}, '${sessionScope.username}')"> <i
 													class="fa fa-shopping-cart"></i> Thêm vào giỏ
 												</a>
 											</div>
@@ -505,7 +505,7 @@
 	<script src="assets/user/js/main.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
-	function confirmAddToCart(event, bookId, checklogin) {
+	function confirmAddToCart(event, userId, bookId, checklogin) {
 	    event.preventDefault();
 	    
 	    console.log("checklogin: ", checklogin);
@@ -523,6 +523,7 @@
             document.getElementById('confirmYes').onclick = function() {
             	confirmModal.style.display = "none";
             	addToCart(bookId);
+            	recordInteraction(userId, bookId, 1);
             }
             document.getElementById('confirmNo').onclick = function() {
                 confirmModal.style.display = "none";
@@ -644,7 +645,7 @@
 	window.onload = function() {
 	    if (window.location.search.indexOf('page=') !== -1) {
 	        setTimeout(function() {
-	            window.scrollBy(0, 1150);
+	            window.scrollBy(0, 1220);
 	        }, 100);
 	    }
 	}
@@ -683,8 +684,14 @@
 	    .then(response => {
 	        if (response.ok) {
 	            console.log('Tương tác đã được ghi nhận.');
+	            return fetch('http://localhost:8000/refresh_data/', {
+	                method: 'POST',
+	                headers: {
+	                    'Content-Type': 'application/json'
+	                }
+	            });
 	        } else {
-	            console.error('Lỗi khi ghi nhận tương tác.');
+	        	console.log('Tương tác đã tồn tại.');
 	        }
 	    })
 	    .catch(error => {
@@ -704,7 +711,7 @@
 		}
 	    
 
-	    fetch('http://localhost:8000/recommendations/' + userId)
+	   fetch('http://localhost:8000/recommendations/' + userId)
 	        .then(response => {
 	            if (!response.ok) {
 	                throw new Error("Lỗi khi lấy gợi ý sách");
@@ -737,8 +744,10 @@
 	                            } else {
 	                            	console.log(bookData)
 	                                // Tạo phần tử HTML cho mỗi sách
+	                                
 	                                const bookDiv = document.createElement("div");
-	                                bookDiv.classList.add("col-sm-4");
+	                                bookDiv.classList.add("col-sm-3");
+	                                let formattedPrice = new Intl.NumberFormat('vi-VN').format(bookData.price);
 	                                bookDiv.innerHTML = 
 	                                    '<a href="${pageContext.request.contextPath}/book-detail/' + bookData.bookID + '">' +
 	                                    '<div class="product-image-wrapper">' +
@@ -746,11 +755,11 @@
 	                                            '<div class="productinfo text-center"' + 
 	                                            	(userId !== -1 ? ' onclick="recordInteraction(' + userId + ', ' + bookData.bookID + ', 1)"' : '') + '>' +
 	                                                '<img src="assets/user/images/home/' + bookData.image + '" alt="' + bookData.name + '" />' +
-	                                                '<h2>' + bookData.price + ' VND</h2>' +
+	                                                '<h2>' + formattedPrice + ' đ</h2>' +
 	                                                '<p>' + bookData.name + '</p>' +
 	                                                '<a id="submitOrder" href="#"' +
 	                                                    'class="btn btn-default add-to-cart"' +
-	                                                    'onclick="confirmAddToCart(event,' + bookData.bookID + ', \'' + username + '\')">' +
+	                                                    'onclick="confirmAddToCart(event,' + userId + ', \'' + bookData.bookID + '\', \'' + username + '\')">' +
 	                                                    '<i class="fa fa-shopping-cart"></i> Thêm vào giỏ' +
 	                                                '</a>' +
 	                                            '</div>' +
@@ -763,8 +772,8 @@
 	                                itemDiv.appendChild(bookDiv);
 	                                count++;
 
-	                                // Kiểm tra nếu đã đủ 3 sách trong 1 item
-	                                if (count === 3) {
+	                                // Kiểm tra nếu đã đủ 4 sách trong 1 item
+	                                if (count === 4) {
 	                                    // Thêm khung item vào carousel
 	                                    carouselInner.appendChild(itemDiv);
 

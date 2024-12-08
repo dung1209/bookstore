@@ -477,11 +477,16 @@ public class HomeController {
     public ResponseEntity<String> saveInteraction(@RequestBody Interactions interaction) {
     	InteractionDao interactionDao = new InteractionDao();
     	Interactions newInter = new Interactions();
-    	newInter.setUserID(interaction.getUserID());
+    	newInter.setUserID(interaction.getAccountID());
     	newInter.setBookID(interaction.getBookID());
     	newInter.setInteractionType(interaction.getInteractionType());
     	System.out.println(">>> check interaction: " + interaction);
     	System.out.println(">>> check new interaction: " + newInter);
+    	boolean exists = interactionDao.checkInteractionExistence(interaction.getAccountID(), interaction.getBookID());
+        if (exists) {
+        	System.out.println(">>> Tương tác đã tồn tại");
+            return ResponseEntity.badRequest().body("Tương tác này đã tồn tại, không thể ghi nhận lại.");
+        }
     	interactionDao.save(newInter);
         return ResponseEntity.ok("Tương tác đã được ghi nhận.");
     }

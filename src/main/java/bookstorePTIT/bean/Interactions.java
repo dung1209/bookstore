@@ -16,7 +16,7 @@ public class Interactions {
     private int interactionID;
 	
 	@Column(name = "accountID", nullable = false)
-    private int userID;
+    private int accountID;
 	
 	@Column(name = "bookID", nullable = false)
     private int bookID;
@@ -28,10 +28,10 @@ public class Interactions {
 		super();
 	}
 
-	public Interactions(int interactionID, int userID, int bookID, int interactionType) {
+	public Interactions(int interactionID, int accountID, int bookID, int interactionType) {
 		super();
 		this.interactionID = interactionID;
-		this.userID = userID;
+		this.accountID = accountID;
 		this.bookID = bookID;
 		this.interactionType = interactionType;
 	}
@@ -44,12 +44,12 @@ public class Interactions {
 		this.interactionID = interactionID;
 	}
 
-	public int getUserID() {
-		return userID;
+	public int getAccountID() {
+		return accountID;
 	}
 
-	public void setUserID(int userID) {
-		this.userID = userID;
+	public void setUserID(int accountID) {
+		this.accountID = accountID;
 	}
 
 	public int getBookID() {
@@ -70,7 +70,7 @@ public class Interactions {
 
 	@Override
 	public String toString() {
-		return "Interactions [interactionID=" + interactionID + ", userID=" + userID + ", bookID=" + bookID
+		return "Interactions [interactionID=" + interactionID + ", accountID=" + accountID + ", bookID=" + bookID
 				+ ", interactionType=" + interactionType + "]";
 	}
 }

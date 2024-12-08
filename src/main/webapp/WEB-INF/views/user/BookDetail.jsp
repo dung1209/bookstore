@@ -686,6 +686,7 @@
 		                
 		            	console.log("sách gợi ý theo nội dung: ", datas)
 		            	datas.forEach((bookData, index) => {
+		            		let formattedPrice = new Intl.NumberFormat('vi-VN').format(bookData.price);
 		            		const bookDiv = document.createElement("div");
 		                    bookDiv.classList.add("col-sm-4");
 		                    bookDiv.innerHTML = 
@@ -695,7 +696,7 @@
                                         '<div class="productinfo text-center"' +
                                         	(userId !== -1 ? ' onclick="recordInteraction(' + userId + ', ' + bookData.bookID + ', 1)"' : '') + '>' +
                                             '<img src="<%=request.getContextPath()%>/assets/user/images/home/' + bookData.image + '" alt="' + bookData.name + '" />' +
-                                            '<h2>' + bookData.price + ' VND</h2>' +
+                                            '<h2>' + formattedPrice + ' đ</h2>' +
                                             '<p>' + bookData.name + '</p>' +
                                             '<a id="submitOrder" href="#"' +
                                             	'class="btn btn-default add-to-cart"' +
